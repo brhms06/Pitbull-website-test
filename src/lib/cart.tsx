@@ -1,10 +1,12 @@
+'use client';
+
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { readStore, writeStore } from './localStorage-utils';
 
 export interface CartItem {
-  /** Unique line id: `${catSlug}:${optionId}` (a kitten+option is unique). */
+  /** Unique line id: `${dogSlug}:${optionId}` (a dog+option is unique). */
   id: string;
-  catSlug: string;
+  dogSlug: string;
   name: string;
   image: string;
   optionId: string;
@@ -19,11 +21,11 @@ interface CartContextValue {
   add: (item: CartItem) => void;
   remove: (id: string) => void;
   clear: () => void;
-  has: (catSlug: string) => boolean;
+  has: (dogSlug: string) => boolean;
 }
 
 const CartContext = createContext<CartContextValue | undefined>(undefined);
-const CART_KEY = 'mcin:cart';
+const CART_KEY = 'ilb:cart';
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>(() => readStore<CartItem[]>(CART_KEY, []));
@@ -35,13 +37,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const value = useMemo<CartContextValue>(() => {
     const add = (item: CartItem) =>
       setItems((prev) => {
-        // A specific kitten can only be in the cart once — replace if re-added.
-        const withoutCat = prev.filter((i) => i.catSlug !== item.catSlug);
-        return [...withoutCat, item];
+        // A specific dog can only be in the cart once — replace if re-added.
+        const withoutDog = prev.filter((i) => i.dogSlug !== item.dogSlug);
+        return [...withoutDog, item];
       });
     const remove = (id: string) => setItems((prev) => prev.filter((i) => i.id !== id));
     const clear = () => setItems([]);
-    const has = (catSlug: string) => items.some((i) => i.catSlug === catSlug);
+    const has = (dogSlug: string) => items.some((i) => i.dogSlug === dogSlug);
     return {
       items,
       count: items.length,
@@ -71,28 +73,28 @@ export interface PurchaseOption {
   note?: string;
 }
 
-export const RESERVE_DEPOSIT = 200;
-export const BREEDING_RIGHTS_ADDON = 500;
-export const WARRANTY_ADDON = 500;
+export const RESERVE_DEPOSIT = 300;
+export const BREEDING_RIGHTS_ADDON = 800;
+export const WARRANTY_ADDON = 400;
 
-interface PricedCat {
-  adoptionFee: number;
+interface PricedDog {
+  price: number;
   reservePrice?: number;
   breedingPrice?: number;
   warrantyPrice?: number;
 }
 
 /**
- * Build the purchase options for a kitten. Uses the per-kitten prices set in the
+ * Build the purchase options for a dog. Uses the per-dog prices set in the
  * admin dashboard when provided (> 0), otherwise sensible defaults.
  */
-export function buildPurchaseOptions(cat: PricedCat): PurchaseOption[] {
-  const base = cat.adoptionFee;
-  const reserve = cat.reservePrice && cat.reservePrice > 0 ? cat.reservePrice : RESERVE_DEPOSIT;
+export function buildPurchaseOptions(dog: PricedDog): PurchaseOption[] {
+  const base = dog.price;
+  const reserve = dog.reservePrice && dog.reservePrice > 0 ? dog.reservePrice : RESERVE_DEPOSIT;
   const breeding =
-    cat.breedingPrice && cat.breedingPrice > 0 ? cat.breedingPrice : base + BREEDING_RIGHTS_ADDON;
+    dog.breedingPrice && dog.breedingPrice > 0 ? dog.breedingPrice : base + BREEDING_RIGHTS_ADDON;
   const warranty =
-    cat.warrantyPrice && cat.warrantyPrice > 0 ? cat.warrantyPrice : base + WARRANTY_ADDON;
+    dog.warrantyPrice && dog.warrantyPrice > 0 ? dog.warrantyPrice : base + WARRANTY_ADDON;
   return [
     { id: 'reserve', label: 'Reserve', price: reserve, note: 'deposit, rest on pickup' },
     { id: 'full', label: 'Full Payment', price: base },

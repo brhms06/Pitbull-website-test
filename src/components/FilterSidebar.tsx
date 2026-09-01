@@ -1,14 +1,16 @@
-import { useState } from 'react';
-import type { AgeGroup, CatGender } from '@/types';
+'use client';
 
-export interface CatFilters {
+import { useState } from 'react';
+import type { AgeGroup, DogGender } from '@/types';
+
+export interface DogFilters {
   age: AgeGroup | 'all';
-  gender: CatGender | 'all';
+  gender: DogGender | 'all';
   region: string;
-  status: 'all' | 'Available' | 'Pending' | 'Adopted';
+  status: 'all' | 'Available' | 'Pending' | 'Sold';
 }
 
-export const defaultFilters: CatFilters = {
+export const defaultFilters: DogFilters = {
   age: 'all',
   gender: 'all',
   region: 'all',
@@ -17,19 +19,18 @@ export const defaultFilters: CatFilters = {
 
 interface Props {
   regions: string[];
-  onApply: (filters: CatFilters) => void;
+  onApply: (filters: DogFilters) => void;
   resultCount: number;
 }
 
-const ageGroups: AgeGroup[] = ['Kitten', 'Young', 'Adult', 'Senior'];
+const ageGroups: AgeGroup[] = ['Puppy', 'Young', 'Adult', 'Senior'];
 
 /** Filter controls. Sticky sidebar on desktop, collapsible panel on mobile. */
 export default function FilterSidebar({ regions, onApply, resultCount }: Props) {
-  const [draft, setDraft] = useState<CatFilters>(defaultFilters);
+  const [draft, setDraft] = useState<DogFilters>(defaultFilters);
   const [open, setOpen] = useState(false);
 
-  const set = <K extends keyof CatFilters>(key: K, value: CatFilters[K]) =>
-    setDraft((d) => ({ ...d, [key]: value }));
+  const set = <K extends keyof DogFilters>(key: K, value: DogFilters[K]) => setDraft((d) => ({ ...d, [key]: value }));
 
   const apply = () => {
     onApply(draft);
@@ -44,31 +45,21 @@ export default function FilterSidebar({ regions, onApply, resultCount }: Props) 
   return (
     <div className="lg:sticky lg:top-24">
       {/* Mobile toggle */}
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        className="btn-ghost mb-4 w-full justify-between lg:hidden"
-        aria-expanded={open}
-      >
+      <button type="button" onClick={() => setOpen((v) => !v)} className="btn-ghost mb-4 w-full justify-between lg:hidden" aria-expanded={open}>
         <span>Filters</span>
         <span>{open ? '▲' : '▼'}</span>
       </button>
 
       <div className={`${open ? 'block' : 'hidden'} card p-6 lg:block`}>
-        <h2 className="text-lg font-extrabold text-forest-800">Filter cats</h2>
-        <p className="mt-1 text-sm text-muted">{resultCount} cats match your search</p>
+        <h2 className="text-lg font-extrabold text-forest-800">Filter puppies</h2>
+        <p className="mt-1 text-sm text-muted">{resultCount} puppies match your search</p>
 
         <div className="mt-5 space-y-5">
           <div>
             <label className="label" htmlFor="f-age">
               Age
             </label>
-            <select
-              id="f-age"
-              className="input"
-              value={draft.age}
-              onChange={(e) => set('age', e.target.value as CatFilters['age'])}
-            >
+            <select id="f-age" className="input" value={draft.age} onChange={(e) => set('age', e.target.value as DogFilters['age'])}>
               <option value="all">Any age</option>
               {ageGroups.map((a) => (
                 <option key={a} value={a}>
@@ -82,12 +73,7 @@ export default function FilterSidebar({ regions, onApply, resultCount }: Props) 
             <label className="label" htmlFor="f-gender">
               Gender
             </label>
-            <select
-              id="f-gender"
-              className="input"
-              value={draft.gender}
-              onChange={(e) => set('gender', e.target.value as CatFilters['gender'])}
-            >
+            <select id="f-gender" className="input" value={draft.gender} onChange={(e) => set('gender', e.target.value as DogFilters['gender'])}>
               <option value="all">Any gender</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
@@ -98,12 +84,7 @@ export default function FilterSidebar({ regions, onApply, resultCount }: Props) 
             <label className="label" htmlFor="f-region">
               Location
             </label>
-            <select
-              id="f-region"
-              className="input"
-              value={draft.region}
-              onChange={(e) => set('region', e.target.value)}
-            >
+            <select id="f-region" className="input" value={draft.region} onChange={(e) => set('region', e.target.value)}>
               <option value="all">Anywhere in the US</option>
               {regions.map((r) => (
                 <option key={r} value={r}>
@@ -117,16 +98,11 @@ export default function FilterSidebar({ regions, onApply, resultCount }: Props) 
             <label className="label" htmlFor="f-status">
               Status
             </label>
-            <select
-              id="f-status"
-              className="input"
-              value={draft.status}
-              onChange={(e) => set('status', e.target.value as CatFilters['status'])}
-            >
+            <select id="f-status" className="input" value={draft.status} onChange={(e) => set('status', e.target.value as DogFilters['status'])}>
               <option value="all">All statuses</option>
               <option value="Available">Available</option>
               <option value="Pending">Pending</option>
-              <option value="Adopted">Adopted</option>
+              <option value="Sold">Sold</option>
             </select>
           </div>
 

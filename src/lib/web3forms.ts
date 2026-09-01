@@ -4,12 +4,11 @@
  * Web3Forms is designed to work).
  *
  * Get a free key at https://web3forms.com (enter the email where you want to
- * receive submissions). Then set it here or via VITE_WEB3FORMS_ACCESS_KEY.
+ * receive submissions), then set NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY in `.env.local`.
  */
 const PLACEHOLDER = 'YOUR_WEB3FORMS_ACCESS_KEY';
 
-const ACCESS_KEY =
-  import.meta.env.VITE_WEB3FORMS_ACCESS_KEY ?? '95056a37-546a-4850-a044-c0cd6fb80b35';
+const ACCESS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY ?? PLACEHOLDER;
 
 /** True once a real access key has been configured. */
 export const WEB3FORMS_READY = Boolean(ACCESS_KEY) && ACCESS_KEY !== PLACEHOLDER;
@@ -18,9 +17,7 @@ export const WEB3FORMS_READY = Boolean(ACCESS_KEY) && ACCESS_KEY !== PLACEHOLDER
  * Send a payload to Web3Forms. Resolves `{ ok: false }` (never throws) when the
  * key isn't set or the request fails, so callers can fall back gracefully.
  */
-export async function sendWeb3Form(
-  payload: Record<string, unknown>,
-): Promise<{ ok: boolean }> {
+export async function sendWeb3Form(payload: Record<string, unknown>): Promise<{ ok: boolean }> {
   if (!WEB3FORMS_READY) return { ok: false };
   try {
     const res = await fetch('https://api.web3forms.com/submit', {

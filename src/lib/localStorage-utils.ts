@@ -1,7 +1,7 @@
 /**
- * Tiny typed localStorage helpers used to persist form submissions and the
- * favourites list. Everything is wrapped in try/catch so private-mode or
- * storage-full errors never crash the UI.
+ * Tiny typed localStorage helpers used to persist a local copy of form
+ * submissions and the favourites list. Everything is wrapped in try/catch so
+ * private-mode or storage-full errors never crash the UI.
  */
 
 const safeParse = <T>(raw: string | null, fallback: T): T => {
@@ -35,15 +35,13 @@ export function appendSubmission<T extends object>(key: string, record: T): void
 }
 
 // --- Favourites (wishlist) ------------------------------------------------
-const FAV_KEY = 'mcin:favourites';
+const FAV_KEY = 'ilb:favourites';
 
 export const getFavourites = (): string[] => readStore<string[]>(FAV_KEY, []);
 
 export function toggleFavourite(id: string): string[] {
   const current = getFavourites();
-  const next = current.includes(id)
-    ? current.filter((x) => x !== id)
-    : [...current, id];
+  const next = current.includes(id) ? current.filter((x) => x !== id) : [...current, id];
   writeStore(FAV_KEY, next);
   return next;
 }

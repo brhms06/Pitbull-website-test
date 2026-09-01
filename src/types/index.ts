@@ -1,17 +1,20 @@
-export type CatStatus = 'Available' | 'Pending' | 'Adopted';
-export type CatGender = 'Male' | 'Female';
-export type AgeGroup = 'Kitten' | 'Young' | 'Adult' | 'Senior';
+export type DogStatus = 'Available' | 'Pending' | 'Sold';
+export type DogGender = 'Male' | 'Female';
+export type AgeGroup = 'Puppy' | 'Young' | 'Adult' | 'Senior';
 
-export interface Cat {
+export interface Dog {
   id: string;
   name: string;
-  ageLabel: string; // human readable e.g. "2 years old"
+  breed: string; // e.g. "American Bully", "American Pit Bull Terrier"
+  registry: string; // e.g. "ABKC", "UKC" — blank if not registered
+  weightLabel: string; // e.g. "45 lbs (est. adult)"
+  ageLabel: string; // human readable e.g. "10 weeks old"
   ageGroup: AgeGroup;
-  gender: CatGender;
+  gender: DogGender;
   color: string;
   location: string;
   region: string;
-  status: CatStatus;
+  status: DogStatus;
   neutered: boolean;
   vaccinated: boolean;
   vetChecked: boolean;
@@ -19,8 +22,7 @@ export interface Cat {
   goodWithChildren: boolean;
   goodWithCats: boolean;
   goodWithDogs: boolean;
-  indoorOnly: boolean;
-  adoptionFee: number; // kitten price (Full Payment)
+  price: number; // full payment price
   reservePrice?: number; // reservation deposit (0 = use default)
   breedingPrice?: number; // price with breeding rights (0 = use default)
   warrantyPrice?: number; // price with extended warranty (0 = use default)
@@ -32,17 +34,13 @@ export interface Cat {
   videos?: string[];
 }
 
-export interface RehomedStory {
+export interface Testimonial {
   id: string;
-  catName: string;
-  title: string;
-  year: number;
-  adopter: string;
-  location: string;
-  rating: number; // 1-5
+  customerName: string;
+  dogName: string;
   quote: string;
-  beforeImage: string;
-  afterImage: string;
+  rating: number; // 1-5
+  photo: string;
 }
 
 export interface TeamMember {
@@ -50,14 +48,4 @@ export interface TeamMember {
   role: string;
   bio: string;
   image: string;
-}
-
-export interface HelpWay {
-  id: string;
-  icon: 'heart' | 'handshake' | 'home' | 'shopping-bag' | 'sparkles' | 'megaphone';
-  title: string;
-  description: string;
-  ctaLabel: string;
-  to: string;
-  external?: boolean;
 }

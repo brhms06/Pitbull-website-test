@@ -1,22 +1,27 @@
+'use client';
+
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Logo from './Logo';
 import { HeartIcon, CartIcon } from './Icons';
-import { navLinks } from '@/data/site';
+import { navLinks, site } from '@/data/site';
 import { useCart } from '@/lib/cart';
 
 export default function Header() {
-  const [scrolled, setScrolled]   = useState(false);
-  const [menuOpen, setMenuOpen]   = useState(false);
-  const [mounted,  setMounted]    = useState(false);
-  const location = useLocation();
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const pathname = usePathname();
   const { count } = useCart();
   const closeRef = useRef<HTMLButtonElement>(null);
 
   // Only render portal after client-side hydration to avoid SSR mismatch.
-  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Shrink + shadow on scroll.
   useEffect(() => {
@@ -27,12 +32,16 @@ export default function Header() {
   }, []);
 
   // Close menu on navigation.
-  useEffect(() => { setMenuOpen(false); }, [location.pathname]);
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
 
   // Lock body scroll while menu is open.
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [menuOpen]);
 
   // Focus the close button when the menu opens for accessibility.
@@ -42,11 +51,13 @@ export default function Header() {
     }
   }, [menuOpen]);
 
-  const navItemClass = ({ isActive }: { isActive: boolean }) =>
+  const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.startsWith(href));
+
+  const navItemClass = (href: string) =>
     [
       'relative rounded-full px-3 py-2 text-sm font-semibold transition-all duration-200',
       'hover:scale-[1.03] hover:text-ember',
-      isActive ? 'text-ember' : 'text-forest-800',
+      isActive(href) ? 'text-ember' : 'text-forest-800',
     ].join(' ');
 
   return (
@@ -67,31 +78,27 @@ export default function Header() {
         </a>
 
         <div className="container-page flex h-16 items-center justify-between gap-4 md:h-20">
-          <Link to="/" aria-label="Royal Maine Coon Kittens home" className="shrink-0">
+          <Link href="/" aria-label={`${site.name} home`} className="shrink-0">
             <Logo />
           </Link>
 
           <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary">
             {navLinks.map((link) => (
-              <NavLink key={link.to} to={link.to} end={link.to === '/'} className={navItemClass}>
-                {({ isActive }) => (
-                  <>
-                    {link.label}
-                    {isActive && (
-                      <motion.span
-                        layoutId="nav-underline"
-                        className="absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full bg-ember"
-                      />
-                    )}
-                  </>
+              <Link key={link.href} href={link.href} className={navItemClass(link.href)}>
+                {link.label}
+                {isActive(link.href) && (
+                  <motion.span
+                    layoutId="nav-underline"
+                    className="absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full bg-ember"
+                  />
                 )}
-              </NavLink>
+              </Link>
             ))}
           </nav>
 
           <div className="flex items-center gap-2">
             <Link
-              to="/cart"
+              href="/cart"
               aria-label={`Cart${count ? ` (${count})` : ''}`}
               className="relative inline-flex h-11 w-11 items-center justify-center rounded-full text-forest-800 transition hover:bg-forest-50"
             >
@@ -109,11 +116,11 @@ export default function Header() {
               transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
             >
               <Link
-                to="/cats"
+                href="/dogs"
                 className="btn-accent inline-flex items-center gap-2 shadow-glow"
-                aria-label="Reserve a kitten"
+                aria-label="Reserve a puppy"
               >
-                <HeartIcon className="h-4 w-4" filled /> Reserve a Kitten
+                <HeartIcon className="h-4 w-4" filled /> Reserve a Puppy
               </Link>
             </motion.div>
 
@@ -135,8 +142,7 @@ export default function Header() {
         The mobile drawer deliberately avoids framer-motion and Tailwind for every
         property that affects legibility (background, text colour, borders, z-index).
         Those are inline styles so that no purge step, no missing animation chunk and
-        no half-finished transition can ever leave the panel see-through — which is
-        exactly how this menu broke before.
+        no half-finished transition can ever leave the panel see-through.
       */}
       {mounted &&
         createPortal(
@@ -156,7 +162,7 @@ export default function Header() {
               style={{
                 position: 'absolute',
                 inset: 0,
-                backgroundColor: 'rgba(43,42,40,0.6)',
+                backgroundColor: 'rgba(33,31,28,0.6)',
                 opacity: menuOpen ? 1 : 0,
                 transition: 'opacity 220ms ease',
               }}
@@ -177,19 +183,18 @@ export default function Header() {
                 overflowY: 'auto',
                 width: '84%',
                 maxWidth: '360px',
-                backgroundColor: '#faf7f1',
-                backgroundImage: 'none',
-                boxShadow: '-8px 0 40px rgba(43,42,40,0.28)',
-                borderLeft: '1px solid #e7ddcb',
+                backgroundColor: '#f4efe6',
+                boxShadow: '-8px 0 40px rgba(33,31,28,0.28)',
+                borderLeft: '1px solid #e6dcc9',
                 transform: menuOpen ? 'translateX(0)' : 'translateX(100%)',
                 transition: 'transform 260ms cubic-bezier(0.22, 1, 0.36, 1)',
               }}
             >
               <div
                 className="flex items-center justify-between px-5 py-4"
-                style={{ borderBottom: '1px solid #e7ddcb', backgroundColor: '#faf7f1' }}
+                style={{ borderBottom: '1px solid #e6dcc9', backgroundColor: '#f4efe6' }}
               >
-                <Link to="/" onClick={() => setMenuOpen(false)}>
+                <Link href="/" onClick={() => setMenuOpen(false)}>
                   <Logo />
                 </Link>
                 <button
@@ -198,7 +203,7 @@ export default function Header() {
                   onClick={() => setMenuOpen(false)}
                   aria-label="Close menu"
                   className="inline-flex h-10 w-10 items-center justify-center rounded-full transition hover:bg-forest-100"
-                  style={{ color: '#1b3a2b' }}
+                  style={{ color: '#1c3345' }}
                 >
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
                     <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
@@ -206,48 +211,40 @@ export default function Header() {
                 </button>
               </div>
 
-              <nav
-                className="flex flex-1 flex-col gap-1 px-4 py-5"
-                aria-label="Mobile"
-                style={{ backgroundColor: '#faf7f1' }}
-              >
-                {navLinks.map((link) => (
-                  <NavLink
-                    key={link.to}
-                    to={link.to}
-                    end={link.to === '/'}
-                    onClick={() => setMenuOpen(false)}
-                    tabIndex={menuOpen ? 0 : -1}
-                    className="flex items-center justify-between rounded-2xl px-4 py-3.5 text-[15px] font-semibold"
-                    style={({ isActive }) => ({
-                      color: isActive ? '#e2620f' : '#14331f',
-                      backgroundColor: isActive ? '#e8f0e8' : 'transparent',
-                    })}
-                  >
-                    <span>{link.label}</span>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                      <path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </NavLink>
-                ))}
+              <nav className="flex flex-1 flex-col gap-1 px-4 py-5" aria-label="Mobile" style={{ backgroundColor: '#f4efe6' }}>
+                {navLinks.map((link) => {
+                  const active = isActive(link.href);
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setMenuOpen(false)}
+                      tabIndex={menuOpen ? 0 : -1}
+                      className="flex items-center justify-between rounded-2xl px-4 py-3.5 text-[15px] font-semibold"
+                      style={{ color: active ? '#b5502e' : '#1c3345', backgroundColor: active ? '#e8eef2' : 'transparent' }}
+                    >
+                      <span>{link.label}</span>
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                        <path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </Link>
+                  );
+                })}
               </nav>
 
-              <div
-                className="px-5 py-5"
-                style={{ borderTop: '1px solid #e7ddcb', backgroundColor: '#faf7f1' }}
-              >
+              <div className="px-5 py-5" style={{ borderTop: '1px solid #e6dcc9', backgroundColor: '#f4efe6' }}>
                 <Link
-                  to="/cats"
+                  href="/dogs"
                   onClick={() => setMenuOpen(false)}
                   tabIndex={menuOpen ? 0 : -1}
                   className="btn-accent flex w-full items-center justify-center gap-2 py-4 text-base font-bold shadow-glow"
                 >
-                  <HeartIcon className="h-5 w-5" filled /> Reserve a Kitten
+                  <HeartIcon className="h-5 w-5" filled /> Reserve a Puppy
                 </Link>
               </div>
             </div>
           </div>,
-          document.body
+          document.body,
         )}
     </>
   );

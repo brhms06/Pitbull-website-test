@@ -1,32 +1,25 @@
 import type { TeamMember } from '@/types';
 
-const img = (id: string, w = 600) =>
-  `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=70`;
+const img = (id: number, w = 600, h = 600) => `https://placedog.net/${w}/${h}?id=${id}`;
 
-/** Placeholder volunteer profiles — replace with real team members and photos. */
+/** Placeholder team profiles — replace with your real team members and photos. */
 export const team: TeamMember[] = [
   {
-    name: 'Jacky Holmes',
-    role: 'Rehoming Coordinator',
-    bio: 'Jacky matches every cat with the right family and oversees home visits across Colorado.',
-    image: img('1494790108377-be9c29b29330'),
+    name: 'Jordan Turner',
+    role: 'Head Breeder',
+    bio: 'Jordan oversees every litter from birth to placement and handles all health testing.',
+    image: img(30),
   },
   {
-    name: 'Sarah Doyle',
-    role: 'Vet Liaison & Foster Lead',
-    bio: 'A former veterinary nurse, Sarah coordinates medical care and our network of foster homes.',
-    image: img('1438761681033-6461ffad8d80'),
+    name: 'Morgan Reyes',
+    role: 'Vet Liaison',
+    bio: 'A former vet tech, Morgan coordinates checkups, vaccinations and health records.',
+    image: img(31),
   },
   {
-    name: 'Marek Nowak',
-    role: 'Western Region Coordinator',
-    bio: 'Marek runs collections, transport and assessments for cats across the West Coast.',
-    image: img('1500648767791-00dcc994a43e'),
-  },
-  {
-    name: 'Priya Sharma',
-    role: 'Fundraising & Community',
-    bio: 'Priya organises our fundraising events and keeps our wonderful supporters connected.',
-    image: img('1573497019940-1c28c88b4f3e'),
+    name: 'Alex Lin',
+    role: 'Puppy Coordinator',
+    bio: 'Alex matches every puppy with the right family and manages reservations nationwide.',
+    image: img(32),
   },
 ];

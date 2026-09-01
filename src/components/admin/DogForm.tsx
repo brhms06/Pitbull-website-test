@@ -1,0 +1,440 @@
+'use client';
+
+import { useEffect, useState, type FormEvent } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { createDog, updateDog, fetchDogByRowId, uploadDogImage, uploadDogVideo, slugify, type DogInput } from '@/lib/db';
+import type { AgeGroup, DogGender, DogStatus } from '@/types';
+import { ArrowRightIcon } from '@/components/Icons';
+
+const empty: DogInput = {
+  slug: '',
+  name: '',
+  breed: '',
+  registry: '',
+  weightLabel: '',
+  ageLabel: '',
+  ageGroup: 'Puppy',
+  gender: 'Male',
+  color: '',
+  location: '',
+  region: '',
+  status: 'Available',
+  neutered: false,
+  vaccinated: true,
+  vetChecked: true,
+  microchipped: true,
+  goodWithChildren: true,
+  goodWithCats: true,
+  goodWithDogs: true,
+  price: 0,
+  reservePrice: 0,
+  breedingPrice: 0,
+  warrantyPrice: 0,
+  coordinatorName: '',
+  coordinatorEmail: '',
+  coordinatorPhone: '',
+  personality: [],
+  shortDescription: '',
+  story: '',
+  images: [],
+  videos: [],
+  published: true,
+};
+
+const ageGroups: AgeGroup[] = ['Puppy', 'Young', 'Adult', 'Senior'];
+const genders: DogGender[] = ['Male', 'Female'];
+const statuses: DogStatus[] = ['Available', 'Pending', 'Sold'];
+
+const boolFields: Array<[keyof DogInput, string]> = [
+  ['neutered', 'Neutered/Spayed'],
+  ['vaccinated', 'Vaccinated'],
+  ['vetChecked', 'Vet-checked'],
+  ['microchipped', 'Microchipped'],
+  ['goodWithChildren', 'Good with children'],
+  ['goodWithDogs', 'Good with other dogs'],
+  ['goodWithCats', 'Good with cats'],
+];
+
+/**
+ * Build a readable message from whatever a failed save throws. Supabase returns
+ * a plain object ({ message, code, details, hint }) rather than an Error, so an
+ * `e instanceof Error` check always falls through to a vague message and hides
+ * the real cause. This surfaces the actual reason on the page.
+ */
+function readError(e: unknown): string {
+  if (typeof e === 'string') return e;
+  if (e && typeof e === 'object') {
+    const o = e as { message?: unknown; details?: unknown; hint?: unknown; code?: unknown };
+    const parts = [o.message, o.details, o.hint].filter((p): p is string => typeof p === 'string' && p.trim().length > 0);
+    const text = parts.join(' — ');
+    if (text) return o.code ? `${text} (code ${String(o.code)})` : text;
+  }
+  return 'Save failed. Please try again.';
+}
+
+/** Reject if a promise doesn't settle in time, so a stalled upload or DB write surfaces a clear error instead of hanging on "Saving…" forever. */
+function withTimeout<T>(p: Promise<T>, ms: number, label: string): Promise<T> {
+  return Promise.race([
+    p,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error(`${label} timed out after ${Math.round(ms / 1000)}s. Check your internet connection, or try a smaller file.`)), ms),
+    ),
+  ]);
+}
+
+export default function DogForm({ rowId }: { rowId?: string }) {
+  const router = useRouter();
+  const editing = Boolean(rowId);
+
+  const [form, setForm] = useState<DogInput>(empty);
+  const [personalityText, setPersonalityText] = useState('');
+  const [files, setFiles] = useState<File[]>([]);
+  const [videoFiles, setVideoFiles] = useState<File[]>([]);
+  const [slugTouched, setSlugTouched] = useState(false);
+  const [loading, setLoading] = useState(editing);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (!rowId) return;
+    fetchDogByRowId(rowId)
+      .then((dog) => {
+        if (!dog) {
+          setError('Puppy not found.');
+          return;
+        }
+        setForm({
+          slug: dog.id,
+          name: dog.name,
+          breed: dog.breed,
+          registry: dog.registry,
+          weightLabel: dog.weightLabel,
+          ageLabel: dog.ageLabel,
+          ageGroup: dog.ageGroup,
+          gender: dog.gender,
+          color: dog.color,
+          location: dog.location,
+          region: dog.region,
+          status: dog.status,
+          neutered: dog.neutered,
+          vaccinated: dog.vaccinated,
+          vetChecked: dog.vetChecked,
+          microchipped: dog.microchipped,
+          goodWithChildren: dog.goodWithChildren,
+          goodWithCats: dog.goodWithCats,
+          goodWithDogs: dog.goodWithDogs,
+          price: dog.price,
+          reservePrice: dog.reservePrice ?? 0,
+          breedingPrice: dog.breedingPrice ?? 0,
+          warrantyPrice: dog.warrantyPrice ?? 0,
+          coordinatorName: dog.coordinator.name,
+          coordinatorEmail: dog.coordinator.email,
+          coordinatorPhone: dog.coordinator.phone,
+          personality: dog.personality,
+          shortDescription: dog.shortDescription,
+          story: dog.story,
+          images: dog.images,
+          videos: dog.videos ?? [],
+          published: dog.published,
+        });
+        setPersonalityText(dog.personality.join(', '));
+        setSlugTouched(true);
+      })
+      .catch((e) => setError(e instanceof Error ? e.message : 'Failed to load.'))
+      .finally(() => setLoading(false));
+  }, [rowId]);
+
+  const set = <K extends keyof DogInput>(key: K, value: DogInput[K]) => setForm((f) => ({ ...f, [key]: value }));
+
+  const onName = (value: string) => {
+    setForm((f) => ({ ...f, name: value, slug: slugTouched ? f.slug : slugify(value) }));
+  };
+
+  const addFiles = (picked: File[]) => {
+    if (picked.length === 0) return;
+    setFiles((prev) => [...prev, ...picked]);
+  };
+
+  const removeExisting = (url: string) => setForm((f) => ({ ...f, images: f.images.filter((i) => i !== url) }));
+  const removeFile = (idx: number) => setFiles((prev) => prev.filter((_, i) => i !== idx));
+
+  const addVideoFiles = (picked: File[]) => {
+    if (picked.length === 0) return;
+    setVideoFiles((prev) => [...prev, ...picked]);
+  };
+
+  const removeExistingVideo = (url: string) => setForm((f) => ({ ...f, videos: f.videos.filter((v) => v !== url) }));
+  const removeVideoFile = (idx: number) => setVideoFiles((prev) => prev.filter((_, i) => i !== idx));
+
+  const onSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setError('');
+    const fail = (msg: string) => {
+      setError(msg);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+    if (!form.name.trim()) {
+      fail('Please enter a name.');
+      return;
+    }
+    if (form.images.length === 0 && files.length === 0) {
+      fail('Please add at least one photo.');
+      return;
+    }
+    setSaving(true);
+    try {
+      const slug = (form.slug || slugify(form.name)).trim();
+      const uploaded: string[] = [];
+      for (const file of files) {
+        uploaded.push(await withTimeout(uploadDogImage(file, slug), 120000, 'Photo upload'));
+      }
+      const uploadedVideos: string[] = [];
+      for (const file of videoFiles) {
+        uploadedVideos.push(await withTimeout(uploadDogVideo(file, slug), 300000, 'Video upload'));
+      }
+      const payload: DogInput = {
+        ...form,
+        slug,
+        personality: personalityText.split(',').map((s) => s.trim()).filter(Boolean),
+        images: [...form.images, ...uploaded],
+        videos: [...form.videos, ...uploadedVideos],
+      };
+      if (rowId) await withTimeout(updateDog(rowId, payload), 30000, 'Saving to database');
+      else await withTimeout(createDog(payload), 30000, 'Saving to database');
+      router.push('/admin/dogs');
+      router.refresh();
+    } catch (e) {
+      setSaving(false);
+      fail(readError(e));
+    }
+  };
+
+  if (loading) {
+    return <div className="h-64 animate-pulse rounded-2xl bg-sand/50" />;
+  }
+
+  return (
+    <div className="mx-auto max-w-3xl">
+      <Link href="/admin/dogs" className="text-sm font-semibold text-forest-600 hover:underline">
+        ← Back to puppies
+      </Link>
+      <h1 className="mt-2 text-3xl font-extrabold text-forest-800">{editing ? `Edit ${form.name || 'puppy'}` : 'Add a new puppy'}</h1>
+
+      {error && <p className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">{error}</p>}
+
+      <form onSubmit={onSubmit} className="mt-6 space-y-6">
+        {/* Basics */}
+        <section className="card space-y-4 p-6">
+          <h2 className="text-lg font-extrabold text-forest-800">Basics</h2>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label="Name" required>
+              <input className="input" value={form.name} onChange={(e) => onName(e.target.value)} />
+            </Field>
+            <Field label="Breed" hint="e.g. American Bully — Standard">
+              <input className="input" value={form.breed} onChange={(e) => set('breed', e.target.value)} />
+            </Field>
+            <Field label="Registry" hint="e.g. ABKC, UKC — leave blank if none">
+              <input className="input" value={form.registry} onChange={(e) => set('registry', e.target.value)} />
+            </Field>
+            <Field label="Weight" hint='e.g. "45 lbs (est. adult)"'>
+              <input className="input" value={form.weightLabel} onChange={(e) => set('weightLabel', e.target.value)} />
+            </Field>
+            <Field label="Age label" hint="e.g. 10 weeks old">
+              <input className="input" value={form.ageLabel} onChange={(e) => set('ageLabel', e.target.value)} />
+            </Field>
+            <Field label="Age group">
+              <select className="input" value={form.ageGroup} onChange={(e) => set('ageGroup', e.target.value as AgeGroup)}>
+                {ageGroups.map((g) => (
+                  <option key={g}>{g}</option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Gender">
+              <select className="input" value={form.gender} onChange={(e) => set('gender', e.target.value as DogGender)}>
+                {genders.map((g) => (
+                  <option key={g}>{g}</option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Color" hint="e.g. Blue, Fawn, Chocolate tri">
+              <input className="input" value={form.color} onChange={(e) => set('color', e.target.value)} />
+            </Field>
+            <Field label="Status">
+              <select className="input" value={form.status} onChange={(e) => set('status', e.target.value as DogStatus)}>
+                {statuses.map((s) => (
+                  <option key={s}>{s}</option>
+                ))}
+              </select>
+            </Field>
+          </div>
+          <Field label="Personality traits" hint="Comma separated, e.g. Loyal, Playful">
+            <input className="input" value={personalityText} onChange={(e) => setPersonalityText(e.target.value)} />
+          </Field>
+          <label className="flex items-center gap-3 text-sm font-semibold text-forest-800">
+            <input type="checkbox" checked={form.published} onChange={(e) => set('published', e.target.checked)} className="h-5 w-5 rounded border-sand text-forest focus:ring-forest" />
+            Published (visible on the live site)
+          </label>
+        </section>
+
+        {/* Pricing & purchase options */}
+        <section className="card space-y-4 p-6">
+          <h2 className="text-lg font-extrabold text-forest-800">Pricing &amp; purchase options</h2>
+          <p className="text-sm text-muted">These are the prices buyers see on this puppy&apos;s page. Leave an add-on at 0 to use the default shown.</p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label="Price — Full Payment ($)" required>
+              <input type="number" min={0} className="input" value={form.price} onChange={(e) => set('price', Number(e.target.value) || 0)} />
+            </Field>
+            <Field label="Reservation deposit ($)" hint="default $300">
+              <input type="number" min={0} className="input" value={form.reservePrice} onChange={(e) => set('reservePrice', Number(e.target.value) || 0)} />
+            </Field>
+            <Field label="Add breeding rights — price ($)" hint="default = price + $800">
+              <input type="number" min={0} className="input" value={form.breedingPrice} onChange={(e) => set('breedingPrice', Number(e.target.value) || 0)} />
+            </Field>
+            <Field label="Extend health warranty — price ($)" hint="default = price + $400">
+              <input type="number" min={0} className="input" value={form.warrantyPrice} onChange={(e) => set('warrantyPrice', Number(e.target.value) || 0)} />
+            </Field>
+          </div>
+        </section>
+
+        {/* Photos */}
+        <section className="card space-y-4 p-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-extrabold text-forest-800">Photo gallery</h2>
+            <span className="text-sm text-muted">
+              {form.images.length + files.length} photo{form.images.length + files.length === 1 ? '' : 's'}
+            </span>
+          </div>
+          {(form.images.length > 0 || files.length > 0) && (
+            <div className="flex flex-wrap gap-3">
+              {form.images.map((url, i) => (
+                <div key={url} className="relative">
+                  <img src={url} alt="" className="h-24 w-24 rounded-xl object-cover" />
+                  {i === 0 && <span className="absolute bottom-1 left-1 rounded bg-forest px-1.5 py-0.5 text-[10px] font-bold text-white">Main</span>}
+                  <button type="button" onClick={() => removeExisting(url)} className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-600 text-xs font-bold text-white" aria-label="Remove photo">
+                    ×
+                  </button>
+                </div>
+              ))}
+              {files.map((file, i) => (
+                <div key={`${file.name}-${i}`} className="relative">
+                  <img src={URL.createObjectURL(file)} alt="" className="h-24 w-24 rounded-xl object-cover ring-2 ring-forest" />
+                  {form.images.length === 0 && i === 0 && <span className="absolute bottom-1 left-1 rounded bg-forest px-1.5 py-0.5 text-[10px] font-bold text-white">Main</span>}
+                  <button type="button" onClick={() => removeFile(i)} className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-600 text-xs font-bold text-white" aria-label="Remove photo">
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+          <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-sand bg-cream/40 px-6 py-8 text-center transition hover:border-forest/40">
+            <span className="text-sm font-semibold text-forest-800">Click to upload photos</span>
+            <span className="text-xs text-muted">Select several at once, or click again to add more. The first photo is the main image. JPG or PNG.</span>
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              className="hidden"
+              onChange={(e) => {
+                const picked = e.target.files ? Array.from(e.target.files) : [];
+                e.target.value = '';
+                addFiles(picked);
+              }}
+            />
+          </label>
+        </section>
+
+        {/* Videos */}
+        <section className="card space-y-4 p-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-extrabold text-forest-800">Videos</h2>
+            <span className="text-sm text-muted">
+              {form.videos.length + videoFiles.length} video{form.videos.length + videoFiles.length === 1 ? '' : 's'}
+            </span>
+          </div>
+          {(form.videos.length > 0 || videoFiles.length > 0) && (
+            <div className="flex flex-wrap gap-3">
+              {form.videos.map((url) => (
+                <div key={url} className="relative">
+                  <video src={url} controls playsInline preload="metadata" className="h-32 w-44 rounded-xl bg-ink/5 object-cover" />
+                  <button type="button" onClick={() => removeExistingVideo(url)} className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-600 text-xs font-bold text-white" aria-label="Remove video">
+                    ×
+                  </button>
+                </div>
+              ))}
+              {videoFiles.map((file, i) => (
+                <div key={`${file.name}-${i}`} className="relative">
+                  <video src={URL.createObjectURL(file)} controls playsInline preload="metadata" className="h-32 w-44 rounded-xl bg-ink/5 object-cover ring-2 ring-forest" />
+                  <button type="button" onClick={() => removeVideoFile(i)} className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-600 text-xs font-bold text-white" aria-label="Remove video">
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+          <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-sand bg-cream/40 px-6 py-8 text-center transition hover:border-forest/40">
+            <span className="text-sm font-semibold text-forest-800">Tap to upload or record a video</span>
+            <span className="text-xs text-muted">From your phone you can pick a clip or record a new one. MP4 or MOV. Keep clips short (under ~100MB) so they load fast.</span>
+            <input
+              type="file"
+              accept="video/*"
+              multiple
+              className="hidden"
+              onChange={(e) => {
+                const picked = e.target.files ? Array.from(e.target.files) : [];
+                e.target.value = '';
+                addVideoFiles(picked);
+              }}
+            />
+          </label>
+        </section>
+
+        {/* Descriptions */}
+        <section className="card space-y-4 p-6">
+          <h2 className="text-lg font-extrabold text-forest-800">Description</h2>
+          <Field label="Short description" hint="Shown on cards">
+            <textarea rows={2} className="input" value={form.shortDescription} onChange={(e) => set('shortDescription', e.target.value)} />
+          </Field>
+          <Field label="Full story">
+            <textarea rows={5} className="input" value={form.story} onChange={(e) => set('story', e.target.value)} />
+          </Field>
+        </section>
+
+        {/* Health & compatibility */}
+        <section className="card space-y-4 p-6">
+          <h2 className="text-lg font-extrabold text-forest-800">Health &amp; compatibility</h2>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {boolFields.map(([key, label]) => (
+              <label key={key} className="flex items-center gap-2 text-sm text-ink/85">
+                <input type="checkbox" checked={form[key] as boolean} onChange={(e) => set(key, e.target.checked as never)} className="h-5 w-5 rounded border-sand text-forest focus:ring-forest" />
+                {label}
+              </label>
+            ))}
+          </div>
+        </section>
+
+        <div className="flex items-center gap-3">
+          <button type="submit" disabled={saving} className="btn-primary disabled:opacity-70">
+            {saving ? 'Saving…' : editing ? 'Save changes' : 'Publish puppy'}
+            {!saving && <ArrowRightIcon className="h-5 w-5" />}
+          </button>
+          <Link href="/admin/dogs" className="btn-ghost">
+            Cancel
+          </Link>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+function Field({ label, hint, required, children }: { label: string; hint?: string; required?: boolean; children: React.ReactNode }) {
+  return (
+    <label className="block">
+      <span className="label">
+        {label} {required && <span className="text-ember">*</span>}
+        {hint && <span className="ml-1 font-normal text-muted">— {hint}</span>}
+      </span>
+      {children}
+    </label>
+  );
+}

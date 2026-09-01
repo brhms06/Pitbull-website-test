@@ -1,61 +1,51 @@
 interface LogoProps {
   className?: string;
-  /** When false, only the cat-badge mark is rendered (no wordmark). */
+  /** When false, only the badge mark is rendered (no wordmark). */
   withText?: boolean;
   /** Use light colours for placement on dark backgrounds (e.g. the footer). */
   variant?: 'dark' | 'light';
 }
 
 /**
- * Original, custom-drawn Maine Coon badge + wordmark. Inline SVG so it stays
+ * Original, custom-drawn dog-head badge + wordmark. Inline SVG so it stays
  * crisp at any size and can recolour for light/dark backgrounds.
  */
 export default function Logo({ className, withText = true, variant = 'dark' }: LogoProps) {
-  const titleColor = variant === 'light' ? '#ffffff' : '#235c35';
+  const titleColor = variant === 'light' ? '#ffffff' : '#213e53';
   return (
     <span className={`inline-flex items-center gap-3 ${className ?? ''}`}>
-      <svg
-        viewBox="0 0 64 64"
-        className="h-10 w-10 shrink-0"
-        aria-hidden="true"
-        focusable="false"
-      >
+      <svg viewBox="0 0 64 64" className="h-10 w-10 shrink-0" aria-hidden="true" focusable="false">
         <defs>
           <linearGradient id="logo-badge" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="#5aae6a" />
-            <stop offset="1" stopColor="#2a7440" />
+            <stop offset="0" stopColor="#4d7c99" />
+            <stop offset="1" stopColor="#213e53" />
           </linearGradient>
         </defs>
         <rect width="64" height="64" rx="16" fill="url(#logo-badge)" />
-        <g fill="#faf7f1">
-          <path d="M16 20l3-7 7 5z" />
-          <path d="M48 20l-3-7-7 5z" />
-          <path d="M32 18c-9 0-15 6-15 15 0 9 6 16 15 16s15-7 15-16c0-9-6-15-15-15z" />
+        <g fill="#f4efe6">
+          <ellipse cx="17" cy="24" rx="6" ry="8" transform="rotate(-20 17 24)" />
+          <ellipse cx="47" cy="24" rx="6" ry="8" transform="rotate(20 47 24)" />
+          <path d="M32 20c-9 0-14 7-14 15 0 8 6 14 14 14s14-6 14-14c0-8-5-15-14-15z" />
         </g>
-        <g fill="#2a7440">
-          <ellipse cx="26" cy="31" rx="2.6" ry="3.4" />
-          <ellipse cx="38" cy="31" rx="2.6" ry="3.4" />
+        <g fill="#213e53">
+          <ellipse cx="26" cy="34" rx="2.6" ry="3.2" />
+          <ellipse cx="38" cy="34" rx="2.6" ry="3.2" />
         </g>
-        <path d="M32 36l-2.4 2.4h4.8z" fill="#f25c0a" />
+        <path d="M32 39l-2.6 2.4h5.2z" fill="#b5502e" />
         <path
-          d="M32 39c-2 2-4 1.5-5 0M32 39c2 2 4 1.5 5 0"
+          d="M32 42c-2 2-4.2 1.6-5.2 0M32 42c2 2 4.2 1.6 5.2 0"
           fill="none"
-          stroke="#2a7440"
+          stroke="#213e53"
           strokeWidth="1.4"
           strokeLinecap="round"
         />
       </svg>
       {withText && (
         <span className="flex flex-col leading-none">
-          <span
-            className="font-heading text-lg font-extrabold tracking-tight"
-            style={{ color: titleColor }}
-          >
-            Royal Maine Coon
+          <span className="font-heading text-lg font-extrabold tracking-tight" style={{ color: titleColor }}>
+            IRONLINE
           </span>
-          <span className="font-heading text-xs font-semibold tracking-[0.25em] text-ember">
-            KITTENS
-          </span>
+          <span className="font-heading text-xs font-semibold tracking-[0.25em] text-ember">BULLIES</span>
         </span>
       )}
     </span>

@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { appendSubmission } from '@/lib/localStorage-utils';
@@ -6,7 +8,7 @@ import { ArrowRightIcon, CheckIcon } from './Icons';
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-/** Footer newsletter capture — persists to localStorage in this template. */
+/** Footer newsletter capture — writes to Supabase, with a local fallback log. */
 export default function NewsletterSignup() {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'done' | 'error'>('idle');
@@ -18,7 +20,7 @@ export default function NewsletterSignup() {
       return;
     }
     submitNewsletter(email).catch(() => {});
-    appendSubmission('mcin:newsletter', { email });
+    appendSubmission('ilb:newsletter', { email });
     setStatus('done');
     setEmail('');
   };
@@ -59,9 +61,7 @@ export default function NewsletterSignup() {
           Sign Up <ArrowRightIcon className="h-4 w-4" />
         </motion.button>
       </div>
-      {status === 'error' && (
-        <p className="mt-1.5 text-sm text-ember-200">Please enter a valid email address.</p>
-      )}
+      {status === 'error' && <p className="mt-1.5 text-sm text-ember-200">Please enter a valid email address.</p>}
     </form>
   );
 }

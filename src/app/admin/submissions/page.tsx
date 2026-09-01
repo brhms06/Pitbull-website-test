@@ -1,0 +1,152 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { supabase } from '@/lib/supabase/client';
+
+type Tab = 'orders' | 'applications' | 'messages' | 'subscribers';
+
+const tabs: Array<{ key: Tab; label: string; table: string }> = [
+  { key: 'orders', label: 'Orders', table: 'orders' },
+  { key: 'applications', label: 'Applications', table: 'puppy_applications' },
+  { key: 'messages', label: 'Messages', table: 'contact_messages' },
+  { key: 'subscribers', label: 'Subscribers', table: 'newsletter_subscribers' },
+];
+
+const fmtMoney = (n: number) => Number(n).toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+
+type Row = Record<string, any>;
+
+const fmtDate = (iso: string) => new Date(iso).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+
+export default function SubmissionsPage() {
+  const [tab, setTab] = useState<Tab>('orders');
+  const [rows, setRows] = useState<Row[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  const table = tabs.find((t) => t.key === tab)!.table;
+
+  const load = async () => {
+    setLoading(true);
+    const { data, error: err } = await supabase.from(table).select('*').order('created_at', { ascending: false });
+    if (err) setError(err.message);
+    else {
+      setError('');
+      setRows(data ?? []);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tab]);
+
+  const remove = async (id: string) => {
+    if (!window.confirm('Delete this entry?')) return;
+    await supabase.from(table).delete().eq('id', id);
+    load();
+  };
+
+  return (
+    <div>
+      <h1 className="text-3xl font-extrabold text-forest-800">Submissions</h1>
+      <p className="mt-1 text-muted">Everything customers send through the website.</p>
+
+      <div className="mt-6 flex flex-wrap gap-2">
+        {tabs.map((t) => (
+          <button
+            key={t.key}
+            type="button"
+            onClick={() => setTab(t.key)}
+            className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+              tab === t.key ? 'bg-forest text-white shadow-soft' : 'bg-white text-forest-700 ring-1 ring-black/5 hover:bg-forest-50'
+            }`}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {error && <p className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">{error}</p>}
+
+      {loading ? (
+        <div className="mt-6 space-y-3">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="h-24 animate-pulse rounded-2xl bg-sand/50" />
+          ))}
+        </div>
+      ) : rows.length === 0 ? (
+        <p className="card mt-6 px-6 py-12 text-center text-muted">No entries yet.</p>
+      ) : (
+        <div className="mt-6 space-y-3">
+          {rows.map((row) => (
+            <div key={row.id} className="card p-5">
+              <div className="flex items-start justify-between gap-4">
+                <div className="min-w-0">
+                  {tab === 'orders' && (
+                    <>
+                      <p className="font-bold text-forest-800">
+                        {row.customer_name} — {fmtMoney(row.total)}
+                      </p>
+                      <p className="mt-1 text-sm text-muted">
+                        {row.email} · {row.phone}
+                      </p>
+                      <ul className="mt-2 space-y-0.5 text-sm text-ink/80">
+                        {(row.items ?? []).map((it: Row, idx: number) => (
+                          <li key={idx}>
+                            • {it.name} — {it.optionLabel} ({fmtMoney(it.price)})
+                          </li>
+                        ))}
+                      </ul>
+                      {row.address && <p className="mt-1 text-sm text-ink/70">Deliver to: {row.address}</p>}
+                      {row.notes && <p className="mt-1 text-sm text-ink/70">Notes: {row.notes}</p>}
+                    </>
+                  )}
+                  {tab === 'applications' && (
+                    <>
+                      <p className="font-bold text-forest-800">
+                        {row.name} — wants to reserve {row.dog_name || '—'}
+                      </p>
+                      <p className="mt-1 text-sm text-muted">
+                        {row.email} · {row.phone}
+                      </p>
+                      <p className="mt-2 text-sm text-ink/80">
+                        {row.address} · {row.home_type} · Children: {row.has_children} · Pets: {row.has_pets}
+                      </p>
+                      {row.experience && <p className="mt-1 text-sm text-ink/70">Experience: {row.experience}</p>}
+                    </>
+                  )}
+                  {tab === 'messages' && (
+                    <>
+                      <p className="font-bold text-forest-800">
+                        {row.name} · {row.subject}
+                      </p>
+                      <p className="mt-1 text-sm text-muted">
+                        {row.email} · {row.phone}
+                      </p>
+                      <p className="mt-2 text-sm text-ink/80">{row.message}</p>
+                    </>
+                  )}
+                  {tab === 'subscribers' && <p className="font-bold text-forest-800">{row.email}</p>}
+                  <p className="mt-2 text-xs text-muted">{fmtDate(row.created_at)}</p>
+                </div>
+
+                <div className="flex shrink-0 flex-col items-end gap-2">
+                  {tab === 'messages' && row.email && (
+                    <a href={`mailto:${row.email}`} className="btn-ghost px-3 py-1.5 text-xs">
+                      Reply
+                    </a>
+                  )}
+                  <button type="button" onClick={() => remove(row.id)} className="rounded-full px-3 py-1.5 text-xs font-semibold text-red-600 transition hover:bg-red-50">
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}

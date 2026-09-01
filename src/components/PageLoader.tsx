@@ -7,7 +7,7 @@ export default function PageLoader() {
         role="status"
         aria-label="Loading"
       />
-      <p className="text-sm font-medium text-muted">Fetching the cats…</p>
+      <p className="text-sm font-medium text-muted">Fetching the puppies…</p>
     </div>
   );
 }

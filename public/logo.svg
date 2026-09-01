@@ -1,26 +1,26 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 72" width="300" height="72" role="img" aria-label="Maine Coons in Need logo">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 72" width="300" height="72" role="img" aria-label="Ironline Bullies logo">
   <defs>
     <linearGradient id="badge" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#5aae6a"/>
-      <stop offset="1" stop-color="#2a7440"/>
+      <stop offset="0" stop-color="#4d7c99"/>
+      <stop offset="1" stop-color="#213e53"/>
     </linearGradient>
   </defs>
   <g transform="translate(4 4)">
     <rect width="64" height="64" rx="16" fill="url(#badge)"/>
-    <g fill="#faf7f1">
-      <path d="M16 20l3-7 7 5z"/>
-      <path d="M48 20l-3-7-7 5z"/>
-      <path d="M32 18c-9 0-15 6-15 15 0 9 6 16 15 16s15-7 15-16c0-9-6-15-15-15z"/>
+    <g fill="#f4efe6">
+      <ellipse cx="17" cy="24" rx="6" ry="8" transform="rotate(-20 17 24)"/>
+      <ellipse cx="47" cy="24" rx="6" ry="8" transform="rotate(20 47 24)"/>
+      <path d="M32 20c-9 0-14 7-14 15 0 8 6 14 14 14s14-6 14-14c0-8-5-15-14-15z"/>
     </g>
-    <g fill="#2a7440">
-      <ellipse cx="26" cy="31" rx="2.6" ry="3.4"/>
-      <ellipse cx="38" cy="31" rx="2.6" ry="3.4"/>
+    <g fill="#213e53">
+      <ellipse cx="26" cy="34" rx="2.6" ry="3.2"/>
+      <ellipse cx="38" cy="34" rx="2.6" ry="3.2"/>
     </g>
-    <path d="M32 36l-2.4 2.4h4.8z" fill="#f25c0a"/>
-    <path d="M32 39c-2 2-4 1.5-5 0M32 39c2 2 4 1.5 5 0" fill="none" stroke="#2a7440" stroke-width="1.4" stroke-linecap="round"/>
+    <path d="M32 39l-2.6 2.4h5.2z" fill="#b5502e"/>
+    <path d="M32 42c-2 2-4.2 1.6-5.2 0M32 42c2 2 4.2 1.6 5.2 0" fill="none" stroke="#213e53" stroke-width="1.4" stroke-linecap="round"/>
   </g>
-  <g font-family="Poppins, sans-serif">
-    <text x="82" y="34" font-size="22" font-weight="800" fill="#235c35">Maine Coons</text>
-    <text x="82" y="56" font-size="16" font-weight="600" fill="#f25c0a" letter-spacing="3">IN&#160;NEED</text>
+  <g font-family="Oswald, sans-serif">
+    <text x="82" y="34" font-size="22" font-weight="700" fill="#213e53">IRONLINE</text>
+    <text x="82" y="56" font-size="16" font-weight="600" fill="#b5502e" letter-spacing="3">BULLIES</text>
   </g>
 </svg>

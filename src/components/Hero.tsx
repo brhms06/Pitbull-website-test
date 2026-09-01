@@ -1,21 +1,15 @@
+'use client';
+
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PawIcon, ArrowRightIcon, HeartIcon } from './Icons';
+import { site } from '@/data/site';
 
 const heroImages = [
-  {
-    src: 'https://images.unsplash.com/photo-1606214174585-fe31582dc6ee?auto=format&fit=crop&w=1400&q=70',
-    alt: 'A fluffy white Maine Coon cat resting peacefully',
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&w=1400&q=70',
-    alt: 'A majestic brown Maine Coon gazing into the distance',
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1596854407944-bf87f6fdd49e?auto=format&fit=crop&w=1400&q=70',
-    alt: 'A gentle Maine Coon curled up in a cosy home',
-  },
+  { src: 'https://placedog.net/1400/900?id=50', alt: 'An American Bully puppy resting peacefully' },
+  { src: 'https://placedog.net/1400/900?id=51', alt: 'A muscular American Bully gazing into the distance' },
+  { src: 'https://placedog.net/1400/900?id=52', alt: 'A gentle Bully puppy curled up in a cosy home' },
 ];
 
 const SLIDE_INTERVAL = 3000;
@@ -33,10 +27,7 @@ export default function Hero() {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    const id = setInterval(
-      () => setIndex((i) => (i + 1) % heroImages.length),
-      SLIDE_INTERVAL,
-    );
+    const id = setInterval(() => setIndex((i) => (i + 1) % heroImages.length), SLIDE_INTERVAL);
     return () => clearInterval(id);
   }, []);
 
@@ -53,7 +44,7 @@ export default function Hero() {
             variants={fadeUp}
             className="badge inline-flex items-center gap-1.5 bg-ember-100 text-ember-700"
           >
-            <PawIcon className="h-4 w-4" /> Home-raised Maine Coon Kittens
+            <PawIcon className="h-4 w-4" /> {site.tagline}
           </motion.span>
 
           <motion.h1
@@ -63,8 +54,7 @@ export default function Hero() {
             variants={fadeUp}
             className="mt-4 text-4xl font-extrabold leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl"
           >
-            Healthy Maine Coon kittens{' '}
-            <span className="text-forest">raised with love</span>
+            Health-tested American Bully puppies <span className="text-forest">raised with love</span>
           </motion.h1>
 
           <motion.p
@@ -74,41 +64,25 @@ export default function Hero() {
             variants={fadeUp}
             className="mt-5 max-w-xl text-lg leading-relaxed text-muted"
           >
-            We raise happy, healthy, well-socialised Maine Coon kittens — vet-checked,
-            vaccinated and ready to join your family. Reserve yours today, with nationwide
-            delivery available.
+            We raise confident, well-socialised American Bully puppies — vet-checked, vaccinated and
+            ready to join your family. Reserve yours today, with nationwide delivery available.
           </motion.p>
 
-          <motion.div
-            custom={3}
-            initial="hidden"
-            animate="show"
-            variants={fadeUp}
-            className="mt-8 flex flex-wrap gap-3"
-          >
-            <Link to="/cats" className="btn-primary text-base">
-              View Available Kittens <ArrowRightIcon className="h-5 w-5" />
+          <motion.div custom={3} initial="hidden" animate="show" variants={fadeUp} className="mt-8 flex flex-wrap gap-3">
+            <Link href="/dogs" className="btn-primary text-base">
+              View Available Puppies <ArrowRightIcon className="h-5 w-5" />
             </Link>
-            <motion.div
-              animate={{ scale: [1, 1.04, 1] }}
-              transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
-            >
-              <Link to="/contact" className="btn-accent inline-flex items-center gap-2 text-base shadow-glow">
-                <HeartIcon className="h-5 w-5" filled /> Reserve a Kitten
+            <motion.div animate={{ scale: [1, 1.04, 1] }} transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}>
+              <Link href="/contact" className="btn-accent inline-flex items-center gap-2 text-base shadow-glow">
+                <HeartIcon className="h-5 w-5" filled /> Reserve a Puppy
               </Link>
             </motion.div>
           </motion.div>
 
-          <motion.dl
-            custom={4}
-            initial="hidden"
-            animate="show"
-            variants={fadeUp}
-            className="mt-10 grid max-w-md grid-cols-3 gap-4"
-          >
+          <motion.dl custom={4} initial="hidden" animate="show" variants={fadeUp} className="mt-10 grid max-w-md grid-cols-3 gap-4">
             {[
-              { n: '500+', l: 'Kittens placed' },
-              { n: '14', l: 'Years breeding' },
+              { n: site.soldCount, l: 'Puppies placed' },
+              { n: String(new Date().getFullYear() - site.foundedYear), l: 'Years breeding' },
               { n: '100%', l: 'Health guaranteed' },
             ].map((s) => (
               <div key={s.l}>
@@ -144,14 +118,13 @@ export default function Hero() {
               />
             </AnimatePresence>
 
-            {/* Slide indicators */}
             <div className="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 gap-2">
               {heroImages.map((img, i) => (
                 <button
                   key={img.src}
                   type="button"
                   onClick={() => setIndex(i)}
-                  aria-label={`Show cat photo ${i + 1}`}
+                  aria-label={`Show dog photo ${i + 1}`}
                   className={`h-2 rounded-full transition-all duration-300 ${
                     i === index ? 'w-7 bg-white' : 'w-2 bg-white/60 hover:bg-white/80'
                   }`}

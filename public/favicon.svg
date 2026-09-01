@@ -1,32 +1,23 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Maine Coons in Need">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Ironline Bullies">
   <defs>
     <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#5aae6a"/>
-      <stop offset="1" stop-color="#2a7440"/>
+      <stop offset="0" stop-color="#4d7c99"/>
+      <stop offset="1" stop-color="#213e53"/>
     </linearGradient>
   </defs>
   <rect width="64" height="64" rx="16" fill="url(#g)"/>
-  <!-- Maine Coon face: broad, with tufted ears -->
-  <g fill="#faf7f1">
-    <path d="M16 20l3-7 7 5z"/>
-    <path d="M48 20l-3-7-7 5z"/>
-    <path d="M32 18c-9 0-15 6-15 15 0 9 6 16 15 16s15-7 15-16c0-9-6-15-15-15z"/>
-  </g>
-  <!-- ear tufts -->
-  <g stroke="#1f4a2d" stroke-width="1.4" stroke-linecap="round">
-    <path d="M20 13l-1-4M22 14l1-4"/>
-    <path d="M44 13l1-4M42 14l-1-4"/>
+  <!-- American Bully head: broad, rounded, with folded ears -->
+  <g fill="#f4efe6">
+    <ellipse cx="17" cy="24" rx="6" ry="8" transform="rotate(-20 17 24)"/>
+    <ellipse cx="47" cy="24" rx="6" ry="8" transform="rotate(20 47 24)"/>
+    <path d="M32 20c-9 0-14 7-14 15 0 8 6 14 14 14s14-6 14-14c0-8-5-15-14-15z"/>
   </g>
   <!-- eyes -->
-  <g fill="#2a7440">
-    <ellipse cx="26" cy="31" rx="2.6" ry="3.4"/>
-    <ellipse cx="38" cy="31" rx="2.6" ry="3.4"/>
+  <g fill="#213e53">
+    <ellipse cx="26" cy="34" rx="2.6" ry="3.2"/>
+    <ellipse cx="38" cy="34" rx="2.6" ry="3.2"/>
   </g>
   <!-- nose + mouth -->
-  <path d="M32 36l-2.4 2.4h4.8z" fill="#f25c0a"/>
-  <path d="M32 39c-2 2-4 1.5-5 0M32 39c2 2 4 1.5 5 0" fill="none" stroke="#2a7440" stroke-width="1.4" stroke-linecap="round"/>
-  <!-- whiskers -->
-  <g stroke="#2a7440" stroke-width="1.2" stroke-linecap="round" opacity="0.8">
-    <path d="M24 38l-8 -1M24 40l-7 2M40 38l8 -1M40 40l7 2"/>
-  </g>
+  <path d="M32 39l-2.6 2.4h5.2z" fill="#b5502e"/>
+  <path d="M32 42c-2 2-4.2 1.6-5.2 0M32 42c2 2 4.2 1.6 5.2 0" fill="none" stroke="#213e53" stroke-width="1.4" stroke-linecap="round"/>
 </svg>

@@ -1,6 +1,8 @@
+'use client';
+
 import type { ReactNode } from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 interface Props {
   title: string;
@@ -31,7 +33,7 @@ export default function PageHero({ title, subtitle, image, children, breadcrumb 
           className="mb-3 text-sm text-cream/70"
           aria-label="Breadcrumb"
         >
-          <Link to="/" className="hover:text-ember-200">
+          <Link href="/" className="hover:text-ember-200">
             Home
           </Link>{' '}
           / <span className="text-white">{breadcrumb ?? title}</span>

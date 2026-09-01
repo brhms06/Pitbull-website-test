@@ -1,27 +1,29 @@
+'use client';
+
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
-import type { Cat } from '@/types';
+import type { Dog } from '@/types';
 import { useCart, buildPurchaseOptions, formatPrice } from '@/lib/cart';
 import PaymentBadges from './PaymentBadges';
 import { CartIcon, CheckIcon, WhatsAppIcon, ShieldIcon, TruckIcon } from './Icons';
 import { site } from '@/data/site';
 
-export default function PurchasePanel({ cat }: { cat: Cat }) {
+export default function PurchasePanel({ dog }: { dog: Dog }) {
   const { add, has } = useCart();
-  const options = buildPurchaseOptions(cat);
+  const options = buildPurchaseOptions(dog);
   const [selected, setSelected] = useState(options[1].id); // default: Full Payment
-  const inCart = has(cat.id);
+  const inCart = has(dog.id);
 
-  const sold = cat.status === 'Adopted';
+  const sold = dog.status === 'Sold';
   const chosen = options.find((o) => o.id === selected) ?? options[1];
 
   const addToCart = () => {
     add({
-      id: `${cat.id}:${chosen.id}`,
-      catSlug: cat.id,
-      name: cat.name,
-      image: cat.images[0] ?? '',
+      id: `${dog.id}:${chosen.id}`,
+      dogSlug: dog.id,
+      name: dog.name,
+      image: dog.images[0] ?? '',
       optionId: chosen.id,
       optionLabel: chosen.label,
       price: chosen.price,
@@ -29,18 +31,14 @@ export default function PurchasePanel({ cat }: { cat: Cat }) {
   };
 
   const waMessage = encodeURIComponent(
-    `Hi! I'm interested in ${cat.name} (${chosen.label} — ${formatPrice(chosen.price)}). Could you send me a quote?`,
+    `Hi! I'm interested in ${dog.name} (${chosen.label} — ${formatPrice(chosen.price)}). Could you send me a quote?`,
   );
-  const waHref = site.whatsapp
-    ? `https://wa.me/${site.whatsapp}?text=${waMessage}`
-    : '/contact';
+  const waHref = site.whatsapp ? `https://wa.me/${site.whatsapp}?text=${waMessage}` : '/contact';
 
   return (
     <div className="card overflow-hidden">
       <div className="p-6">
-        <p className="text-center text-4xl font-extrabold text-forest-800">
-          {formatPrice(cat.adoptionFee)}
-        </p>
+        <p className="text-center text-4xl font-extrabold text-forest-800">{formatPrice(dog.price)}</p>
 
         <p className="mt-5 text-sm font-bold text-forest-800">
           Purchase options: <span className="text-ember">*</span>
@@ -77,19 +75,14 @@ export default function PurchasePanel({ cat }: { cat: Cat }) {
 
         {sold ? (
           <div className="mt-5 rounded-2xl bg-sky-50 px-4 py-3 text-center text-sm font-semibold text-sky-700">
-            {cat.name} has found a forever home.
+            {dog.name} has found a forever home.
           </div>
         ) : inCart ? (
-          <Link to="/cart" className="btn-primary mt-5 w-full text-base">
+          <Link href="/cart" className="btn-primary mt-5 w-full text-base">
             <CartIcon className="h-5 w-5" /> In cart — View cart
           </Link>
         ) : (
-          <motion.button
-            type="button"
-            whileTap={{ scale: 0.98 }}
-            onClick={addToCart}
-            className="btn-accent mt-5 w-full text-base"
-          >
+          <motion.button type="button" whileTap={{ scale: 0.98 }} onClick={addToCart} className="btn-accent mt-5 w-full text-base">
             <CartIcon className="h-5 w-5" /> Add to Cart
           </motion.button>
         )}
@@ -102,9 +95,7 @@ export default function PurchasePanel({ cat }: { cat: Cat }) {
         <h3 className="flex items-center gap-2 text-sm font-extrabold text-forest-800">
           <TruckIcon className="h-5 w-5 text-forest-600" /> Delivery options
         </h3>
-        <p className="mt-1 text-sm text-muted">
-          Nationwide delivery available. Get a personalised quote for your location.
-        </p>
+        <p className="mt-1 text-sm text-muted">Nationwide delivery available. Get a personalised quote for your location.</p>
         <a
           href={waHref}
           target={site.whatsapp ? '_blank' : undefined}

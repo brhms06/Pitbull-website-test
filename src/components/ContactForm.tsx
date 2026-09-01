@@ -1,9 +1,10 @@
+'use client';
+
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import FormField from './FormField';
 import Modal from './Modal';
 import { appendSubmission } from '@/lib/localStorage-utils';
-import { sendEmail } from '@/lib/emailjs-config';
 import { sendWeb3Form } from '@/lib/web3forms';
 import { submitContact } from '@/lib/db';
 
@@ -15,7 +16,7 @@ interface ContactData {
   message: string;
 }
 
-const empty: ContactData = { name: '', email: '', phone: '', subject: 'Adoption Inquiry', message: '' };
+const empty: ContactData = { name: '', email: '', phone: '', subject: 'Puppy Reservation', message: '' };
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phonePattern = /^[+\d][\d\s()-]{6,}$/;
 
@@ -55,83 +56,42 @@ export default function ContactForm() {
       message: data.message,
     });
     await submitContact(data).catch(() => {});
-    await sendEmail({ form: 'contact', ...data });
-    appendSubmission('mcin:contact', data);
+    appendSubmission('ilb:contact', data);
     setSubmitting(false);
     setSuccess(true);
     setData(empty);
   };
 
-  const inputCls = (field: keyof ContactData) =>
-    `input ${errors[field] ? 'input-error' : ''}`;
+  const inputCls = (field: keyof ContactData) => `input ${errors[field] ? 'input-error' : ''}`;
 
   return (
     <>
       <form onSubmit={onSubmit} noValidate className="card p-6 sm:p-8">
         <div className="grid gap-5 sm:grid-cols-2">
           <FormField label="Name" htmlFor="c-name" required error={errors.name}>
-            <input
-              id="c-name"
-              className={inputCls('name')}
-              value={data.name}
-              onChange={(e) => update('name', e.target.value)}
-              autoComplete="name"
-            />
+            <input id="c-name" className={inputCls('name')} value={data.name} onChange={(e) => update('name', e.target.value)} autoComplete="name" />
           </FormField>
 
           <FormField label="Email" htmlFor="c-email" required error={errors.email}>
-            <input
-              id="c-email"
-              type="email"
-              className={inputCls('email')}
-              value={data.email}
-              onChange={(e) => update('email', e.target.value)}
-              autoComplete="email"
-            />
+            <input id="c-email" type="email" className={inputCls('email')} value={data.email} onChange={(e) => update('email', e.target.value)} autoComplete="email" />
           </FormField>
 
           <FormField label="Phone" htmlFor="c-phone" error={errors.phone} hint="Optional">
-            <input
-              id="c-phone"
-              type="tel"
-              className={inputCls('phone')}
-              value={data.phone}
-              onChange={(e) => update('phone', e.target.value)}
-              autoComplete="tel"
-            />
+            <input id="c-phone" type="tel" className={inputCls('phone')} value={data.phone} onChange={(e) => update('phone', e.target.value)} autoComplete="tel" />
           </FormField>
 
           <FormField label="Subject" htmlFor="c-subject">
-            <select
-              id="c-subject"
-              className="input"
-              value={data.subject}
-              onChange={(e) => update('subject', e.target.value)}
-            >
-              <option>Adoption Inquiry</option>
+            <select id="c-subject" className="input" value={data.subject} onChange={(e) => update('subject', e.target.value)}>
+              <option>Puppy Reservation</option>
               <option>General Question</option>
-              <option>Volunteer / Foster</option>
-              <option>Donation / Fundraising</option>
+              <option>Delivery / Shipping</option>
               <option>Other</option>
             </select>
           </FormField>
         </div>
 
-        <FormField
-          label="Message"
-          htmlFor="c-message"
-          required
-          error={errors.message}
-          className="mt-5"
-        >
-          <textarea
-            id="c-message"
-            rows={5}
-            className={inputCls('message')}
-            value={data.message}
-            onChange={(e) => update('message', e.target.value)}
-            placeholder="How can we help?"
-          />
+        <FormField label="Message" htmlFor="c-message" required error={errors.message} className="mt-5">
+          <textarea id="c-message" rows={5} className={inputCls('message')} value={data.message} onChange={(e) => update('message', e.target.value)} placeholder="How can we help?" />
         </FormField>
 
         <motion.button

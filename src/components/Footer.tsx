@@ -1,25 +1,14 @@
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import Logo from './Logo';
 import NewsletterSignup from './NewsletterSignup';
-import {
-  FacebookIcon,
-  InstagramIcon,
-  TikTokIcon,
-  MailIcon,
-  PhoneIcon,
-  PinIcon,
-  ShieldIcon,
-  StarIcon,
-  LockIcon,
-} from './Icons';
+import { FacebookIcon, InstagramIcon, TikTokIcon, MailIcon, PhoneIcon, PinIcon, ShieldIcon, StarIcon, LockIcon } from './Icons';
 import { site } from '@/data/site';
 
 const quickLinks = [
-  { label: 'Home', to: '/' },
-  { label: 'About Us', to: '/about' },
-  { label: 'Available Kittens', to: '/cats' },
-  { label: 'Happy Families', to: '/rehomed' },
-  { label: 'Contact', to: '/contact' },
+  { label: 'Home', href: '/' },
+  { label: 'About Us', href: '/about' },
+  { label: 'Available Puppies', href: '/dogs' },
+  { label: 'Contact', href: '/contact' },
 ];
 
 export default function Footer() {
@@ -30,8 +19,8 @@ export default function Footer() {
         <div>
           <Logo variant="light" />
           <p className="mt-4 max-w-xs text-sm text-cream/70">
-            {site.name} — {site.tagline}. Healthy, home-raised gentle giants,
-            raised with love and delivered across the US.
+            {site.name} — {site.tagline}. Health-tested, home-raised puppies, raised with love and
+            delivered across the US.
           </p>
           <div className="mt-5 flex gap-3">
             <SocialLink href={site.social.facebook} label="Facebook">
@@ -51,8 +40,8 @@ export default function Footer() {
           <h3 className="text-sm font-bold uppercase tracking-wider text-white">Explore</h3>
           <ul className="mt-4 space-y-2 text-sm">
             {quickLinks.map((l) => (
-              <li key={l.to}>
-                <Link to={l.to} className="text-cream/70 transition hover:text-ember-200">
+              <li key={l.href}>
+                <Link href={l.href} className="text-cream/70 transition hover:text-ember-200">
                   {l.label}
                 </Link>
               </li>
@@ -104,35 +93,28 @@ export default function Footer() {
 
       <div className="border-t border-white/10">
         <div className="container-page flex flex-col items-center justify-between gap-3 py-6 text-xs text-cream/60 sm:flex-row">
-          <p>© {new Date().getFullYear()} {site.name}. All rights reserved.</p>
+          <p>
+            © {new Date().getFullYear()} {site.name}. All rights reserved.
+          </p>
           <div className="flex items-center gap-4">
-            <Link to="/privacy" className="hover:text-ember-200">
+            <Link href="/privacy" className="hover:text-ember-200">
               Privacy Policy
             </Link>
-            <Link to="/terms" className="hover:text-ember-200">
+            <Link href="/terms" className="hover:text-ember-200">
               Terms &amp; Conditions
             </Link>
           </div>
         </div>
         <p className="container-page pb-6 text-center text-[11px] leading-relaxed text-cream/40">
-          {site.name} is a family-run Maine Coon cattery in Evansville, Indiana. Kittens are
-          vet-checked, vaccinated and microchipped before they travel, and every kitten comes with a
-          written health guarantee.
+          {site.name} is a family-run American Bully breeder. Puppies are vet-checked, vaccinated
+          and microchipped before they travel, and every puppy comes with a written health guarantee.
         </p>
       </div>
     </footer>
   );
 }
 
-function SocialLink({
-  href,
-  label,
-  children,
-}: {
-  href: string;
-  label: string;
-  children: React.ReactNode;
-}) {
+function SocialLink({ href, label, children }: { href: string; label: string; children: React.ReactNode }) {
   // A blank href means the profile has not been set up yet — render nothing
   // rather than a dead link that drops visitors on a 404.
   if (!href || !href.trim()) return null;
