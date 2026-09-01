@@ -1,0 +1,368 @@
+import { useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import AdoptionForm from '@/components/AdoptionForm';
+import Modal from '@/components/Modal';
+import {
+  CheckIcon,
+  FemaleIcon,
+  MaleIcon,
+  PinIcon,
+  ShareIcon,
+  MailIcon,
+  PhoneIcon,
+  PawIcon,
+} from '@/components/Icons';
+import PurchasePanel from '@/components/PurchasePanel';
+import Seo from '@/components/Seo';
+import { useCat } from '@/hooks/useCats';
+import { site } from '@/data/site';
+import { catFaqs } from '@/data/catFaqs';
+import { getOptimizedImageUrl } from '@/lib/image-utils';
+
+export default function CatDetail() {
+  const { id } = useParams();
+  const { cat, loading } = useCat(id);
+  const [active, setActive] = useState(0);
+  const [shareOpen, setShareOpen] = useState(false);
+
+  if (loading) {
+    return (
+      <div className="container-page flex min-h-[60vh] flex-col items-center justify-center gap-4 text-center">
+        <PawIcon className="h-12 w-12 animate-pulse text-forest-300" />
+        <p className="text-muted">Loading…</p>
+      </div>
+    );
+  }
+
+  if (!cat) {
+    return (
+      <div className="container-page flex min-h-[60vh] flex-col items-center justify-center gap-4 text-center">
+        <PawIcon className="h-16 w-16 text-forest-200" />
+        <h1 className="text-3xl font-extrabold">We couldn&apos;t find that cat</h1>
+        <p className="text-muted">They may already have found their forever home.</p>
+        <Link to="/cats" className="btn-primary">
+          Back to all cats
+        </Link>
+      </div>
+    );
+  }
+
+  const hasCoordinator = Boolean(
+    cat.coordinator.name || cat.coordinator.email || cat.coordinator.phone,
+  );
+
+  const productJsonLd: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: `${cat.name} — ${cat.color} Maine Coon Cat`,
+    description: cat.shortDescription || cat.story,
+    image: cat.images,
+    category: 'Maine Coon Kitten',
+    offers: {
+      '@type': 'Offer',
+      price: cat.adoptionFee,
+      priceCurrency: 'USD',
+      url: `${site.url}/cats/${cat.id}`,
+      availability:
+        cat.status === 'Adopted'
+          ? 'https://schema.org/SoldOut'
+          : cat.status === 'Pending'
+            ? 'https://schema.org/LimitedAvailability'
+            : 'https://schema.org/InStock',
+    },
+  };
+
+  const faqs = catFaqs[cat.id] || [];
+  const faqJsonLd = faqs.length > 0 ? {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    'mainEntity': faqs.map(f => ({
+      '@type': 'Question',
+      'name': f.question,
+      'acceptedAnswer': {
+        '@type': 'Answer',
+        'text': f.answer
+      }
+    }))
+  } : null;
+
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    'itemListElement': [
+      {
+        '@type': 'ListItem',
+        'position': 1,
+        'name': 'Home',
+        'item': site.url
+      },
+      {
+        '@type': 'ListItem',
+        'position': 2,
+        'name': 'Available Kittens',
+        'item': `${site.url}/cats`
+      },
+      {
+        '@type': 'ListItem',
+        'position': 3,
+        'name': cat.name,
+        'item': `${site.url}/cats/${cat.id}`
+      }
+    ]
+  };
+
+  const jsonLdData = faqJsonLd
+    ? [productJsonLd, breadcrumbJsonLd, faqJsonLd]
+    : [productJsonLd, breadcrumbJsonLd];
+
+  const facts: Array<[string, string]> = [
+    ['Age', cat.ageLabel],
+    ['Gender', cat.gender],
+    ['Colour', cat.color],
+    ['Location', cat.location],
+    ['Adoption fee', `$${cat.adoptionFee}`],
+    ['Status', cat.status],
+  ];
+
+  const health = [
+    ['Vet-checked', cat.vetChecked],
+    ['Vaccinated', cat.vaccinated],
+    ['Neutered', cat.neutered],
+    ['Microchipped', cat.microchipped],
+  ] as const;
+
+  const livesWith = [
+    ['Children', cat.goodWithChildren],
+    ['Other cats', cat.goodWithCats],
+    ['Dogs', cat.goodWithDogs],
+    ['Indoor only', cat.indoorOnly],
+  ] as const;
+
+  const share = async () => {
+    const url = window.location.href;
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: `Adopt ${cat.name}`, url });
+        return;
+      } catch {
+        /* user cancelled — fall through to modal */
+      }
+    }
+    setShareOpen(true);
+  };
+
+  return (
+    <div className="container-page py-10 md:py-14">
+      <Seo
+        title={`${cat.name} — ${cat.color} Maine Coon Kitten`}
+        description={cat.shortDescription || `Meet ${cat.name}, a ${cat.color} Maine Coon kitten available now.`}
+        image={cat.images[0]}
+        jsonLd={jsonLdData}
+      />
+      <nav className="mb-6 text-sm text-muted" aria-label="Breadcrumb">
+        <Link to="/" className="link-quiet">Home</Link> /{' '}
+        <Link to="/cats" className="link-quiet">Cats</Link> /{' '}
+        <span className="font-semibold text-forest-800">{cat.name}</span>
+      </nav>
+
+      <div className="grid gap-10 lg:grid-cols-2">
+        {/* Gallery */}
+        <div>
+          <motion.div
+            key={active}
+            initial={{ opacity: 0.4, scale: 0.99 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden rounded-3xl shadow-soft ring-1 ring-black/5"
+          >
+            <img
+              src={getOptimizedImageUrl(cat.images[active], 800, 80)}
+              alt={`${cat.name}, a ${cat.color} Maine Coon`}
+              className="aspect-[4/3] w-full object-cover"
+            />
+          </motion.div>
+          {cat.images.length > 1 && (
+            <div className="mt-3 flex gap-3">
+              {cat.images.map((src, i) => (
+                <button
+                  key={src}
+                  type="button"
+                  onClick={() => setActive(i)}
+                  className={`overflow-hidden rounded-2xl ring-2 transition ${
+                    active === i ? 'ring-forest' : 'ring-transparent opacity-70 hover:opacity-100'
+                  }`}
+                  aria-label={`View photo ${i + 1}`}
+                >
+                  <img src={getOptimizedImageUrl(src, 150, 60)} alt={`${cat.name} photo thumbnail ${i + 1}`} className="h-20 w-24 object-cover" />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Summary */}
+        <div>
+          <div className="flex flex-wrap items-center gap-3">
+            <h1 className="text-4xl font-extrabold text-forest-800">{cat.name}</h1>
+            <span className="inline-flex items-center gap-1 text-muted">
+              {cat.gender === 'Male' ? (
+                <MaleIcon className="h-5 w-5 text-sky" />
+              ) : (
+                <FemaleIcon className="h-5 w-5 text-ember" />
+              )}
+              {cat.gender}
+            </span>
+          </div>
+          <p className="mt-2 inline-flex items-center gap-1 text-muted">
+            <PinIcon className="h-4 w-4 text-forest-500" /> {cat.location}
+          </p>
+
+          <div className="mt-4 flex flex-wrap gap-2">
+            {cat.personality.map((p) => (
+              <span key={p} className="badge bg-forest-50 text-forest-700">
+                {p}
+              </span>
+            ))}
+          </div>
+
+          <p className="mt-5 leading-relaxed text-ink/85">{cat.story}</p>
+
+          <dl className="mt-6 grid grid-cols-2 gap-3">
+            {facts.map(([k, v]) => (
+              <div key={k} className="rounded-2xl bg-sand/60 px-4 py-3">
+                <dt className="text-xs font-semibold uppercase tracking-wide text-muted">{k}</dt>
+                <dd className="font-bold text-forest-800">{v}</dd>
+              </div>
+            ))}
+          </dl>
+
+          <div className="mt-6">
+            <PurchasePanel cat={cat} />
+          </div>
+
+          <div className="mt-4 flex flex-wrap gap-3">
+            <a
+              href="#adopt"
+              className="btn-ghost text-sm"
+            >
+              Have a question? Send an inquiry
+            </a>
+            <button type="button" onClick={share} className="btn-ghost text-sm">
+              <ShareIcon className="h-5 w-5" /> Share
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Videos */}
+      {cat.videos && cat.videos.length > 0 && (
+        <div className="mt-12">
+          <h2 className="text-2xl font-extrabold text-forest-800">Watch {cat.name}</h2>
+          <div className="mt-5 grid gap-5 sm:grid-cols-2">
+            {cat.videos.map((url) => (
+              <video
+                key={url}
+                src={url}
+                controls
+                playsInline
+                preload="metadata"
+                className="w-full rounded-3xl bg-ink/5 shadow-soft ring-1 ring-black/5"
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Health + compatibility */}
+      <div className="mt-12 grid gap-6 md:grid-cols-2">
+        <div className="card p-6">
+          <h2 className="text-lg font-extrabold text-forest-800">Health & care</h2>
+          <ul className="mt-4 grid grid-cols-2 gap-3 text-sm">
+            {health.map(([label, ok]) => (
+              <li key={label} className="flex items-center gap-2">
+                <span className={`flex h-6 w-6 items-center justify-center rounded-full ${ok ? 'bg-forest-100 text-forest-700' : 'bg-sand text-muted'}`}>
+                  {ok ? <CheckIcon className="h-4 w-4" /> : '–'}
+                </span>
+                {label}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="card p-6">
+          <h2 className="text-lg font-extrabold text-forest-800">Lives happily with</h2>
+          <ul className="mt-4 grid grid-cols-2 gap-3 text-sm">
+            {livesWith.map(([label, ok]) => (
+              <li key={label} className="flex items-center gap-2">
+                <span className={`flex h-6 w-6 items-center justify-center rounded-full ${ok ? 'bg-forest-100 text-forest-700' : 'bg-sand text-muted'}`}>
+                  {ok ? <CheckIcon className="h-4 w-4" /> : '–'}
+                </span>
+                {label}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      {/* Requirements + coordinator */}
+      <div className="mt-6 grid gap-6 md:grid-cols-3">
+        <div className={`card p-6 ${hasCoordinator ? 'md:col-span-2' : 'md:col-span-3'}`}>
+          <h2 className="text-lg font-extrabold text-forest-800">Reservation &amp; pickup</h2>
+          <ul className="mt-4 space-y-2 text-sm text-ink/85">
+            <li className="flex items-start gap-2"><CheckIcon className="mt-0.5 h-4 w-4 text-forest" /> A deposit reserves your kitten until pickup</li>
+            <li className="flex items-start gap-2"><CheckIcon className="mt-0.5 h-4 w-4 text-forest" /> Full health records, vaccinations &amp; a health guarantee</li>
+            <li className="flex items-start gap-2"><CheckIcon className="mt-0.5 h-4 w-4 text-forest" /> Litter-trained and ready to go home at 12+ weeks</li>
+            <li className="flex items-start gap-2"><CheckIcon className="mt-0.5 h-4 w-4 text-forest" /> Pickup in Evansville, IN — or nationwide delivery</li>
+          </ul>
+        </div>
+        {hasCoordinator && (
+          <div className="card p-6">
+            <h2 className="text-lg font-extrabold text-forest-800">{cat.name}&apos;s coordinator</h2>
+            {cat.coordinator.name && <p className="mt-3 font-semibold text-forest-700">{cat.coordinator.name}</p>}
+            {cat.coordinator.email && (
+              <a href={`mailto:${cat.coordinator.email}`} className="mt-2 flex items-center gap-2 text-sm link-quiet">
+                <MailIcon className="h-4 w-4" /> {cat.coordinator.email}
+              </a>
+            )}
+            {cat.coordinator.phone && (
+              <a href={`tel:${cat.coordinator.phone.replace(/\s/g, '')}`} className="mt-1 flex items-center gap-2 text-sm link-quiet">
+                <PhoneIcon className="h-4 w-4" /> {cat.coordinator.phone}
+              </a>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Frequently Asked Questions */}
+      {faqs.length > 0 && (
+        <div className="mt-16 border-t border-forest-100 pt-12">
+          <h2 className="text-2xl font-extrabold text-forest-800">Frequently Asked Questions about {cat.name}</h2>
+          <div className="mt-6 grid gap-6 md:grid-cols-2">
+            {faqs.map((faq, idx) => (
+              <div key={idx} className="card p-6">
+                <h3 className="text-base font-extrabold text-forest-700">{faq.question}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-ink/80">{faq.answer}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Adoption form */}
+      <div id="adopt" className="mt-14 scroll-mt-24">
+        <h2 className="text-2xl font-extrabold text-forest-800">Inquire about {cat.name}</h2>
+        <p className="mt-2 max-w-2xl text-muted">
+          Fill in the short form below and we&apos;ll be in touch within 24 hours to arrange your reservation.
+        </p>
+        <div className="mt-6 max-w-3xl">
+          <AdoptionForm catId={cat.id} catName={cat.name} />
+        </div>
+      </div>
+
+      <Modal open={shareOpen} onClose={() => setShareOpen(false)} title={`Share ${cat.name}`}>
+        Copy the link from your browser&apos;s address bar to share {cat.name}&apos;s profile and
+        help them find a home.
+      </Modal>
+    </div>
+  );
+}
