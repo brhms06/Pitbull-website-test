@@ -6,16 +6,14 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Logo from './Logo';
-import { HeartIcon, CartIcon } from './Icons';
+import { HeartIcon } from './Icons';
 import { navLinks, site } from '@/data/site';
-import { useCart } from '@/lib/cart';
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
-  const { count } = useCart();
   const closeRef = useRef<HTMLButtonElement>(null);
 
   // Only render portal after client-side hydration to avoid SSR mismatch.
@@ -97,19 +95,6 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center gap-2">
-            <Link
-              href="/cart"
-              aria-label={`Cart${count ? ` (${count})` : ''}`}
-              className="relative inline-flex h-11 w-11 items-center justify-center rounded-full text-forest-800 transition hover:bg-forest-50"
-            >
-              <CartIcon className="h-6 w-6" />
-              {count > 0 && (
-                <span className="absolute right-1 top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-ember px-1 text-[11px] font-bold text-white">
-                  {count}
-                </span>
-              )}
-            </Link>
-
             <motion.div
               className="hidden sm:block"
               animate={{ scale: [1, 1.04, 1] }}
