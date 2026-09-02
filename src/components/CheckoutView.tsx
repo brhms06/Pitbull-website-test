@@ -20,12 +20,15 @@ interface Buyer {
   phone: string;
   address: string;
   notes: string;
+  paymentMethod: string;
+  whatsappOptIn: boolean;
 }
 
-const empty: Buyer = { name: '', email: '', phone: '', address: '', notes: '' };
+const empty: Buyer = { name: '', email: '', phone: '', address: '', notes: '', paymentMethod: '', whatsappOptIn: false };
 
 export default function CheckoutView() {
   const { items, total, count, clear } = useCart();
+  const methods = getPaymentMethods();
   const [data, setData] = useState<Buyer>(empty);
   const [errors, setErrors] = useState<Partial<Record<keyof Buyer, string>>>({});
   const [submitting, setSubmitting] = useState(false);
@@ -44,6 +47,7 @@ export default function CheckoutView() {
     if (!data.email.trim()) next.email = 'An email is required.';
     else if (!emailPattern.test(data.email)) next.email = 'Enter a valid email.';
     if (!data.phone.trim()) next.phone = 'A phone number is required.';
+    if (methods.length > 0 && !data.paymentMethod) next.paymentMethod = 'Please choose a payment method.';
     setErrors(next);
     return Object.keys(next).length === 0;
   };
@@ -57,6 +61,14 @@ export default function CheckoutView() {
 
     const orderRef = makeRef();
     const orderItems = items.map((i) => ({ dogSlug: i.dogSlug, name: i.name, optionId: i.optionId, optionLabel: i.optionLabel, price: i.price }));
+    const chosenMethod = methods.find((m) => m.label === data.paymentMethod);
+    const chosenMethodText = chosenMethod ? `${chosenMethod.label}: ${chosenMethod.value}` : 'Not selected';
+    const customerWaLink =
+      data.whatsappOptIn && data.phone.trim()
+        ? `https://wa.me/${data.phone.replace(/\D/g, '')}?text=${encodeURIComponent(
+            `Hi ${data.name}, this is Ironline Bullies re: your order ${orderRef}. Your chosen payment method is ${data.paymentMethod || 'TBD'} — here are the details:`,
+          )}`
+        : '';
 
     await Promise.all([
       createOrder({
@@ -67,6 +79,9 @@ export default function CheckoutView() {
         notes: `Ref ${orderRef}${data.notes ? ` — ${data.notes}` : ''}`,
         items: orderItems,
         total,
+        paymentMethod: data.paymentMethod,
+        paymentMethodValue: chosenMethod?.value ?? '',
+        whatsappOptIn: data.whatsappOptIn,
       }).catch(() => {}),
       notify({
         type: 'order',
@@ -79,6 +94,18 @@ export default function CheckoutView() {
         total: formatPrice(total),
         notes: data.notes || 'None',
         paymentDetails: paymentMethodsText(),
+        chosenPaymentMethod: chosenMethodText,
+        customerWhatsAppLink: customerWaLink || 'Not opted in',
+      }),
+      notify({
+        type: 'order-confirmation',
+        orderRef,
+        name: data.name,
+        email: data.email,
+        total: formatPrice(total),
+        paymentMethodLabel: chosenMethod?.label ?? '',
+        paymentMethodValue: chosenMethod?.value ?? '',
+        paymentInstructions: paymentInstructions(),
       }),
     ]);
 
@@ -90,9 +117,9 @@ export default function CheckoutView() {
   };
 
   if (done) {
-    const methods = getPaymentMethods();
+    const chosen = methods.find((m) => m.label === data.paymentMethod) ?? null;
     const waHref = site.whatsapp
-      ? `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(`Hi! I placed order ${ref} (${data.name}). Total ${formatPrice(placedTotal)}. I'd like to pay.`)}`
+      ? `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(`Hi! I placed order ${ref} (${data.name}). Total ${formatPrice(placedTotal)}, paying via ${data.paymentMethod || 'the method provided'}. I'd like to send proof of payment.`)}`
       : '/contact';
     return (
       <div className="container-page max-w-2xl py-12 md:py-16">
@@ -120,32 +147,29 @@ export default function CheckoutView() {
           </div>
 
           <h2 className="mt-6 text-lg font-extrabold text-forest-800">How to pay</h2>
-          {methods.length > 0 ? (
-            <ul className="mt-4 space-y-3">
-              {methods.map((m) => (
-                <li key={m.label} className="rounded-2xl bg-sand/40 p-4">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <p className="text-sm font-bold text-forest-800">{m.label}</p>
-                      <p className="break-words text-sm text-ink/80">{m.value}</p>
-                    </div>
-                    <div className="flex shrink-0 gap-2">
-                      <CopyButton text={m.value} />
-                      {m.href && (
-                        <a href={m.href} target="_blank" rel="noopener noreferrer" className="rounded-full bg-forest px-3 py-1.5 text-xs font-semibold text-white hover:bg-forest-700">
-                          Open
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                </li>
-              ))}
-            </ul>
+          {chosen ? (
+            <div className="mt-4 rounded-2xl bg-sand/40 p-4">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="text-sm font-bold text-forest-800">{chosen.label}</p>
+                  <p className="break-words text-sm text-ink/80">{chosen.value}</p>
+                </div>
+                <div className="flex shrink-0 gap-2">
+                  <CopyButton text={chosen.value} />
+                  {chosen.href && (
+                    <a href={chosen.href} target="_blank" rel="noopener noreferrer" className="rounded-full bg-forest px-3 py-1.5 text-xs font-semibold text-white hover:bg-forest-700">
+                      Open
+                    </a>
+                  )}
+                </div>
+              </div>
+            </div>
           ) : (
             <p className="mt-3 rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-800">
               Our team will email you the payment details shortly. You can also reach us on WhatsApp below.
             </p>
           )}
+          <p className="mt-2 text-xs text-muted">A confirmation email with these details has also been sent to {data.email}.</p>
 
           <p className="mt-5 rounded-2xl bg-forest-50 px-4 py-3 text-sm text-ink/80">{paymentInstructions()}</p>
 
@@ -203,12 +227,45 @@ export default function CheckoutView() {
               <input className="input" value={data.address} onChange={(e) => update('address', e.target.value)} placeholder="e.g. Denver, CO 80202" />
             </Field>
           </div>
+
+          {methods.length > 0 && (
+            <div>
+              <span className="label">
+                Payment method <span className="text-ember">*</span>
+              </span>
+              <div className="mt-2 space-y-2">
+                {methods.map((m) => (
+                  <label
+                    key={m.label}
+                    className={`flex cursor-pointer items-center gap-3 rounded-2xl border p-3 text-sm transition ${
+                      data.paymentMethod === m.label ? 'border-forest bg-forest-50' : 'border-sand'
+                    }`}
+                  >
+                    <input type="radio" name="paymentMethod" checked={data.paymentMethod === m.label} onChange={() => update('paymentMethod', m.label)} />
+                    <span className="font-semibold text-forest-800">{m.label}</span>
+                  </label>
+                ))}
+              </div>
+              {errors.paymentMethod && <span className="mt-1 block text-sm font-medium text-red-600">{errors.paymentMethod}</span>}
+            </div>
+          )}
+
+          <label className="flex items-start gap-3 rounded-2xl bg-sand/30 p-3 text-sm">
+            <input
+              type="checkbox"
+              className="mt-0.5 h-5 w-5 rounded border-sand text-forest focus:ring-forest"
+              checked={data.whatsappOptIn}
+              onChange={(e) => setData((d) => ({ ...d, whatsappOptIn: e.target.checked }))}
+            />
+            <span>You may also contact me on WhatsApp about this order, using the phone number above.</span>
+          </label>
+
           <Field label="Notes" hint="Optional — pickup/delivery preferences, questions">
             <textarea rows={3} className="input" value={data.notes} onChange={(e) => update('notes', e.target.value)} />
           </Field>
           <p className="rounded-2xl bg-forest-50 px-4 py-3 text-xs text-ink/75">
             No payment is taken on this page. After you place the order we&apos;ll contact you to confirm availability
-            and arrange secure payment (Zelle, Cash App, Chime or Apple Pay).
+            and arrange secure payment via the method you chose above.
           </p>
         </div>
 

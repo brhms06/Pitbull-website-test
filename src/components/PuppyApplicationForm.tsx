@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import FormField from './FormField';
 import Modal from './Modal';
@@ -36,6 +37,7 @@ interface Props {
 }
 
 export default function PuppyApplicationForm({ dogId, dogName, dogs }: Props) {
+  const router = useRouter();
   const needsDogPicker = Boolean(dogs?.length) && !dogId;
   const [step, setStep] = useState(0);
   const [data, setData] = useState<ApplicationData>({
@@ -253,7 +255,7 @@ export default function PuppyApplicationForm({ dogId, dogName, dogs }: Props) {
         </div>
       </form>
 
-      <Modal open={success} onClose={() => setSuccess(false)} title="Application received!">
+      <Modal open={success} onClose={() => router.push('/')} title="Application received!">
         Thank you for applying to reserve {displayDogName}. Our team will be in touch within 24 hours to talk through the next steps.
       </Modal>
     </>

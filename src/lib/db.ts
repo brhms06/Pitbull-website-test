@@ -385,6 +385,9 @@ export async function createOrder(o: {
   notes: string;
   items: OrderItemInput[];
   total: number;
+  paymentMethod: string;
+  paymentMethodValue: string;
+  whatsappOptIn: boolean;
 }): Promise<void> {
   const { error } = await supabase.from('orders').insert({
     customer_name: o.customerName,
@@ -394,6 +397,9 @@ export async function createOrder(o: {
     notes: o.notes,
     items: o.items,
     total: o.total,
+    payment_method: o.paymentMethod,
+    payment_method_value: o.paymentMethodValue,
+    whatsapp_opt_in: o.whatsappOptIn,
   });
   if (error) throw error;
 }

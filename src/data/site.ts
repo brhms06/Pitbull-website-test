@@ -27,7 +27,7 @@ export const site = {
   phone: '(555) 010-1234',
   // WhatsApp number in international format, digits only (e.g. 18125551234).
   // Leave blank to fall back to the contact page.
-  whatsapp: '',
+  whatsapp: '237670666946',
   // Left blank on purpose — no physical address is shown on the site.
   address: '',
   responseTime: 'We aim to reply within 24 hours.',

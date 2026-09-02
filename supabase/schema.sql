@@ -99,17 +99,27 @@ create table if not exists public.newsletter_subscribers (
 );
 
 create table if not exists public.orders (
-  id             uuid primary key default gen_random_uuid(),
-  customer_name  text not null,
-  email          text not null,
-  phone          text default '',
-  address        text default '',
-  notes          text default '',
-  items          jsonb not null default '[]',
-  total          numeric not null default 0,
-  status         text not null default 'New',
-  created_at     timestamptz not null default now()
+  id                    uuid primary key default gen_random_uuid(),
+  customer_name         text not null,
+  email                 text not null,
+  phone                 text default '',
+  address               text default '',
+  notes                 text default '',
+  items                 jsonb not null default '[]',
+  total                 numeric not null default 0,
+  payment_method        text not null default '',
+  payment_method_value  text not null default '',
+  whatsapp_opt_in       boolean not null default false,
+  status                text not null default 'New',
+  created_at            timestamptz not null default now()
 );
+
+-- Adds the payment-method/WhatsApp columns to an orders table that already
+-- existed before this feature — safe to run repeatedly, no-op once applied.
+alter table public.orders
+  add column if not exists payment_method       text not null default '',
+  add column if not exists payment_method_value text not null default '',
+  add column if not exists whatsapp_opt_in      boolean not null default false;
 
 -- ---------- BLOG POSTS (admin-managed CMS) ------------------------------------
 create table if not exists public.blog_posts (
