@@ -1,7 +1,7 @@
 'use client';
 
-import { Suspense, useState, type FormEvent } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useState, type FormEvent } from 'react';
+import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase/client';
 import { PawIcon, LockIcon } from '@/components/Icons';
 
@@ -17,21 +17,11 @@ function friendlyError(msg: string): string {
 }
 
 export default function LoginPage() {
-  return (
-    <Suspense fallback={null}>
-      <LoginForm />
-    </Suspense>
-  );
-}
-
-function LoginForm() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const unauthorized = searchParams.get('unauthorized');
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(unauthorized ? "This account isn't an admin yet. Add its user id to the admins table in Supabase, then sign in again." : '');
+  const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
 
   const onSubmit = async (e: FormEvent) => {
@@ -85,7 +75,7 @@ function LoginForm() {
         </form>
 
         <p className="mt-6 text-center text-xs text-muted">
-          Need an account? Create one in your Supabase dashboard (Authentication&nbsp;→&nbsp;Users) and add it to the admins table.
+          Need an account? Create one in your Supabase dashboard (Authentication&nbsp;→&nbsp;Users) — any account you create there can sign in here.
         </p>
       </div>
     </div>

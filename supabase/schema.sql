@@ -6,9 +6,11 @@
 --   2. Paste this ENTIRE file and click "Run".  It is safe to run more than once.
 --   3. Create your admin login: Authentication -> Users -> "Add user"
 --      (enter your email + a password, tick "Auto Confirm User").
---   4. Update the bootstrap email near the bottom of this file to that address,
---      then re-run this file (or run the final INSERT manually).
---   5. Log in at  https://your-domain/admin
+--   4. Log in at  https://your-domain/admin  — any account you create in
+--      Authentication -> Users can sign in as an admin (see is_admin() below).
+--   5. IMPORTANT: disable public sign-ups (Authentication -> Settings/Providers ->
+--      turn off "Allow new users to sign up"), since anyone with an account is an
+--      admin here — the only accounts that should exist are ones you create above.
 -- =============================================================================
 
 -- ---------- DOGS / PRODUCTS ----------------------------------------------------
@@ -131,20 +133,18 @@ create table if not exists public.blog_posts (
 create index if not exists blog_posts_created_at_idx   on public.blog_posts (created_at desc);
 create index if not exists blog_posts_published_at_idx on public.blog_posts (published_at desc);
 
--- ---------- ADMINS ALLOWLIST --------------------------------------------------
--- A user is treated as an admin only if their auth id appears here.
-create table if not exists public.admins (
-  user_id    uuid primary key references auth.users (id) on delete cascade,
-  created_at timestamptz not null default now()
-);
-
+-- ---------- ADMIN CHECK --------------------------------------------------------
+-- Any signed-in Supabase user is treated as an admin — there's no separate
+-- allowlist table. This is safe ONLY because public sign-ups must stay disabled
+-- (see the HOW TO USE note above), so the only accounts that can ever exist are
+-- ones you create yourself in Authentication -> Users.
 create or replace function public.is_admin()
 returns boolean
 language sql
 security definer
 set search_path = public
 as $$
-  select exists (select 1 from public.admins a where a.user_id = auth.uid());
+  select auth.uid() is not null;
 $$;
 
 -- =============================================================================
@@ -157,7 +157,6 @@ alter table public.contact_messages      enable row level security;
 alter table public.puppy_applications    enable row level security;
 alter table public.newsletter_subscribers enable row level security;
 alter table public.orders                enable row level security;
-alter table public.admins                enable row level security;
 
 -- DOGS: everyone can read published dogs; admins can do everything.
 drop policy if exists "dogs public read" on public.dogs;
@@ -201,38 +200,6 @@ begin
       t, t);
   end loop;
 end $$;
-
--- ADMINS: a signed-in user may check whether *they* are an admin.
-drop policy if exists "admins read self" on public.admins;
-create policy "admins read self" on public.admins
-  for select using (user_id = auth.uid());
-
--- ---------- BOOTSTRAP ADMIN ACCOUNT ------------------------------------------
--- TODO: replace this placeholder email with your real admin login email.
--- This email is automatically granted admin access, whether the user is created
--- before or after this script runs.
-create or replace function public.handle_new_admin()
-returns trigger
-language plpgsql
-security definer
-set search_path = public
-as $$
-begin
-  if new.email = 'admin@ironlinebullies.com' then
-    insert into public.admins (user_id) values (new.id) on conflict do nothing;
-  end if;
-  return new;
-end $$;
-
-drop trigger if exists on_auth_user_created on auth.users;
-create trigger on_auth_user_created
-  after insert on auth.users
-  for each row execute function public.handle_new_admin();
-
--- Grant now if the account already exists.
-insert into public.admins (user_id)
-select id from auth.users where email = 'admin@ironlinebullies.com'
-on conflict do nothing;
 
 -- =============================================================================
 -- STORAGE — public bucket for dog photos & videos

@@ -16,16 +16,17 @@ from Project Settings → API into a `.env.local` file (copy `.env.example` firs
 2. Open [`supabase/schema.sql`](supabase/schema.sql), copy the whole file, paste it, click **Run**.
    - This creates all tables (including blog posts), security rules, and the puppy photo/video and blog image storage buckets.
    - It is safe to run again later.
-3. Near the bottom of the file, replace `admin@ironlinebullies.com` with your real
-   admin email **before** running it (or edit and re-run the bootstrap section only).
 
 ## 3. Create your admin login
 
 - Supabase → **Authentication → Users → Add user** — enter your email + a password,
-  tick **Auto Confirm User**.
-- If that email matches the one you set in the schema, it is automatically granted
-  admin access.
+  tick **Auto Confirm User**. Any account you create this way can sign in at `/admin` —
+  there's no separate allowlist to edit.
 - You can change the password any time in Supabase → Authentication → Users.
+- **Important**: disable public sign-ups in Supabase (**Authentication → Settings**,
+  turn off "Allow new users to sign up"). Since any account is an admin here, the only
+  accounts that should ever exist are the ones you create yourself above — the app's
+  public anon key means anyone could otherwise sign themselves up.
 
 ## 4. Log in and add puppies
 

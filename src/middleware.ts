@@ -22,11 +22,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/admin/login', request.url));
   }
 
-  const { data: isAdmin } = await supabase.rpc('is_admin');
-  if (!isAdmin) {
-    return NextResponse.redirect(new URL('/admin/login?unauthorized=1', request.url));
-  }
-
   return response;
 }
 
