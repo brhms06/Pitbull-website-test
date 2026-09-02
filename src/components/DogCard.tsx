@@ -73,11 +73,11 @@ export default function DogCard({ dog }: { dog: Dog }) {
             View Details
           </Link>
           <Link
-            href={`/dogs/${dog.id}`}
+            href={`/dogs/${dog.id}#buy`}
             className={`btn-accent flex-1 px-4 py-2.5 text-sm ${dog.status === 'Sold' ? 'pointer-events-none opacity-50' : ''}`}
             aria-disabled={dog.status === 'Sold'}
           >
-            Reserve <ArrowRightIcon className="h-4 w-4" />
+            Buy Now <ArrowRightIcon className="h-4 w-4" />
           </Link>
         </div>
       </div>

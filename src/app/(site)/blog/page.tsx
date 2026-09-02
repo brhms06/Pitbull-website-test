@@ -3,12 +3,13 @@ import Link from 'next/link';
 import PageHero from '@/components/PageHero';
 import { fetchPublishedBlogPostsServer } from '@/lib/db.server';
 import { site } from '@/data/site';
+import { pitbullPhotos } from '@/data/pitbullPhotos';
 
-const heroImg = 'https://placedog.net/1400/700?id=96';
+const heroImg = pitbullPhotos[5];
 
 export const metadata: Metadata = {
   title: 'Blog',
-  description: 'Read the latest articles about American Bully puppies, care tips, and breeder news.',
+  description: 'Read the latest articles about Pitbull puppies, care tips, and breeder news.',
 };
 
 export default async function BlogPage() {
@@ -34,7 +35,7 @@ export default async function BlogPage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([blogPageSchema, breadcrumbJsonLd]) }} />
-      <PageHero title="Our Blog" subtitle="Tips, news, and everything you need to know about American Bully puppies." image={heroImg} breadcrumb="Blog" />
+      <PageHero title="Our Blog" subtitle="Tips, news, and everything you need to know about Pitbull puppies." image={heroImg} breadcrumb="Blog" />
 
       <section className="container-page py-14 md:py-20">
         {posts.length === 0 ? (

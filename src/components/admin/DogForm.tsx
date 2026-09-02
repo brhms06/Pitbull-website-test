@@ -231,7 +231,7 @@ export default function DogForm({ rowId }: { rowId?: string }) {
             <Field label="Name" required>
               <input className="input" value={form.name} onChange={(e) => onName(e.target.value)} />
             </Field>
-            <Field label="Breed" hint="e.g. American Bully — Standard">
+            <Field label="Breed" hint="e.g. Pitbull — Standard">
               <input className="input" value={form.breed} onChange={(e) => set('breed', e.target.value)} />
             </Field>
             <Field label="Registry" hint="e.g. ABKC, UKC — leave blank if none">

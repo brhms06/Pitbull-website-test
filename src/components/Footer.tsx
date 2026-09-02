@@ -106,7 +106,7 @@ export default function Footer() {
           </div>
         </div>
         <p className="container-page pb-6 text-center text-[11px] leading-relaxed text-cream/40">
-          {site.name} is a family-run American Bully breeder. Puppies are vet-checked, vaccinated
+          {site.name} is a family-run Pitbull breeder. Puppies are vet-checked, vaccinated
           and microchipped before they travel, and every puppy comes with a written health guarantee.
         </p>
       </div>

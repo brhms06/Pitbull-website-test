@@ -16,7 +16,7 @@ const sections: Array<{ h: string; p: string[] }> = [
   {
     h: 'Who we are',
     p: [
-      `${site.name} is a family-run American Bully breeder. This policy explains what personal information we collect through this website, why we collect it, and what you can do about it.`,
+      `${site.name} is a family-run Pitbull breeder. This policy explains what personal information we collect through this website, why we collect it, and what you can do about it.`,
       `If you have any question about this policy, email us at ${site.email}.`,
     ],
   },

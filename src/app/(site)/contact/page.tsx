@@ -3,8 +3,9 @@ import PageHero from '@/components/PageHero';
 import ContactForm from '@/components/ContactForm';
 import { MailIcon, PhoneIcon, PinIcon, FacebookIcon, InstagramIcon, TikTokIcon } from '@/components/Icons';
 import { site } from '@/data/site';
+import { pitbullPhotos } from '@/data/pitbullPhotos';
 
-const heroImg = 'https://placedog.net/1400/700?id=95';
+const heroImg = pitbullPhotos[3];
 
 export const metadata: Metadata = {
   title: 'Contact Us',

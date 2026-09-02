@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useCart, formatPrice } from '@/lib/cart';
 import PaymentBadges from './PaymentBadges';
 import { CartIcon, TrashIcon, ArrowRightIcon } from './Icons';
+import { pitbullPhotos } from '@/data/pitbullPhotos';
 
 export default function CartView() {
   const { items, remove, total, count } = useCart();
@@ -32,7 +33,7 @@ export default function CartView() {
         <div className="space-y-4">
           {items.map((item) => (
             <div key={item.id} className="card flex items-center gap-4 p-4">
-              <img src={item.image || 'https://placedog.net/100/100'} alt={item.name} className="h-20 w-20 shrink-0 rounded-2xl object-cover" />
+              <img src={item.image || pitbullPhotos[0]} alt={item.name} className="h-20 w-20 shrink-0 rounded-2xl object-cover" />
               <div className="min-w-0 flex-1">
                 <Link href={`/dogs/${item.dogSlug}`} className="font-extrabold text-forest-800 hover:underline">
                   {item.name}

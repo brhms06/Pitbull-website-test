@@ -4,20 +4,21 @@ import { useState, useEffect, useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRightIcon } from './Icons';
+import { pitbullPhotos } from '@/data/pitbullPhotos';
 
 const slides = [
   {
     id: 0,
-    image: 'https://placedog.net/1600/900?id=60',
+    image: pitbullPhotos[3],
     eyebrow: 'Meet Duke',
     heading: 'Meet your new best friend',
-    sub: 'A confident, affectionate American Bully ready to join your family.',
+    sub: 'A confident, affectionate Pitbull ready to join your family.',
     location: 'Available nationwide',
     dogId: 'duke',
   },
   {
     id: 1,
-    image: 'https://placedog.net/1600/900?id=61',
+    image: pitbullPhotos[4],
     eyebrow: 'Meet Bella',
     heading: 'Fill your home with loyalty and love',
     sub: 'Playful, affectionate and utterly charming — Bella is ready to steal your heart.',
@@ -26,7 +27,7 @@ const slides = [
   },
   {
     id: 2,
-    image: 'https://placedog.net/1600/900?id=62',
+    image: pitbullPhotos[5],
     eyebrow: 'Meet Diesel',
     heading: 'Loyal companions, built strong',
     sub: 'Home-raised and beautifully socialised, Diesel is ready to come home with you.',

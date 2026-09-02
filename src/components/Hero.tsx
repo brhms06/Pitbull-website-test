@@ -5,11 +5,12 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PawIcon, ArrowRightIcon, HeartIcon } from './Icons';
 import { site } from '@/data/site';
+import { pitbullPhotos } from '@/data/pitbullPhotos';
 
 const heroImages = [
-  { src: 'https://placedog.net/1400/900?id=50', alt: 'An American Bully puppy resting peacefully' },
-  { src: 'https://placedog.net/1400/900?id=51', alt: 'A muscular American Bully gazing into the distance' },
-  { src: 'https://placedog.net/1400/900?id=52', alt: 'A gentle Bully puppy curled up in a cosy home' },
+  { src: pitbullPhotos[0], alt: 'A Pitbull puppy resting peacefully' },
+  { src: pitbullPhotos[1], alt: 'A muscular Pitbull gazing into the distance' },
+  { src: pitbullPhotos[2], alt: 'A gentle Pitbull puppy curled up in a cosy home' },
 ];
 
 const SLIDE_INTERVAL = 3000;
@@ -54,7 +55,7 @@ export default function Hero() {
             variants={fadeUp}
             className="mt-4 text-4xl font-extrabold leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl"
           >
-            Health-tested American Bully puppies <span className="text-forest">raised with love</span>
+            Health-tested Pitbull puppies <span className="text-forest">raised with love</span>
           </motion.h1>
 
           <motion.p
@@ -64,14 +65,11 @@ export default function Hero() {
             variants={fadeUp}
             className="mt-5 max-w-xl text-lg leading-relaxed text-muted"
           >
-            We raise confident, well-socialised American Bully puppies — vet-checked, vaccinated and
+            We raise confident, well-socialised Pitbull puppies — vet-checked, vaccinated and
             ready to join your family. Reserve yours today, with nationwide delivery available.
           </motion.p>
 
           <motion.div custom={3} initial="hidden" animate="show" variants={fadeUp} className="mt-8 flex flex-wrap gap-3">
-            <Link href="/dogs" className="btn-primary text-base">
-              View Available Puppies <ArrowRightIcon className="h-5 w-5" />
-            </Link>
             <motion.div animate={{ scale: [1, 1.04, 1] }} transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}>
               <Link href="/contact" className="btn-accent inline-flex items-center gap-2 text-base shadow-glow">
                 <HeartIcon className="h-5 w-5" filled /> Reserve a Puppy
@@ -100,49 +98,55 @@ export default function Hero() {
           transition={{ duration: 0.8, ease: 'easeOut' }}
           className="relative"
         >
-          <div className="relative h-[460px] overflow-hidden rounded-[2.5rem] shadow-lift ring-1 ring-black/5">
-            <AnimatePresence>
-              <motion.img
-                key={index}
-                src={heroImages[index].src}
-                alt={heroImages[index].alt}
-                className="absolute inset-0 h-full w-full object-cover"
-                initial={{ opacity: 0, scale: 1.12 }}
-                animate={{ opacity: 1, scale: 1.04 }}
-                exit={{ opacity: 0, scale: 1.04 }}
-                transition={{
-                  opacity: { duration: 0.7, ease: 'easeInOut' },
-                  scale: { duration: SLIDE_INTERVAL / 1000 + 0.7, ease: 'easeOut' },
-                }}
-                fetchPriority="high"
-              />
-            </AnimatePresence>
-
-            <div className="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 gap-2">
-              {heroImages.map((img, i) => (
-                <button
-                  key={img.src}
-                  type="button"
-                  onClick={() => setIndex(i)}
-                  aria-label={`Show dog photo ${i + 1}`}
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    i === index ? 'w-7 bg-white' : 'w-2 bg-white/60 hover:bg-white/80'
-                  }`}
+          <div className="relative">
+            <div className="relative h-[460px] overflow-hidden rounded-[2.5rem] shadow-lift ring-1 ring-black/5">
+              <AnimatePresence>
+                <motion.img
+                  key={index}
+                  src={heroImages[index].src}
+                  alt={heroImages[index].alt}
+                  className="absolute inset-0 h-full w-full object-cover"
+                  initial={{ opacity: 0, scale: 1.12 }}
+                  animate={{ opacity: 1, scale: 1.04 }}
+                  exit={{ opacity: 0, scale: 1.04 }}
+                  transition={{
+                    opacity: { duration: 0.7, ease: 'easeInOut' },
+                    scale: { duration: SLIDE_INTERVAL / 1000 + 0.7, ease: 'easeOut' },
+                  }}
+                  fetchPriority="high"
                 />
-              ))}
+              </AnimatePresence>
+
+              <div className="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 gap-2">
+                {heroImages.map((img, i) => (
+                  <button
+                    key={img.src}
+                    type="button"
+                    onClick={() => setIndex(i)}
+                    aria-label={`Show dog photo ${i + 1}`}
+                    className={`h-2 rounded-full transition-all duration-300 ${
+                      i === index ? 'w-7 bg-white' : 'w-2 bg-white/60 hover:bg-white/80'
+                    }`}
+                  />
+                ))}
+              </div>
             </div>
+
+            <motion.div
+              className="absolute -bottom-5 -left-5 z-10 hidden rounded-2xl bg-white p-4 shadow-lift ring-1 ring-black/5 sm:block"
+              animate={{ y: [0, -8, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <p className="flex items-center gap-1.5 text-sm font-bold text-forest-800">
+                <PawIcon className="h-4 w-4 text-forest-600" /> Home-raised with love
+              </p>
+              <p className="text-xs text-muted">Vet-checked &amp; vaccinated</p>
+            </motion.div>
           </div>
 
-          <motion.div
-            className="absolute -bottom-5 -left-5 z-10 hidden rounded-2xl bg-white p-4 shadow-lift ring-1 ring-black/5 sm:block"
-            animate={{ y: [0, -8, 0] }}
-            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <p className="flex items-center gap-1.5 text-sm font-bold text-forest-800">
-              <PawIcon className="h-4 w-4 text-forest-600" /> Home-raised with love
-            </p>
-            <p className="text-xs text-muted">Vet-checked &amp; vaccinated</p>
-          </motion.div>
+          <Link href="/dogs" className="btn-primary mt-10 inline-flex text-base sm:mt-8">
+            View Available Puppies <ArrowRightIcon className="h-5 w-5" />
+          </Link>
         </motion.div>
       </div>
     </section>

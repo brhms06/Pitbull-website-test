@@ -148,7 +148,7 @@ export default async function DogDetailPage({ params }: Props) {
             ))}
           </dl>
 
-          <div className="mt-6">
+          <div id="buy" className="mt-6 scroll-mt-24">
             <PurchasePanel dog={dog} />
           </div>
 

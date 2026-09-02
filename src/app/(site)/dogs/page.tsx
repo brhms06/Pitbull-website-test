@@ -3,12 +3,13 @@ import PageHero from '@/components/PageHero';
 import DogsBrowser from '@/components/DogsBrowser';
 import { site } from '@/data/site';
 import { fetchPublicDogsServer } from '@/lib/db.server';
+import { pitbullPhotos } from '@/data/pitbullPhotos';
 
-const heroImg = 'https://placedog.net/1400/700?id=90';
+const heroImg = pitbullPhotos[2];
 
 export const metadata: Metadata = {
-  title: 'Available American Bully Puppies',
-  description: 'Browse available American Bully puppies — vet-checked, vaccinated and home-raised. Reserve yours today, with nationwide delivery.',
+  title: 'Available Pitbull Puppies',
+  description: 'Browse available Pitbull puppies — vet-checked, vaccinated and home-raised. Reserve yours today, with nationwide delivery.',
 };
 
 export default async function DogsPage() {
@@ -44,7 +45,7 @@ export default async function DogsPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema ? [itemListSchema, breadcrumbJsonLd] : breadcrumbJsonLd) }}
       />
-      <PageHero title="Available American Bully Puppies" subtitle="Browse our available puppies — vet-checked, vaccinated and ready for their new homes. Nationwide delivery available." image={heroImg} />
+      <PageHero title="Available Pitbull Puppies" subtitle="Browse our available puppies — vet-checked, vaccinated and ready for their new homes. Nationwide delivery available." image={heroImg} />
 
       <section className="container-page py-12 md:py-16">
         <DogsBrowser dogs={dogs} />

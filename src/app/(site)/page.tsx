@@ -17,6 +17,7 @@ import {
   StarIcon,
 } from '@/components/Icons';
 import { fetchPublicDogsServer, fetchPublicTestimonialsServer } from '@/lib/db.server';
+import { pitbullPhotos } from '@/data/pitbullPhotos';
 
 const services = [
   { icon: <HeartIcon className="h-7 w-7" />, title: 'Health-Tested', text: 'Every puppy is vet-checked, vaccinated and comes with a written health guarantee.' },
@@ -26,7 +27,7 @@ const services = [
 ];
 
 const reservationSteps = [
-  { step: '01', icon: <SearchIcon className="h-6 w-6" />, title: 'Browse our puppies', text: 'Explore our available American Bully puppies and find the one whose look and personality you love.' },
+  { step: '01', icon: <SearchIcon className="h-6 w-6" />, title: 'Browse our puppies', text: 'Explore our available Pitbull puppies and find the one whose look and personality you love.' },
   { step: '02', icon: <ClipboardIcon className="h-6 w-6" />, title: 'Reserve with a deposit', text: 'Place a deposit to hold your puppy. We keep you updated with photos and videos as they grow.' },
   { step: '03', icon: <ShieldIcon className="h-6 w-6" />, title: 'Health check & vaccines', text: 'Your puppy is vet-checked, vaccinated and ready to go home once old enough to travel.' },
   { step: '04', icon: <HeartIcon className="h-6 w-6" />, title: 'Pickup or delivery', text: 'Collect your puppy in person, or we arrange safe nationwide delivery to your door.' },
@@ -47,7 +48,7 @@ export default async function HomePage() {
           <div>
             <h2 className="text-2xl font-extrabold text-white sm:text-3xl">Loyal Companions, Built Strong</h2>
             <p className="mt-2 max-w-2xl text-cream/80">
-              American Bullies are confident, affectionate and devoted — and we raise ours with love from day one, so
+              Pitbulls are confident, affectionate and devoted — and we raise ours with love from day one, so
               they settle into your family with ease.
             </p>
           </div>
@@ -82,14 +83,14 @@ export default async function HomePage() {
         <div className="container-page grid items-center gap-12 lg:grid-cols-2">
           <div className="relative hidden h-[460px] lg:block">
             <img
-              src="https://placedog.net/700/900?id=70"
-              alt="An American Bully being cared for at home"
+              src={pitbullPhotos[6]}
+              alt="A Pitbull being cared for at home"
               loading="lazy"
               className="absolute right-0 top-0 h-4/5 w-3/4 rounded-[2rem] object-cover shadow-lift"
             />
             <img
-              src="https://placedog.net/500/500?id=71"
-              alt="A happy American Bully puppy in a loving home"
+              src={pitbullPhotos[7]}
+              alt="A happy Pitbull puppy in a loving home"
               loading="lazy"
               className="absolute bottom-0 left-0 h-2/5 w-2/5 rounded-[1.5rem] object-cover shadow-lift ring-4 ring-cream"
             />
@@ -100,9 +101,9 @@ export default async function HomePage() {
           </div>
 
           <Reveal>
-            <SectionHeading align="left" eyebrow="About us" title="A breeder built on love for the American Bully" className="!mx-0" />
+            <SectionHeading align="left" eyebrow="About us" title="A breeder built on love for the Pitbull" className="!mx-0" />
             <p className="mt-5 leading-relaxed text-ink/85">
-              Founded in {site.foundedYear} by a family of American Bully lovers, we raise our puppies underfoot in
+              Founded in {site.foundedYear} by a family of Pitbull lovers, we raise our puppies underfoot in
               our home — never in kennels — so they grow up confident, affectionate and ready to bond with you.
             </p>
             <p className="mt-4 leading-relaxed text-ink/85">
@@ -180,7 +181,7 @@ export default async function HomePage() {
       {/* Testimonials */}
       {testimonials.length > 0 && (
         <section className="container-page py-16 md:py-24">
-          <SectionHeading eyebrow="Happy families" title="What our families say" description="Families across the country trust us for healthy, well-socialised American Bully puppies." />
+          <SectionHeading eyebrow="Happy families" title="What our families say" description="Families across the country trust us for healthy, well-socialised Pitbull puppies." />
           <Reveal stagger={0.1} className="mt-12 grid gap-6 md:grid-cols-3">
             {testimonials.slice(0, 3).map((t) => (
               <div key={t.id} className="card flex flex-col gap-3 p-6">
@@ -257,7 +258,7 @@ export default async function HomePage() {
       <section className="relative overflow-hidden bg-forest-800 py-16 text-center text-white md:py-20">
         <div className="absolute inset-0 bg-paw-pattern opacity-20" aria-hidden />
         <div className="container-page relative">
-          <h2 className="mx-auto max-w-2xl text-3xl font-extrabold text-white sm:text-4xl">Ready to welcome an American Bully puppy?</h2>
+          <h2 className="mx-auto max-w-2xl text-3xl font-extrabold text-white sm:text-4xl">Ready to welcome a Pitbull puppy?</h2>
           <p className="mx-auto mt-4 max-w-xl text-cream/80">
             Reserve your puppy today and we&apos;ll guide you through every step — from deposit to delivery. Your new
             best friend is waiting.

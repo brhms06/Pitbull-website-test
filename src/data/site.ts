@@ -7,7 +7,7 @@
  */
 export const site = {
   name: 'Ironline Bullies',
-  tagline: 'Family-Raised American Bully Puppies',
+  tagline: 'Family-Raised Pitbull Puppies',
   shortPitch: 'Loyal companions, built strong.',
   foundedYear: 2015,
   soldCount: '300+',
@@ -18,9 +18,9 @@ export const site = {
   // Your live domain (no trailing slash). Used for canonical URLs & sitemap.
   url: 'https://ironlinebullies.com',
   seoDescription:
-    'Health-tested, home-raised American Bully puppies. Vet-checked, vaccinated and raised with love — reserve your puppy today, with nationwide delivery available.',
+    'Health-tested, home-raised Pitbull puppies. Vet-checked, vaccinated and raised with love — reserve your puppy today, with nationwide delivery available.',
   keywords:
-    'American Bully puppies, pitbull puppies for sale, American Bully breeder, XL Bully puppies, buy pitbull puppy, reserve American Bully puppy',
+    'Pitbull puppies, pitbull puppies for sale, Pitbull breeder, XL Pitbull puppies, buy pitbull puppy, reserve a Pitbull puppy',
 
   // --- Placeholder contact details ---
   // TODO: this is temporarily your own inbox so Resend's sandbox mode can

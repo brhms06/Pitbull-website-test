@@ -6,8 +6,9 @@ import TrustBadge from '@/components/TrustBadge';
 import { ShieldIcon, HeartIcon, PawIcon, ArrowRightIcon, StarIcon, HandshakeIcon } from '@/components/Icons';
 import { team } from '@/data/team';
 import { site } from '@/data/site';
+import { pitbullPhotos } from '@/data/pitbullPhotos';
 
-const heroImg = 'https://placedog.net/1400/700?id=80';
+const heroImg = pitbullPhotos[8];
 
 const values = [
   { icon: <HeartIcon className="h-7 w-7" />, title: 'Compassion first', text: 'Every puppy is raised underfoot in our home with patience and affection — from birth to the day they go home.' },
@@ -16,8 +17,8 @@ const values = [
 ];
 
 export const metadata: Metadata = {
-  title: 'About Us — American Bully Breeder',
-  description: `Learn about ${site.name}, how we home-raise healthy, socialized American Bully puppies, and our written health guarantee.`,
+  title: 'About Us — Pitbull Breeder',
+  description: `Learn about ${site.name}, how we home-raise healthy, socialized Pitbull puppies, and our written health guarantee.`,
 };
 
 export default function AboutPage() {
@@ -25,7 +26,7 @@ export default function AboutPage() {
     '@context': 'https://schema.org',
     '@type': 'AboutPage',
     name: `About Us | ${site.name}`,
-    description: `Learn about ${site.name}, how we home-raise healthy, socialized American Bully puppies, and our written health guarantee.`,
+    description: `Learn about ${site.name}, how we home-raise healthy, socialized Pitbull puppies, and our written health guarantee.`,
     url: `${site.url}/about`,
     mainEntity: { '@type': 'PetStore', name: site.name, url: site.url },
   };
@@ -44,7 +45,7 @@ export default function AboutPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([aboutPageSchema, breadcrumbJsonLd]) }} />
       <PageHero
         title={`About ${site.name}`}
-        subtitle="A small, passionate breeder raising healthy, well-socialised American Bully puppies for families across the US."
+        subtitle="A small, passionate breeder raising healthy, well-socialised Pitbull puppies for families across the US."
         image={heroImg}
         breadcrumb="About Us"
       />
@@ -53,10 +54,10 @@ export default function AboutPage() {
       <section className="container-page py-14 md:py-20">
         <div className="grid items-center gap-10 lg:grid-cols-2">
           <div className="overflow-hidden rounded-[2.5rem] shadow-lift ring-1 ring-black/5">
-            <img src="https://placedog.net/900/700?id=81" alt="An American Bully resting comfortably" loading="lazy" className="h-full w-full object-cover" />
+            <img src={pitbullPhotos[0]} alt="A Pitbull resting comfortably" loading="lazy" className="h-full w-full object-cover" />
           </div>
           <div>
-            <SectionHeading align="left" eyebrow="Our story" title={`Raising exceptional American Bully puppies since ${site.foundedYear}`} className="!mx-0" />
+            <SectionHeading align="left" eyebrow="Our story" title={`Raising exceptional Pitbull puppies since ${site.foundedYear}`} className="!mx-0" />
             <p className="mt-5 leading-relaxed text-ink/85">
               {site.name} began with a simple love for this loyal, muscular breed. Our puppies are raised underfoot
               in our home — not in kennels — so they grow up confident, affectionate and beautifully socialised with
@@ -70,7 +71,7 @@ export default function AboutPage() {
             <div className="mt-6 rounded-2xl bg-forest-50 p-5">
               <p className="font-bold text-forest-800">Our promise</p>
               <p className="mt-1 text-sm text-ink/80">
-                To raise healthy, happy, well-socialised American Bully puppies and match them with loving families —
+                To raise healthy, happy, well-socialised Pitbull puppies and match them with loving families —
                 with support for life.
               </p>
             </div>
@@ -123,19 +124,19 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Why American Bullies */}
+      {/* Why Pitbulls */}
       <section className="bg-forest-800 py-14 text-white md:py-20">
         <div className="container-page grid items-center gap-10 lg:grid-cols-2">
           <div className="overflow-hidden rounded-[2.5rem] shadow-lift lg:order-2">
-            <img src="https://placedog.net/900/700?id=82" alt="A muscular American Bully" loading="lazy" className="h-full w-full object-cover" />
+            <img src={pitbullPhotos[1]} alt="A muscular Pitbull" loading="lazy" className="h-full w-full object-cover" />
           </div>
           <div className="lg:order-1">
             <span className="badge inline-flex items-center gap-1.5 bg-white/15 text-white">
               <PawIcon className="h-3.5 w-3.5" /> The breed
             </span>
-            <h2 className="mt-3 text-3xl font-extrabold text-white">Why families love American Bullies</h2>
+            <h2 className="mt-3 text-3xl font-extrabold text-white">Why families love Pitbulls</h2>
             <p className="mt-4 leading-relaxed text-cream/85">
-              American Bullies are one of the most affectionate, family-oriented breeds — confident, sociable and
+              Pitbulls are one of the most affectionate, family-oriented breeds — confident, sociable and
               devoted to their people. Their sturdy build and gentle, loyal personalities make them a wonderful
               addition to any home.
             </p>

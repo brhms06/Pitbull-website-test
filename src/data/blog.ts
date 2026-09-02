@@ -1,3 +1,5 @@
+import { pitbullPhotos } from '@/data/pitbullPhotos';
+
 export interface BlogPost {
   id: string;
   slug: string;
@@ -14,25 +16,28 @@ export const blogPosts: BlogPost[] = [
   {
     id: '1',
     slug: 'american-bully-vs-pitbull-difference',
-    title: 'American Bully vs. Pitbull: What Is the Difference?',
+    title: 'Pitbull Puppies 101: Sizes, Colors & Temperament Explained',
     date: '2024-02-10',
     author: 'Ironline Bullies',
     excerpt:
-      '"Pitbull" and "American Bully" get used interchangeably, but they are not the same thing. Here is how the breeds actually compare.',
+      'Pitbulls come in more shapes, colors and sizes than most people expect. Here is what to know before choosing your puppy.',
     content: `
-      <h2>Two Related, Distinct Breeds</h2>
-      <p>"Pitbull" is an umbrella term that usually refers to the American Pit Bull Terrier and similar breeds. The American Bully is a newer breed, developed in the 1990s by breeding American Pit Bull Terriers with American Staffordshire Terriers and other bully breeds to emphasize a bulkier, more compact build.</p>
+      <h2>Not Just One Look</h2>
+      <p>"Pitbull" covers a range of builds, from lean and athletic to short and heavily muscled. Whatever the build, well-bred, well-socialized Pitbulls share the same core traits: they are loyal, people-oriented and eager to be part of the family.</p>
 
-      <h3>Build and Size</h3>
-      <p>American Pit Bull Terriers are lean, athletic and built for endurance. American Bullies are shorter, wider and more heavily muscled, bred primarily as companion dogs rather than working dogs. Bullies also come in size classes — Pocket, Standard, Classic and XL.</p>
+      <h3>Size Classes Explained</h3>
+      <p>Our puppies are grouped into four size classes — Pocket (compact, often under 20 lbs), Standard (the classic mid-size build), Classic (a leaner, more athletic frame), and XL (taller and heavier, often 90+ lbs at maturity). The class affects adult size and build, not temperament — every size makes an equally devoted companion.</p>
 
-      <h3>Temperament</h3>
-      <p>Both breeds are known for being affectionate, loyal and great with families when properly socialized. American Bullies were specifically bred to have an even more stable, people-oriented temperament, which is part of why they have become such popular family companions.</p>
+      <h3>Coat Colors You'll See</h3>
+      <p>Pitbulls come in a wide range of colors: solid fawn, blue, black and red, striking brindle and merle patterns, and rarer dilute colors like lilac and chocolate tri. Color is purely cosmetic and has no bearing on health or personality.</p>
 
-      <h3>Which One Is Right for You?</h3>
-      <p>If you want an athletic, high-energy companion for hiking and training, a Pit Bull Terrier may be the better fit. If you want a lower-energy, muscular companion who is happy to relax at home, an American Bully is worth a look. Either way, always ask a breeder about health testing and socialization before bringing a puppy home.</p>
+      <h3>Temperament: What to Really Expect</h3>
+      <p>A well-raised Pitbull is affectionate, loyal and typically great with children when properly socialized from puppyhood. They thrive on attention and do best as part of an active family life rather than left alone for long stretches.</p>
+
+      <h3>Choosing the Right Puppy for Your Home</h3>
+      <p>Think about space and energy level: a Pocket or Classic Pitbull suits smaller households, while a Standard or XL needs more room to stretch out. Whichever size you choose, always ask about health testing, vaccinations and socialization before bringing a puppy home.</p>
     `,
-    image: 'https://placedog.net/1400/700?id=21',
+    image: pitbullPhotos[6],
     published: true,
   },
   {
@@ -54,9 +59,9 @@ export const blogPosts: BlogPost[] = [
       <p>Start basic house training in earnest, introduce short positive-reinforcement training sessions, and begin gentle socialization — new sounds, surfaces and (once fully vaccinated) safe introductions to other dogs.</p>
 
       <h3>Health Checklist</h3>
-      <p>Schedule your first vet visit within 72 hours of pickup, keep up with the vaccination schedule your breeder provided, and ask about spay/neuter timing appropriate for a bully breed's growth plates.</p>
+      <p>Schedule your first vet visit within 72 hours of pickup, keep up with the vaccination schedule your breeder provided, and ask about spay/neuter timing appropriate for a Pitbull's growth plates.</p>
     `,
-    image: 'https://placedog.net/1400/700?id=22',
+    image: pitbullPhotos[7],
     published: true,
   },
 ];

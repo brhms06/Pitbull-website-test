@@ -2,12 +2,13 @@ import type { Metadata } from 'next';
 import PageHero from '@/components/PageHero';
 import PuppyApplicationForm from '@/components/PuppyApplicationForm';
 import { fetchPublicDogsServer } from '@/lib/db.server';
+import { pitbullPhotos } from '@/data/pitbullPhotos';
 
-const heroImg = 'https://placedog.net/1400/700?id=95';
+const heroImg = pitbullPhotos[4];
 
 export const metadata: Metadata = {
   title: 'Reserve a Puppy',
-  description: 'Start your reservation for an American Bully puppy — pick the puppy you love and tell us about your home in a few short steps.',
+  description: 'Start your reservation for a Pitbull puppy — pick the puppy you love and tell us about your home in a few short steps.',
 };
 
 export default async function ReservePage() {

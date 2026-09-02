@@ -1,11 +1,13 @@
 import type { Dog } from '@/types';
+import { pitbullPhotos } from '@/data/pitbullPhotos';
 
 /**
- * Placeholder puppy data. Photos are stand-ins from placedog.net — swap this
- * array's `images` (or manage dogs entirely through the admin dashboard, which
- * uploads to Supabase Storage) once real photos are available.
+ * Placeholder puppy data. Photos are real Pitbull photos from dog.ceo's free
+ * breed API — swap this array's `images` (or manage dogs entirely through the
+ * admin dashboard, which uploads to Supabase Storage) once real photos of
+ * your own puppies are available.
  */
-const img = (id: number, w = 900, h = 700) => `https://placedog.net/${w}/${h}?id=${id}`;
+const img = (i: number) => pitbullPhotos[i % pitbullPhotos.length];
 
 const coordinators = {
   jt: { name: '', email: '', phone: '' },
@@ -17,8 +19,8 @@ export const dogs: Dog[] = [
   {
     id: 'duke',
     name: 'Duke',
-    breed: 'American Bully — Standard',
-    registry: 'ABKC',
+    breed: 'Pitbull — Standard',
+    registry: 'UKC',
     weightLabel: '65 lbs (adult)',
     ageLabel: '2 years old',
     ageGroup: 'Young',
@@ -38,15 +40,15 @@ export const dogs: Dog[] = [
     coordinator: coordinators.jt,
     personality: ['Loyal', 'Confident', 'Gentle giant'],
     shortDescription:
-      'A muscular 2-year-old Blue American Bully with a rock-solid temperament and a heart of gold.',
+      'A muscular 2-year-old Blue Pitbull with a rock-solid temperament and a heart of gold.',
     story:
-      'Duke is a striking Blue American Bully with the broad chest and compact build the breed is known for. He is confident without being pushy, deeply loyal to his people, and surprisingly gentle around kids. Duke is health-tested, vet-checked, vaccinated and microchipped, and comes with a written health guarantee. If you want a devoted, athletic companion who will guard your home and cuddle on the couch in the same breath, Duke is ready to meet you.',
+      'Duke is a striking Blue Pitbull with the broad chest and compact build the breed is known for. He is confident without being pushy, deeply loyal to his people, and surprisingly gentle around kids. Duke is health-tested, vet-checked, vaccinated and microchipped, and comes with a written health guarantee. If you want a devoted, athletic companion who will guard your home and cuddle on the couch in the same breath, Duke is ready to meet you.',
     images: [img(1), img(2)],
   },
   {
     id: 'bella',
     name: 'Bella',
-    breed: 'American Bully — Pocket',
+    breed: 'Pitbull — Pocket',
     registry: 'UKC',
     weightLabel: '15 lbs (est. adult)',
     ageLabel: '10 weeks old',
@@ -67,16 +69,16 @@ export const dogs: Dog[] = [
     coordinator: coordinators.mr,
     personality: ['Playful', 'Affectionate', 'Curious'],
     shortDescription:
-      'A compact, big-hearted Fawn Pocket Bully puppy — playful, people-focused and easy to fall for.',
+      'A compact, big-hearted Fawn Pocket Pitbull puppy — playful, people-focused and easy to fall for.',
     story:
-      'Bella is a Pocket-sized American Bully with a personality twice her size. At 10 weeks old she is already confident, curious and glued to her people. She has had her first round of vaccinations, a full vet check, and comes microchipped with a written health guarantee. Bella gets along with everyone — kids, other dogs, even the family cat. If you want a compact, easygoing companion who will grow into a loyal shadow, Bella is ready for her forever home.',
+      'Bella is a Pocket-sized Pitbull with a personality twice her size. At 10 weeks old she is already confident, curious and glued to her people. She has had her first round of vaccinations, a full vet check, and comes microchipped with a written health guarantee. Bella gets along with everyone — kids, other dogs, even the family cat. If you want a compact, easygoing companion who will grow into a loyal shadow, Bella is ready for her forever home.',
     images: [img(3), img(4)],
   },
   {
     id: 'zeus',
     name: 'Zeus',
-    breed: 'American Bully — XL',
-    registry: 'ABKC',
+    breed: 'Pitbull — XL',
+    registry: 'UKC',
     weightLabel: '95 lbs (adult)',
     ageLabel: '3 years old',
     ageGroup: 'Adult',
@@ -96,9 +98,9 @@ export const dogs: Dog[] = [
     coordinator: coordinators.jt,
     personality: ['Calm', 'Protective', 'Devoted'],
     shortDescription:
-      'A commanding 3-year-old XL Bully with a calm, steady temperament and a deeply protective streak.',
+      'A commanding 3-year-old XL Pitbull with a calm, steady temperament and a deeply protective streak.',
     story:
-      'Zeus is everything an XL American Bully should be — massive, muscular and unmistakably calm. He is devoted to his family, exceptionally patient with children, and naturally protective without a hint of aggression. Zeus prefers to be the only dog in the household, where he can settle in and bond fully. He is fully vet-checked, neutered, vaccinated and microchipped. If you want a dependable, larger-than-life companion, Zeus is your dog.',
+      'Zeus is everything an XL Pitbull should be — massive, muscular and unmistakably calm. He is devoted to his family, exceptionally patient with children, and naturally protective without a hint of aggression. Zeus prefers to be the only dog in the household, where he can settle in and bond fully. He is fully vet-checked, neutered, vaccinated and microchipped. If you want a dependable, larger-than-life companion, Zeus is your dog.',
     images: [img(5), img(6)],
   },
   {
@@ -133,8 +135,8 @@ export const dogs: Dog[] = [
   {
     id: 'diesel',
     name: 'Diesel',
-    breed: 'American Bully — Classic',
-    registry: 'ABKC',
+    breed: 'Pitbull — Classic',
+    registry: 'UKC',
     weightLabel: '55 lbs (adult)',
     ageLabel: '4 years old',
     ageGroup: 'Adult',
@@ -154,15 +156,15 @@ export const dogs: Dog[] = [
     coordinator: coordinators.mr,
     personality: ['Easygoing', 'Social', 'Food-motivated'],
     shortDescription:
-      'A social, easygoing 4-year-old Chocolate Tri Classic Bully who loves people, pets and treats equally.',
+      'A social, easygoing 4-year-old Chocolate Tri Classic Pitbull who loves people, pets and treats equally.',
     story:
-      'Diesel has the leaner "Classic" American Bully build and a personality to match his striking chocolate tri coat — social, easygoing and endlessly food-motivated. He gets along with everyone he meets, two-legged or four. Diesel is neutered, fully vaccinated, vet-checked and microchipped, and comes with a written health guarantee. A wonderful choice for a first-time Bully owner.',
+      'Diesel has the leaner "Classic" Pitbull build and a personality to match his striking chocolate tri coat — social, easygoing and endlessly food-motivated. He gets along with everyone he meets, two-legged or four. Diesel is neutered, fully vaccinated, vet-checked and microchipped, and comes with a written health guarantee. A wonderful choice for a first-time Pitbull owner.',
     images: [img(9), img(10)],
   },
   {
     id: 'rosie',
     name: 'Rosie',
-    breed: 'American Bully — Standard',
+    breed: 'Pitbull — Standard',
     registry: 'UKC',
     weightLabel: '50 lbs (adult)',
     ageLabel: '6 months old',
@@ -183,16 +185,16 @@ export const dogs: Dog[] = [
     coordinator: coordinators.jt,
     personality: ['Bouncy', 'Affectionate', 'Bold'],
     shortDescription:
-      'A rare Lilac Standard Bully with a bouncy, affectionate personality and a striking dilute coat.',
+      'A rare Lilac Standard Pitbull with a bouncy, affectionate personality and a striking dilute coat.',
     story:
-      'Rosie is a stunning Lilac American Bully — a rare, sought-after dilute color paired with a bouncy, affectionate personality. At 6 months she already carries herself with confidence, and she adores attention from everyone she meets. Rosie is up to date on vaccinations, vet-checked and microchipped, with a full health guarantee. If you want a head-turning puppy who will grow into a loyal family guardian, Rosie is the one.',
+      'Rosie is a stunning Lilac Pitbull — a rare, sought-after dilute color paired with a bouncy, affectionate personality. At 6 months she already carries herself with confidence, and she adores attention from everyone she meets. Rosie is up to date on vaccinations, vet-checked and microchipped, with a full health guarantee. If you want a head-turning puppy who will grow into a loyal family guardian, Rosie is the one.',
     images: [img(11), img(12)],
   },
   {
     id: 'titan',
     name: 'Titan',
-    breed: 'American Bully — XL',
-    registry: 'ABKC',
+    breed: 'Pitbull — XL',
+    registry: 'UKC',
     weightLabel: '100 lbs (adult)',
     ageLabel: '5 years old',
     ageGroup: 'Senior',
@@ -212,16 +214,16 @@ export const dogs: Dog[] = [
     coordinator: coordinators.al,
     personality: ['Dignified', 'Quiet', 'Loyal to one person'],
     shortDescription:
-      'A dignified, quiet senior XL Bully looking for a calm home where he can be the only pet.',
+      'A dignified, quiet senior XL Pitbull looking for a calm home where he can be the only pet.',
     story:
-      'Titan is a striking Merle XL Bully who has settled into a calm, dignified senior temperament. He bonds intensely with one person and prefers a quiet household without other pets or young children. Titan is neutered, vet-checked, vaccinated and microchipped, with a reduced price to help him find a loving home quickly. If you want a devoted one-person dog to share your couch, Titan will not disappoint.',
+      'Titan is a striking Merle XL Pitbull who has settled into a calm, dignified senior temperament. He bonds intensely with one person and prefers a quiet household without other pets or young children. Titan is neutered, vet-checked, vaccinated and microchipped, with a reduced price to help him find a loving home quickly. If you want a devoted one-person dog to share your couch, Titan will not disappoint.',
     images: [img(13), img(14)],
   },
   {
     id: 'sadie',
     name: 'Sadie',
-    breed: 'American Bully — Pocket',
-    registry: 'ABKC',
+    breed: 'Pitbull — Pocket',
+    registry: 'UKC',
     weightLabel: '18 lbs (adult)',
     ageLabel: '18 months old',
     ageGroup: 'Young',
@@ -241,15 +243,15 @@ export const dogs: Dog[] = [
     coordinator: coordinators.mr,
     personality: ['Sweet', 'Compact', 'Great with kids'],
     shortDescription:
-      'A sweet, compact Black Pocket Bully — now happily settled with her new family.',
+      'A sweet, compact Black Pocket Pitbull — now happily settled with her new family.',
     story:
-      'Success story: Sadie has found her forever home! This sweet, compact Black Pocket Bully was raised underfoot in our home from birth and quickly won over her new family with her gentle, kid-friendly nature. While Sadie is no longer available, she represents exactly the kind of well-socialized, health-tested puppy we raise. Browse our current litter for a puppy just like her.',
+      'Success story: Sadie has found her forever home! This sweet, compact Black Pocket Pitbull was raised underfoot in our home from birth and quickly won over her new family with her gentle, kid-friendly nature. While Sadie is no longer available, she represents exactly the kind of well-socialized, health-tested puppy we raise. Browse our current litter for a puppy just like her.',
     images: [img(15), img(16)],
   },
   {
     id: 'bruno',
     name: 'Bruno',
-    breed: 'American Bully — Standard',
+    breed: 'Pitbull — Standard',
     registry: 'UKC',
     weightLabel: '70 lbs (adult)',
     ageLabel: '2 years old',
@@ -270,15 +272,15 @@ export const dogs: Dog[] = [
     coordinator: coordinators.jt,
     personality: ['Goofy', 'Sturdy', 'Family-oriented'],
     shortDescription:
-      'A goofy, sturdy 2-year-old Red Bully who thinks he is a lapdog and loves every member of the family.',
+      'A goofy, sturdy 2-year-old Red Pitbull who thinks he is a lapdog and loves every member of the family.',
     story:
-      'Bruno is a big, goofy Red American Bully who never got the memo that he is not a lapdog. He is sturdy, silly and endlessly affectionate with the whole family — kids, other dogs and even the cat included. Bruno is fully vet-checked, neutered, vaccinated and microchipped, with a written health guarantee. If you want a large, loving clown of a dog, Bruno is ready to move in.',
+      'Bruno is a big, goofy Red Pitbull who never got the memo that he is not a lapdog. He is sturdy, silly and endlessly affectionate with the whole family — kids, other dogs and even the cat included. Bruno is fully vet-checked, neutered, vaccinated and microchipped, with a written health guarantee. If you want a large, loving clown of a dog, Bruno is ready to move in.',
     images: [img(17), img(18)],
   },
   {
     id: 'coco',
     name: 'Coco',
-    breed: 'American Bully — Classic',
+    breed: 'Pitbull — Classic',
     registry: '',
     weightLabel: '12 lbs (est. adult)',
     ageLabel: '9 weeks old',
@@ -299,9 +301,9 @@ export const dogs: Dog[] = [
     coordinator: coordinators.al,
     personality: ['Tiny', 'Fearless', 'Snuggly'],
     shortDescription:
-      'A tiny, fearless Chocolate Classic Bully puppy who already thinks she runs the house.',
+      'A tiny, fearless Chocolate Classic Pitbull puppy who already thinks she runs the house.',
     story:
-      'Coco is a small-framed Classic Bully puppy with a personality that fills the whole room. At 9 weeks old she is fearless, snuggly, and already following the family dog around like a shadow. Coco has had her first vaccinations, a complete vet check, and comes microchipped with a full health guarantee. If you want a compact, confident puppy to grow alongside your family, Coco is ready to come home.',
+      'Coco is a small-framed Classic Pitbull puppy with a personality that fills the whole room. At 9 weeks old she is fearless, snuggly, and already following the family dog around like a shadow. Coco has had her first vaccinations, a complete vet check, and comes microchipped with a full health guarantee. If you want a compact, confident puppy to grow alongside your family, Coco is ready to come home.',
     images: [img(19), img(20)],
   },
 ];
