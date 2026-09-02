@@ -23,7 +23,10 @@ export const site = {
     'American Bully puppies, pitbull puppies for sale, American Bully breeder, XL Bully puppies, buy pitbull puppy, reserve American Bully puppy',
 
   // --- Placeholder contact details ---
-  email: 'info@ironlinebullies.com',
+  // TODO: this is temporarily your own inbox so Resend's sandbox mode can
+  // actually deliver test notifications. Switch back to the real business
+  // email once you've verified a sending domain in Resend.
+  email: 'broomuhams@gmail.com',
   phone: '(555) 010-1234',
   // WhatsApp number in international format, digits only (e.g. 18125551234).
   // Leave blank to fall back to the contact page.
