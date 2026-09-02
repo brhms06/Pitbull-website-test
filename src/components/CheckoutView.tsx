@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useCart, formatPrice } from '@/lib/cart';
 import { createOrder } from '@/lib/db';
-import { sendWeb3Form } from '@/lib/web3forms';
+import { notify } from '@/lib/notify';
 import { getPaymentMethods, paymentInstructions, paymentMethodsText } from '@/lib/payment';
 import PaymentBadges from './PaymentBadges';
 import { CartIcon, CheckIcon, WhatsAppIcon, ArrowRightIcon } from './Icons';
@@ -58,29 +58,29 @@ export default function CheckoutView() {
     const orderRef = makeRef();
     const orderItems = items.map((i) => ({ dogSlug: i.dogSlug, name: i.name, optionId: i.optionId, optionLabel: i.optionLabel, price: i.price }));
 
-    await createOrder({
-      customerName: data.name,
-      email: data.email,
-      phone: data.phone,
-      address: data.address,
-      notes: `Ref ${orderRef}${data.notes ? ` — ${data.notes}` : ''}`,
-      items: orderItems,
-      total,
-    }).catch(() => {});
-
-    await sendWeb3Form({
-      subject: `New puppy order ${orderRef} — ${formatPrice(total)} from ${data.name}`,
-      from_name: data.name,
-      order_reference: orderRef,
-      name: data.name,
-      email: data.email,
-      phone: data.phone,
-      delivery_address: data.address || 'Not provided',
-      order: itemsSummary,
-      total: formatPrice(total),
-      notes: data.notes || 'None',
-      payment_details_for_buyer: paymentMethodsText(),
-    });
+    await Promise.all([
+      createOrder({
+        customerName: data.name,
+        email: data.email,
+        phone: data.phone,
+        address: data.address,
+        notes: `Ref ${orderRef}${data.notes ? ` — ${data.notes}` : ''}`,
+        items: orderItems,
+        total,
+      }).catch(() => {}),
+      notify({
+        type: 'order',
+        orderRef,
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        address: data.address || 'Not provided',
+        items: itemsSummary,
+        total: formatPrice(total),
+        notes: data.notes || 'None',
+        paymentDetails: paymentMethodsText(),
+      }),
+    ]);
 
     setRef(orderRef);
     setPlacedTotal(total);

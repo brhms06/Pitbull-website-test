@@ -3,11 +3,12 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase/client';
-import { PawIcon, HomeIcon, ShoppingBagIcon, ClipboardIcon, ArrowRightIcon, StarIcon } from '@/components/Icons';
+import { PawIcon, HomeIcon, ShoppingBagIcon, ClipboardIcon, ArrowRightIcon, StarIcon, MegaphoneIcon } from '@/components/Icons';
 
 const nav = [
   { href: '/admin', label: 'Dashboard', icon: <HomeIcon className="h-5 w-5" />, exact: true },
   { href: '/admin/dogs', label: 'Puppies', icon: <ShoppingBagIcon className="h-5 w-5" />, exact: false },
+  { href: '/admin/blog', label: 'Blog', icon: <MegaphoneIcon className="h-5 w-5" />, exact: false },
   { href: '/admin/testimonials', label: 'Testimonials', icon: <StarIcon className="h-5 w-5" />, exact: false },
   { href: '/admin/submissions', label: 'Submissions', icon: <ClipboardIcon className="h-5 w-5" />, exact: false },
 ];

@@ -77,6 +77,7 @@ export const navLinks = [
   { label: 'Home', href: '/' },
   { label: 'About Us', href: '/about' },
   { label: 'Available Puppies', href: '/dogs' },
+  { label: 'Reserve a Puppy', href: '/reserve' },
   { label: 'Blog', href: '/blog' },
   { label: 'Contact', href: '/contact' },
 ] as const;

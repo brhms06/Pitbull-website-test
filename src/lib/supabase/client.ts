@@ -10,8 +10,10 @@ import { createBrowserClient } from '@supabase/ssr';
  * TODO: replace the fallback URL/key with your own Supabase project's values,
  * or set NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY in `.env.local`.
  */
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? 'https://YOUR-PROJECT-ref.supabase.co';
-const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? 'your-anon-key';
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? 'https://msgcdajmlelowisaqgpj.supabase.co';
+const SUPABASE_ANON_KEY =
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ??
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1zZ2NkYWptbGVsb3dpc2FxZ3BqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgyNzYzMDUsImV4cCI6MjEwMzg1MjMwNX0.QyOQdoiQzIBqbvGhZLBxbN1ASwJ1SXmABoecPPAKung';
 
 export function createClient() {
   return createBrowserClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -19,6 +21,9 @@ export function createClient() {
 
 /** Storage bucket that holds uploaded dog photos/videos. */
 export const DOG_IMAGES_BUCKET = 'dog-images';
+
+/** Storage bucket that holds uploaded blog post images. */
+export const BLOG_IMAGES_BUCKET = 'blog-images';
 
 /** Shared singleton for client components that don't need a fresh instance. */
 export const supabase = createClient();

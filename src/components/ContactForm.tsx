@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import FormField from './FormField';
 import Modal from './Modal';
 import { appendSubmission } from '@/lib/localStorage-utils';
-import { sendWeb3Form } from '@/lib/web3forms';
+import { notify } from '@/lib/notify';
 import { submitContact } from '@/lib/db';
 
 interface ContactData {
@@ -46,16 +46,7 @@ export default function ContactForm() {
     e.preventDefault();
     if (!validate()) return;
     setSubmitting(true);
-    await sendWeb3Form({
-      subject: `New contact message: ${data.subject}`,
-      from_name: data.name,
-      name: data.name,
-      email: data.email,
-      phone: data.phone || 'Not provided',
-      topic: data.subject,
-      message: data.message,
-    });
-    await submitContact(data).catch(() => {});
+    await Promise.all([notify({ type: 'contact', ...data }), submitContact(data).catch(() => {})]);
     appendSubmission('ilb:contact', data);
     setSubmitting(false);
     setSuccess(true);

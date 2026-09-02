@@ -109,6 +109,28 @@ create table if not exists public.orders (
   created_at     timestamptz not null default now()
 );
 
+-- ---------- BLOG POSTS (admin-managed CMS) ------------------------------------
+create table if not exists public.blog_posts (
+  id                uuid primary key default gen_random_uuid(),
+  slug              text unique not null,
+  title             text not null,
+  excerpt           text not null default '',
+  content_json      jsonb not null default '[]',
+  content_html      text not null default '',
+  featured_image    text not null default '',
+  og_image          text not null default '',
+  meta_title        text not null default '',
+  meta_description  text not null default '',
+  tags              text[] not null default '{}',
+  author            text not null default 'Ironline Bullies',
+  published         boolean not null default false,
+  published_at      timestamptz,
+  created_at        timestamptz not null default now(),
+  updated_at        timestamptz not null default now()
+);
+create index if not exists blog_posts_created_at_idx   on public.blog_posts (created_at desc);
+create index if not exists blog_posts_published_at_idx on public.blog_posts (published_at desc);
+
 -- ---------- ADMINS ALLOWLIST --------------------------------------------------
 -- A user is treated as an admin only if their auth id appears here.
 create table if not exists public.admins (
@@ -130,6 +152,7 @@ $$;
 -- =============================================================================
 alter table public.dogs                  enable row level security;
 alter table public.testimonials          enable row level security;
+alter table public.blog_posts            enable row level security;
 alter table public.contact_messages      enable row level security;
 alter table public.puppy_applications    enable row level security;
 alter table public.newsletter_subscribers enable row level security;
@@ -151,6 +174,15 @@ drop policy if exists "testimonials admin all"   on public.testimonials;
 create policy "testimonials public read" on public.testimonials
   for select using (published = true or public.is_admin());
 create policy "testimonials admin all" on public.testimonials
+  for all using (public.is_admin()) with check (public.is_admin());
+
+-- BLOG POSTS: everyone can read published posts; admins manage them.
+-- No public insert policy — posts are only ever written by an admin.
+drop policy if exists "blog posts public read" on public.blog_posts;
+drop policy if exists "blog posts admin all"   on public.blog_posts;
+create policy "blog posts public read" on public.blog_posts
+  for select using (published = true or public.is_admin());
+create policy "blog posts admin all" on public.blog_posts
   for all using (public.is_admin()) with check (public.is_admin());
 
 -- SUBMISSIONS: anyone can insert (submit a form); only admins can read/manage.
@@ -222,3 +254,24 @@ create policy "dog images admin update" on storage.objects
   for update using (bucket_id = 'dog-images' and public.is_admin());
 create policy "dog images admin delete" on storage.objects
   for delete using (bucket_id = 'dog-images' and public.is_admin());
+
+-- =============================================================================
+-- STORAGE — public bucket for blog post images
+-- =============================================================================
+insert into storage.buckets (id, name, public, file_size_limit)
+values ('blog-images', 'blog-images', true, 20971520)
+on conflict (id) do update set public = true, file_size_limit = 20971520;
+
+drop policy if exists "blog images public read" on storage.objects;
+drop policy if exists "blog images admin write"  on storage.objects;
+drop policy if exists "blog images admin update" on storage.objects;
+drop policy if exists "blog images admin delete" on storage.objects;
+
+create policy "blog images public read" on storage.objects
+  for select using (bucket_id = 'blog-images');
+create policy "blog images admin write" on storage.objects
+  for insert with check (bucket_id = 'blog-images' and public.is_admin());
+create policy "blog images admin update" on storage.objects
+  for update using (bucket_id = 'blog-images' and public.is_admin());
+create policy "blog images admin delete" on storage.objects
+  for delete using (bucket_id = 'blog-images' and public.is_admin());

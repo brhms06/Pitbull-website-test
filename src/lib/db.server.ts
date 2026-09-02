@@ -1,8 +1,9 @@
 import { createClient } from './supabase/server';
 import { dogs as seedDogs } from '@/data/dogs';
 import { testimonials as seedTestimonials } from '@/data/testimonials';
+import { blogPosts as seedBlogPosts, type BlogPost } from '@/data/blog';
 import type { Dog, Testimonial } from '@/types';
-import { rowToAdminDog, type DogRow } from './db';
+import { rowToAdminDog, rowToBlogPost, type DogRow, type BlogPostRow } from './db';
 
 /** Server-side variant of fetchPublicDogs, for use in Server Components. */
 export async function fetchPublicDogsServer(): Promise<Dog[]> {
@@ -47,4 +48,25 @@ export async function fetchPublicTestimonialsServer(): Promise<Testimonial[]> {
     rating: r.rating,
     photo: r.photo_url,
   }));
+}
+
+/** Server-side variant of fetchPublishedBlogPosts, for use in Server Components. */
+export async function fetchPublishedBlogPostsServer(): Promise<BlogPost[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('blog_posts')
+    .select('*')
+    .eq('published', true)
+    .order('published_at', { ascending: false });
+
+  if (error || !data) return seedBlogPosts.filter((p) => p.published);
+  return (data as BlogPostRow[]).map(rowToBlogPost);
+}
+
+export async function fetchPublishedBlogPostBySlugServer(slug: string): Promise<BlogPost | undefined> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.from('blog_posts').select('*').eq('slug', slug).eq('published', true).maybeSingle();
+
+  if (error) return seedBlogPosts.find((p) => p.slug === slug);
+  return data ? rowToBlogPost(data as BlogPostRow) : undefined;
 }

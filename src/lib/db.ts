@@ -1,6 +1,7 @@
-import { supabase, DOG_IMAGES_BUCKET } from './supabase/client';
+import { supabase, DOG_IMAGES_BUCKET, BLOG_IMAGES_BUCKET } from './supabase/client';
 import { dogs as seedDogs } from '@/data/dogs';
 import { testimonials as seedTestimonials } from '@/data/testimonials';
+import { blogPosts as seedBlogPosts, type BlogPost } from '@/data/blog';
 import type { Dog, AgeGroup, DogGender, DogStatus, Testimonial } from '@/types';
 
 /** Shape of a row in the `dogs` table (snake_case). */
@@ -438,4 +439,207 @@ export async function submitPuppyApplication(a: {
 export async function submitNewsletter(email: string): Promise<void> {
   const { error } = await supabase.from('newsletter_subscribers').insert({ email });
   if (error) throw error;
+}
+
+// ---------------------------------------------------------------------------
+// BLOG POSTS (admin-managed CMS)
+// ---------------------------------------------------------------------------
+
+/** Shape of a row in the `blog_posts` table (snake_case). */
+export interface BlogPostRow {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  content_json: unknown[];
+  content_html: string;
+  featured_image: string;
+  og_image: string;
+  meta_title: string;
+  meta_description: string;
+  tags: string[];
+  author: string;
+  published: boolean;
+  published_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+/** Editable blog post fields used by the admin form. `id` is the row uuid (edit only). */
+export interface BlogPostInput {
+  id?: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  contentJson: unknown[];
+  contentHtml: string;
+  featuredImage: string;
+  ogImage: string;
+  metaTitle: string;
+  metaDescription: string;
+  tags: string[];
+  author: string;
+  published: boolean;
+  /** First-publish timestamp — set once by the form, then carried forward unchanged. */
+  publishedAt: string | null;
+}
+
+/** A blog post with its admin metadata (db uuid + block content) attached. */
+export interface AdminBlogPost {
+  rowId: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  contentJson: unknown[];
+  contentHtml: string;
+  featuredImage: string;
+  ogImage: string;
+  metaTitle: string;
+  metaDescription: string;
+  tags: string[];
+  author: string;
+  published: boolean;
+  publishedAt: string | null;
+  createdAt: string;
+}
+
+export const rowToAdminBlogPost = (r: BlogPostRow): AdminBlogPost => ({
+  rowId: r.id,
+  slug: r.slug,
+  title: r.title,
+  excerpt: r.excerpt,
+  contentJson: r.content_json ?? [],
+  contentHtml: r.content_html,
+  featuredImage: r.featured_image,
+  ogImage: r.og_image,
+  metaTitle: r.meta_title,
+  metaDescription: r.meta_description,
+  tags: r.tags ?? [],
+  author: r.author,
+  published: r.published,
+  publishedAt: r.published_at,
+  createdAt: r.created_at,
+});
+
+/** Maps a DB row to the public-facing `BlogPost` shape used by the site's blog pages. */
+export const rowToBlogPost = (r: BlogPostRow): BlogPost => ({
+  id: r.id,
+  slug: r.slug,
+  title: r.title,
+  date: r.published_at ?? r.created_at,
+  author: r.author,
+  excerpt: r.excerpt,
+  content: r.content_html,
+  image: r.featured_image,
+  published: r.published,
+});
+
+const inputToBlogRow = (p: BlogPostInput) => ({
+  slug: p.slug,
+  title: p.title,
+  excerpt: p.excerpt,
+  content_json: p.contentJson,
+  content_html: p.contentHtml,
+  featured_image: p.featuredImage,
+  og_image: p.ogImage,
+  meta_title: p.metaTitle,
+  meta_description: p.metaDescription,
+  tags: p.tags,
+  author: p.author,
+  published: p.published,
+  published_at: p.publishedAt,
+});
+
+// ---- PUBLIC READS ----
+
+export async function fetchPublishedBlogPosts(): Promise<BlogPost[]> {
+  const { data, error } = await supabase
+    .from('blog_posts')
+    .select('*')
+    .eq('published', true)
+    .order('published_at', { ascending: false });
+
+  if (error || !data) {
+    console.warn('[db] falling back to seed blog posts:', error?.message);
+    return seedBlogPosts.filter((p) => p.published);
+  }
+  return (data as BlogPostRow[]).map(rowToBlogPost);
+}
+
+export async function fetchPublishedBlogPostBySlug(slug: string): Promise<BlogPost | undefined> {
+  const { data, error } = await supabase.from('blog_posts').select('*').eq('slug', slug).eq('published', true).maybeSingle();
+
+  if (error) return seedBlogPosts.find((p) => p.slug === slug);
+  return data ? rowToBlogPost(data as BlogPostRow) : undefined;
+}
+
+// ---- ADMIN READS / WRITES ----
+
+export async function fetchAllBlogPosts(): Promise<AdminBlogPost[]> {
+  const { data, error } = await supabase.from('blog_posts').select('*').order('created_at', { ascending: false });
+  if (error) throw error;
+  return (data as BlogPostRow[]).map(rowToAdminBlogPost);
+}
+
+export async function fetchBlogPostByRowId(rowId: string): Promise<AdminBlogPost | null> {
+  const { data, error } = await supabase.from('blog_posts').select('*').eq('id', rowId).maybeSingle();
+  if (error) throw error;
+  return data ? rowToAdminBlogPost(data as BlogPostRow) : null;
+}
+
+export async function createBlogPost(input: BlogPostInput): Promise<void> {
+  const { error } = await supabase.from('blog_posts').insert(inputToBlogRow(input));
+  if (error) throw error;
+}
+
+export async function updateBlogPost(rowId: string, input: BlogPostInput): Promise<void> {
+  const { error } = await supabase.from('blog_posts').update(inputToBlogRow(input)).eq('id', rowId);
+  if (error) throw error;
+}
+
+export async function deleteBlogPost(rowId: string): Promise<void> {
+  const { error } = await supabase.from('blog_posts').delete().eq('id', rowId);
+  if (error) throw error;
+}
+
+/** Quick publish / unpublish toggle from the blog list. Stamps `published_at` the first time a post goes live. */
+export async function setBlogPostPublished(rowId: string, published: boolean, publishedAt: string | null): Promise<void> {
+  const { error } = await supabase
+    .from('blog_posts')
+    .update({ published, published_at: publishedAt ?? (published ? new Date().toISOString() : null) })
+    .eq('id', rowId);
+  if (error) throw error;
+}
+
+/** Upload one blog content/featured image to storage and return its public URL. */
+export async function uploadBlogImage(file: File, slug: string): Promise<string> {
+  const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
+  const path = `${slug || 'post'}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+  const { error } = await supabase.storage.from(BLOG_IMAGES_BUCKET).upload(path, file, { cacheControl: '3600', upsert: false });
+  if (error) throw error;
+  const { data } = supabase.storage.from(BLOG_IMAGES_BUCKET).getPublicUrl(path);
+  return data.publicUrl;
+}
+
+/** One-time helper: import the bundled demo blog posts into an empty table. */
+export async function importSeedBlogPosts(): Promise<number> {
+  const rows = seedBlogPosts.map((p, i) => ({
+    slug: p.slug,
+    title: p.title,
+    excerpt: p.excerpt,
+    content_json: [],
+    content_html: p.content,
+    featured_image: p.image,
+    og_image: '',
+    meta_title: '',
+    meta_description: '',
+    tags: [],
+    author: p.author,
+    published: p.published,
+    published_at: p.date ? new Date(p.date).toISOString() : new Date().toISOString(),
+    created_at: new Date(Date.now() - (seedBlogPosts.length - i) * 1000).toISOString(),
+  }));
+  const { error } = await supabase.from('blog_posts').upsert(rows, { onConflict: 'slug' });
+  if (error) throw error;
+  return rows.length;
 }

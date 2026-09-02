@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import FormField from './FormField';
 import Modal from './Modal';
 import { appendSubmission } from '@/lib/localStorage-utils';
-import { sendWeb3Form } from '@/lib/web3forms';
+import { notify } from '@/lib/notify';
 import { submitPuppyApplication } from '@/lib/db';
 import { CheckIcon } from './Icons';
 
@@ -27,11 +27,20 @@ const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phonePattern = /^[+\d][\d\s()-]{6,}$/;
 const steps = ['About you', 'Your home', 'Confirm'];
 
-export default function PuppyApplicationForm({ dogId, dogName }: { dogId: string; dogName: string }) {
+interface Props {
+  /** Pre-chosen dog (dog detail page). Omit together with `dogName` to show the picker below instead. */
+  dogId?: string;
+  dogName?: string;
+  /** Reservable dogs to pick from, used only when no `dogId` is pre-chosen (the standalone /reserve page). */
+  dogs?: { id: string; name: string }[];
+}
+
+export default function PuppyApplicationForm({ dogId, dogName, dogs }: Props) {
+  const needsDogPicker = Boolean(dogs?.length) && !dogId;
   const [step, setStep] = useState(0);
   const [data, setData] = useState<ApplicationData>({
-    dogId,
-    dogName,
+    dogId: dogId ?? '',
+    dogName: dogName ?? '',
     name: '',
     email: '',
     phone: '',
@@ -51,9 +60,16 @@ export default function PuppyApplicationForm({ dogId, dogName }: { dogId: string
     setErrors((e) => ({ ...e, [key]: undefined }));
   };
 
+  const chooseDog = (id: string) => {
+    const chosen = dogs?.find((d) => d.id === id);
+    setData((d) => ({ ...d, dogId: id, dogName: chosen?.name ?? '' }));
+    setErrors((e) => ({ ...e, dogId: undefined }));
+  };
+
   const validateStep = (current: number): boolean => {
     const next: typeof errors = {};
     if (current === 0) {
+      if (needsDogPicker && !data.dogId) next.dogId = 'Please choose a puppy.';
       if (!data.name.trim()) next.name = 'Please enter your name.';
       if (!data.email.trim()) next.email = 'An email is required.';
       else if (!emailPattern.test(data.email)) next.email = 'Enter a valid email.';
@@ -77,26 +93,28 @@ export default function PuppyApplicationForm({ dogId, dogName }: { dogId: string
     e.preventDefault();
     if (!validateStep(2)) return;
     setSubmitting(true);
-    await sendWeb3Form({
-      subject: `New puppy application for ${data.dogName || 'a puppy'}`,
-      from_name: data.name,
-      name: data.name,
-      email: data.email,
-      phone: data.phone,
-      dog: data.dogName,
-      location: data.address,
-      home_type: data.homeType,
-      children: data.hasChildren,
-      other_pets: data.hasPets,
-      experience: data.experience || 'Not provided',
-    });
-    await submitPuppyApplication(data).catch(() => {});
+    await Promise.all([
+      notify({
+        type: 'application',
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        dogName: data.dogName,
+        address: data.address,
+        homeType: data.homeType,
+        hasChildren: data.hasChildren,
+        hasPets: data.hasPets,
+        experience: data.experience || 'Not provided',
+      }),
+      submitPuppyApplication(data).catch(() => {}),
+    ]);
     appendSubmission('ilb:applications', data);
     setSubmitting(false);
     setSuccess(true);
   };
 
   const inputCls = (field: keyof ApplicationData) => `input ${errors[field] ? 'input-error' : ''}`;
+  const displayDogName = data.dogName || 'this puppy';
 
   return (
     <>
@@ -121,6 +139,18 @@ export default function PuppyApplicationForm({ dogId, dogName }: { dogId: string
           <motion.div key={step} initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ duration: 0.25 }}>
             {step === 0 && (
               <div className="grid gap-5 sm:grid-cols-2">
+                {needsDogPicker && (
+                  <FormField label="Which puppy are you interested in?" htmlFor="a-dog" required error={errors.dogId} className="sm:col-span-2">
+                    <select id="a-dog" className={inputCls('dogId')} value={data.dogId} onChange={(e) => chooseDog(e.target.value)}>
+                      <option value="">Select a puppy…</option>
+                      {dogs!.map((d) => (
+                        <option key={d.id} value={d.id}>
+                          {d.name}
+                        </option>
+                      ))}
+                    </select>
+                  </FormField>
+                )}
                 <FormField label="Full name" htmlFor="a-name" required error={errors.name}>
                   <input id="a-name" className={inputCls('name')} value={data.name} onChange={(e) => update('name', e.target.value)} autoComplete="name" />
                 </FormField>
@@ -171,7 +201,7 @@ export default function PuppyApplicationForm({ dogId, dogName }: { dogId: string
             {step === 2 && (
               <div>
                 <div className="rounded-2xl bg-forest-50 p-5 text-sm">
-                  <p className="font-bold text-forest-800">You&apos;re applying to reserve {dogName}.</p>
+                  <p className="font-bold text-forest-800">You&apos;re applying to reserve {displayDogName}.</p>
                   <ul className="mt-3 space-y-1.5 text-ink/80">
                     <li>
                       <strong>Name:</strong> {data.name || '—'}
@@ -191,7 +221,7 @@ export default function PuppyApplicationForm({ dogId, dogName }: { dogId: string
                   </ul>
                 </div>
                 <p className="mt-4 text-xs text-muted">
-                  Our process includes a friendly chat and a short reference check to make sure {dogName} is the right match for your family.
+                  Our process includes a friendly chat and a short reference check to make sure {displayDogName} is the right match for your family.
                 </p>
                 <label className="mt-4 flex items-start gap-3 text-sm">
                   <input type="checkbox" checked={data.agree} onChange={(e) => update('agree', e.target.checked)} className="mt-1 h-5 w-5 rounded border-sand text-forest focus:ring-forest" />
@@ -224,7 +254,7 @@ export default function PuppyApplicationForm({ dogId, dogName }: { dogId: string
       </form>
 
       <Modal open={success} onClose={() => setSuccess(false)} title="Application received!">
-        Thank you for applying to reserve {dogName}. Our team will be in touch within 24 hours to talk through the next steps.
+        Thank you for applying to reserve {displayDogName}. Our team will be in touch within 24 hours to talk through the next steps.
       </Modal>
     </>
   );

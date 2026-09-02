@@ -1,0 +1,67 @@
+import { NextResponse } from 'next/server';
+import { Resend } from 'resend';
+import { site } from '@/data/site';
+
+type NotifyPayload = { type: 'contact' | 'application' | 'order' | 'newsletter' } & Record<string, unknown>;
+
+function buildEmail(payload: NotifyPayload): { subject: string; text: string } {
+  switch (payload.type) {
+    case 'contact':
+      return {
+        subject: `New contact message: ${payload.subject ?? 'General'}`,
+        text: `From: ${payload.name} <${payload.email}>\nPhone: ${payload.phone || 'Not provided'}\nTopic: ${payload.subject}\n\n${payload.message}`,
+      };
+    case 'application':
+      return {
+        subject: `New puppy application for ${payload.dogName || 'a puppy'}`,
+        text: `Name: ${payload.name}\nEmail: ${payload.email}\nPhone: ${payload.phone}\nPuppy: ${payload.dogName}\nLocation: ${payload.address}\nHome type: ${payload.homeType}\nChildren: ${payload.hasChildren}\nOther pets: ${payload.hasPets}\nExperience: ${payload.experience || 'Not provided'}`,
+      };
+    case 'order':
+      return {
+        subject: `New puppy order ${payload.orderRef ?? ''} — ${payload.total ?? ''} from ${payload.name ?? ''}`,
+        text: `Order ref: ${payload.orderRef}\nName: ${payload.name}\nEmail: ${payload.email}\nPhone: ${payload.phone}\nDelivery: ${payload.address || 'Not provided'}\n\nItems:\n${payload.items}\n\nTotal: ${payload.total}\nNotes: ${payload.notes || 'None'}`,
+      };
+    case 'newsletter':
+      return {
+        subject: 'New newsletter subscriber',
+        text: `Email: ${payload.email}`,
+      };
+    default:
+      return { subject: 'New website submission', text: JSON.stringify(payload, null, 2) };
+  }
+}
+
+/**
+ * POST /api/notify — sends the admin notification email via Resend.
+ * The API key stays server-only (never NEXT_PUBLIC_). Always resolves 200,
+ * so a missing key or a Resend failure never blocks the caller's form.
+ *
+ * NOTE: without a verified sending domain in Resend, mail can only be sent
+ * from `onboarding@resend.dev` and only *to* the Resend account owner's own
+ * email address. Verify a domain in the Resend dashboard once you're ready
+ * to deliver to `site.email` for real.
+ */
+export async function POST(request: Request) {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) return NextResponse.json({ ok: false });
+
+  try {
+    const payload = (await request.json()) as NotifyPayload;
+    const { subject, text } = buildEmail(payload);
+    const resend = new Resend(apiKey);
+    const { error } = await resend.emails.send({
+      from: 'Ironline Bullies <onboarding@resend.dev>',
+      to: [site.email],
+      subject,
+      text,
+    });
+    if (error) {
+      console.error('[notify] Resend error:', error);
+      return NextResponse.json({ ok: false });
+    }
+    return NextResponse.json({ ok: true });
+  } catch (err) {
+    console.error('[notify] failed:', err);
+    return NextResponse.json({ ok: false });
+  }
+}
