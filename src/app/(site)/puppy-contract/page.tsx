@@ -68,7 +68,17 @@ export default async function PuppyContractPage() {
     <>
       <PageHero title="Puppy Contract" breadcrumb="Puppy Contract" subtitle="What to expect when you reserve and buy a puppy from us." />
       <article className="container-page max-w-3xl py-14 md:py-20">
-        <p className="text-sm text-muted">Last updated: {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
+        <section>
+          <h2 className="text-2xl font-extrabold text-forest-800">Sign this contract</h2>
+          <p className="mt-3 leading-relaxed text-ink/85">
+            Ready to move forward? Fill in your details and sign below — we&apos;ll email you and our team a copy. The full terms are below for your reference.
+          </p>
+          <div className="mt-6">
+            <PuppyContractForm dogs={reservable} />
+          </div>
+        </section>
+
+        <p className="mt-12 text-sm text-muted">Last updated: {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
         {sections.map((s) => (
           <section key={s.h} className="mt-8">
             <h2 className="text-2xl font-extrabold text-forest-800">{s.h}</h2>
@@ -79,16 +89,6 @@ export default async function PuppyContractPage() {
             ))}
           </section>
         ))}
-
-        <section className="mt-12">
-          <h2 className="text-2xl font-extrabold text-forest-800">Sign this contract</h2>
-          <p className="mt-3 leading-relaxed text-ink/85">
-            Ready to move forward? Fill in your details, review the terms above and sign below — we&apos;ll email you and our team a copy.
-          </p>
-          <div className="mt-6">
-            <PuppyContractForm dogs={reservable} />
-          </div>
-        </section>
       </article>
     </>
   );

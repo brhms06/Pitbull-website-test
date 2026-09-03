@@ -60,6 +60,9 @@ export default function Hero() {
                 <HeartIcon className="h-5 w-5" filled /> Bring Me Home
               </Link>
             </motion.div>
+            <Link href="/dogs" className="btn-primary hidden items-center gap-2 text-base lg:inline-flex">
+              View Available Puppies <ArrowRightIcon className="h-5 w-5" />
+            </Link>
           </div>
 
           <dl
@@ -127,7 +130,7 @@ export default function Hero() {
             </motion.div>
           </div>
 
-          <Link href="/dogs" className="btn-primary mt-10 inline-flex text-base sm:mt-8">
+          <Link href="/dogs" className="btn-primary mt-10 inline-flex text-base sm:mt-8 lg:hidden">
             View Available Puppies <ArrowRightIcon className="h-5 w-5" />
           </Link>
         </div>
