@@ -260,57 +260,61 @@ export default function DogForm({ rowId }: { rowId?: string }) {
           </div>
         </section>
 
-        {/* More basics */}
-        <section className="card space-y-4 p-6">
-          <h2 className="text-lg font-extrabold text-forest-800">More basics</h2>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Registry" hint="e.g. ABKC, UKC — leave blank if none">
-              <input className="input" value={form.registry} onChange={(e) => set('registry', e.target.value)} />
-            </Field>
-            <Field label="Weight" hint='e.g. "45 lbs (est. adult)"'>
-              <input className="input" value={form.weightLabel} onChange={(e) => set('weightLabel', e.target.value)} />
-            </Field>
-            <Field label="Age group">
-              <select className="input" value={form.ageGroup} onChange={(e) => set('ageGroup', e.target.value as AgeGroup)}>
-                {ageGroups.map((g) => (
-                  <option key={g}>{g}</option>
-                ))}
-              </select>
-            </Field>
-            <Field label="Color" hint="e.g. Blue, Fawn, Chocolate tri">
-              <input className="input" value={form.color} onChange={(e) => set('color', e.target.value)} />
-            </Field>
-          </div>
-          <Field label="Personality traits" hint="Comma separated, e.g. Loyal, Playful">
-            <input className="input" value={personalityText} onChange={(e) => setPersonalityText(e.target.value)} />
-          </Field>
-          <label className="flex items-center gap-3 text-sm font-semibold text-forest-800">
-            <input type="checkbox" checked={form.published} onChange={(e) => set('published', e.target.checked)} className="h-5 w-5 rounded border-sand text-forest focus:ring-forest" />
-            Published (visible on the live site)
-          </label>
-        </section>
+        {editing && (
+          <>
+            {/* More basics */}
+            <section className="card space-y-4 p-6">
+              <h2 className="text-lg font-extrabold text-forest-800">More basics</h2>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Field label="Registry" hint="e.g. ABKC, UKC — leave blank if none">
+                  <input className="input" value={form.registry} onChange={(e) => set('registry', e.target.value)} />
+                </Field>
+                <Field label="Weight" hint='e.g. "45 lbs (est. adult)"'>
+                  <input className="input" value={form.weightLabel} onChange={(e) => set('weightLabel', e.target.value)} />
+                </Field>
+                <Field label="Age group">
+                  <select className="input" value={form.ageGroup} onChange={(e) => set('ageGroup', e.target.value as AgeGroup)}>
+                    {ageGroups.map((g) => (
+                      <option key={g}>{g}</option>
+                    ))}
+                  </select>
+                </Field>
+                <Field label="Color" hint="e.g. Blue, Fawn, Chocolate tri">
+                  <input className="input" value={form.color} onChange={(e) => set('color', e.target.value)} />
+                </Field>
+              </div>
+              <Field label="Personality traits" hint="Comma separated, e.g. Loyal, Playful">
+                <input className="input" value={personalityText} onChange={(e) => setPersonalityText(e.target.value)} />
+              </Field>
+              <label className="flex items-center gap-3 text-sm font-semibold text-forest-800">
+                <input type="checkbox" checked={form.published} onChange={(e) => set('published', e.target.checked)} className="h-5 w-5 rounded border-sand text-forest focus:ring-forest" />
+                Published (visible on the live site)
+              </label>
+            </section>
 
-        <div className="pt-2">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-muted">Additional details</h2>
-          <p className="text-xs text-muted">Everything below is optional extra info — not shown on the puppy card.</p>
-        </div>
+            <div className="pt-2">
+              <h2 className="text-sm font-bold uppercase tracking-wider text-muted">Additional details</h2>
+              <p className="text-xs text-muted">Everything below is optional extra info — not shown on the puppy card.</p>
+            </div>
 
-        {/* Pricing add-ons */}
-        <section className="card space-y-4 p-6">
-          <h2 className="text-lg font-extrabold text-forest-800">Purchase options</h2>
-          <p className="text-sm text-muted">The full payment price is set above. Leave an add-on at 0 to use the default shown.</p>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Reservation deposit ($)" hint="default $300">
-              <input type="number" min={0} className="input" value={form.reservePrice} onChange={(e) => set('reservePrice', Number(e.target.value) || 0)} />
-            </Field>
-            <Field label="Add breeding rights — price ($)" hint="default = price + $800">
-              <input type="number" min={0} className="input" value={form.breedingPrice} onChange={(e) => set('breedingPrice', Number(e.target.value) || 0)} />
-            </Field>
-            <Field label="Extend health warranty — price ($)" hint="default = price + $400">
-              <input type="number" min={0} className="input" value={form.warrantyPrice} onChange={(e) => set('warrantyPrice', Number(e.target.value) || 0)} />
-            </Field>
-          </div>
-        </section>
+            {/* Pricing add-ons */}
+            <section className="card space-y-4 p-6">
+              <h2 className="text-lg font-extrabold text-forest-800">Purchase options</h2>
+              <p className="text-sm text-muted">The full payment price is set above. Leave an add-on at 0 to use the default shown.</p>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Field label="Reservation deposit ($)" hint="default $300">
+                  <input type="number" min={0} className="input" value={form.reservePrice} onChange={(e) => set('reservePrice', Number(e.target.value) || 0)} />
+                </Field>
+                <Field label="Add breeding rights — price ($)" hint="default = price + $800">
+                  <input type="number" min={0} className="input" value={form.breedingPrice} onChange={(e) => set('breedingPrice', Number(e.target.value) || 0)} />
+                </Field>
+                <Field label="Extend health warranty — price ($)" hint="default = price + $400">
+                  <input type="number" min={0} className="input" value={form.warrantyPrice} onChange={(e) => set('warrantyPrice', Number(e.target.value) || 0)} />
+                </Field>
+              </div>
+            </section>
+          </>
+        )}
 
         {/* Photos */}
         <section className="card space-y-4 p-6">
@@ -404,29 +408,33 @@ export default function DogForm({ rowId }: { rowId?: string }) {
           </label>
         </section>
 
-        {/* Descriptions */}
-        <section className="card space-y-4 p-6">
-          <h2 className="text-lg font-extrabold text-forest-800">Description</h2>
-          <Field label="Short description" hint="Shown on cards">
-            <textarea rows={2} className="input" value={form.shortDescription} onChange={(e) => set('shortDescription', e.target.value)} />
-          </Field>
-          <Field label="Full story">
-            <textarea rows={5} className="input" value={form.story} onChange={(e) => set('story', e.target.value)} />
-          </Field>
-        </section>
+        {editing && (
+          <>
+            {/* Descriptions */}
+            <section className="card space-y-4 p-6">
+              <h2 className="text-lg font-extrabold text-forest-800">Description</h2>
+              <Field label="Short description" hint="Shown on cards">
+                <textarea rows={2} className="input" value={form.shortDescription} onChange={(e) => set('shortDescription', e.target.value)} />
+              </Field>
+              <Field label="Full story">
+                <textarea rows={5} className="input" value={form.story} onChange={(e) => set('story', e.target.value)} />
+              </Field>
+            </section>
 
-        {/* Health & compatibility */}
-        <section className="card space-y-4 p-6">
-          <h2 className="text-lg font-extrabold text-forest-800">Health &amp; compatibility</h2>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {boolFields.map(([key, label]) => (
-              <label key={key} className="flex items-center gap-2 text-sm text-ink/85">
-                <input type="checkbox" checked={form[key] as boolean} onChange={(e) => set(key, e.target.checked as never)} className="h-5 w-5 rounded border-sand text-forest focus:ring-forest" />
-                {label}
-              </label>
-            ))}
-          </div>
-        </section>
+            {/* Health & compatibility */}
+            <section className="card space-y-4 p-6">
+              <h2 className="text-lg font-extrabold text-forest-800">Health &amp; compatibility</h2>
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                {boolFields.map(([key, label]) => (
+                  <label key={key} className="flex items-center gap-2 text-sm text-ink/85">
+                    <input type="checkbox" checked={form[key] as boolean} onChange={(e) => set(key, e.target.checked as never)} className="h-5 w-5 rounded border-sand text-forest focus:ring-forest" />
+                    {label}
+                  </label>
+                ))}
+              </div>
+            </section>
+          </>
+        )}
 
         <div className="flex items-center gap-3">
           <button type="submit" disabled={saving} className="btn-primary disabled:opacity-70">
