@@ -18,19 +18,6 @@ export async function fetchPublicDogsServer(): Promise<Dog[]> {
   return (data as DogRow[]).map(rowToAdminDog);
 }
 
-export async function fetchPublicDogBySlugServer(slug: string): Promise<Dog | undefined> {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from('dogs')
-    .select('*')
-    .eq('slug', slug)
-    .eq('published', true)
-    .maybeSingle();
-
-  if (error) return seedDogs.find((d) => d.id === slug);
-  return data ? rowToAdminDog(data as DogRow) : undefined;
-}
-
 export async function fetchPublicTestimonialsServer(): Promise<Testimonial[]> {
   const supabase = await createClient();
   const { data, error } = await supabase

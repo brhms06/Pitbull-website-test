@@ -23,7 +23,7 @@ export default async function DogsPage() {
           itemListElement: dogs.map((dog, index) => ({
             '@type': 'ListItem',
             position: index + 1,
-            url: `${site.url}/dogs/${dog.id}`,
+            url: `${site.url}/dogs`,
             name: dog.name,
             image: dog.images?.[0] || '',
           })),

@@ -190,20 +190,6 @@ export async function fetchPublicDogs(): Promise<Dog[]> {
   return (data as DogRow[]).map(rowToAdminDog);
 }
 
-export async function fetchPublicDogBySlug(slug: string): Promise<Dog | undefined> {
-  const { data, error } = await supabase
-    .from('dogs')
-    .select('*')
-    .eq('slug', slug)
-    .eq('published', true)
-    .maybeSingle();
-
-  if (error) {
-    return seedDogs.find((d) => d.id === slug);
-  }
-  return data ? rowToAdminDog(data as DogRow) : undefined;
-}
-
 export async function fetchPublicTestimonials(): Promise<Testimonial[]> {
   const { data, error } = await supabase
     .from('testimonials')
@@ -368,41 +354,6 @@ export async function setTestimonialPublished(id: string, published: boolean): P
 // ---------------------------------------------------------------------------
 // FORM SUBMISSIONS (public insert)
 // ---------------------------------------------------------------------------
-
-export interface OrderItemInput {
-  dogSlug: string;
-  name: string;
-  optionId: string;
-  optionLabel: string;
-  price: number;
-}
-
-export async function createOrder(o: {
-  customerName: string;
-  email: string;
-  phone: string;
-  address: string;
-  notes: string;
-  items: OrderItemInput[];
-  total: number;
-  paymentMethod: string;
-  paymentMethodValue: string;
-  whatsappOptIn: boolean;
-}): Promise<void> {
-  const { error } = await supabase.from('orders').insert({
-    customer_name: o.customerName,
-    email: o.email,
-    phone: o.phone,
-    address: o.address,
-    notes: o.notes,
-    items: o.items,
-    total: o.total,
-    payment_method: o.paymentMethod,
-    payment_method_value: o.paymentMethodValue,
-    whatsapp_opt_in: o.whatsappOptIn,
-  });
-  if (error) throw error;
-}
 
 export async function submitContact(m: {
   name: string;

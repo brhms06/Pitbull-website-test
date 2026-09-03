@@ -113,8 +113,8 @@ export default function DogSlideshow() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.65, duration: 0.6 }}
               >
-                <Link href={`/dogs/${slides[current].dogId}`} className="btn-primary">
-                  View {slides[current].eyebrow.replace('Meet ', '')} <ArrowRightIcon className="h-5 w-5" />
+                <Link href={`/contact?dog=${slides[current].dogId}`} className="btn-primary">
+                  Bring {slides[current].eyebrow.replace('Meet ', '')} Home <ArrowRightIcon className="h-5 w-5" />
                 </Link>
                 <Link href="/dogs" className="btn-outline-white">
                   All puppies

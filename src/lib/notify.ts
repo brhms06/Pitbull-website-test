@@ -3,7 +3,7 @@
  * `/api/notify` route (which holds the real Resend API key server-side) and
  * never throws — a failed or unconfigured send should never block a form.
  */
-export async function notify(payload: { type: 'contact' | 'application' | 'contract' | 'order' | 'order-confirmation' | 'newsletter' } & Record<string, unknown>): Promise<{ ok: boolean }> {
+export async function notify(payload: { type: 'contact' | 'application' | 'contract' | 'newsletter' } & Record<string, unknown>): Promise<{ ok: boolean }> {
   try {
     const res = await fetch('/api/notify', {
       method: 'POST',
