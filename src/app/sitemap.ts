@@ -5,7 +5,19 @@ import { fetchPublicDogsServer, fetchPublishedBlogPostsServer } from '@/lib/db.s
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [dogs, posts] = await Promise.all([fetchPublicDogsServer(), fetchPublishedBlogPostsServer()]);
 
-  const staticRoutes = ['', '/about', '/dogs', '/reserve', '/contact', '/blog', '/privacy', '/terms'].map((path) => ({
+  const staticRoutes = [
+    '',
+    '/about',
+    '/dogs',
+    '/reserve',
+    '/contact',
+    '/blog',
+    '/privacy',
+    '/terms',
+    '/faq',
+    '/puppy-delivery',
+    '/testimonials',
+  ].map((path) => ({
     url: `${site.url}${path}`,
     lastModified: new Date(),
   }));

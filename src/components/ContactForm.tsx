@@ -12,15 +12,33 @@ interface ContactData {
   name: string;
   email: string;
   phone: string;
-  subject: string;
+  dogId: string;
+  dogName: string;
+  address: string;
   message: string;
 }
 
-const empty: ContactData = { name: '', email: '', phone: '', subject: 'Puppy Reservation', message: '' };
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phonePattern = /^[+\d][\d\s()-]{6,}$/;
 
-export default function ContactForm() {
+interface Props {
+  /** Reservable puppies for the "Puppy of Interest" dropdown. */
+  dogs?: { id: string; name: string }[];
+  /** Pre-selected puppy id, e.g. from a "Contact Us Now" link's `?dog=` param. */
+  initialDogId?: string;
+}
+
+export default function ContactForm({ dogs, initialDogId }: Props) {
+  const initialDog = dogs?.find((d) => d.id === initialDogId);
+  const empty: ContactData = {
+    name: '',
+    email: '',
+    phone: '',
+    dogId: initialDog?.id ?? '',
+    dogName: initialDog?.name ?? '',
+    address: '',
+    message: '',
+  };
   const [data, setData] = useState<ContactData>(empty);
   const [errors, setErrors] = useState<Partial<Record<keyof ContactData, string>>>({});
   const [submitting, setSubmitting] = useState(false);
@@ -29,6 +47,12 @@ export default function ContactForm() {
   const update = (key: keyof ContactData, value: string) => {
     setData((d) => ({ ...d, [key]: value }));
     setErrors((e) => ({ ...e, [key]: undefined }));
+  };
+
+  const chooseDog = (id: string) => {
+    const chosen = dogs?.find((d) => d.id === id);
+    update('dogId', id);
+    setData((d) => ({ ...d, dogName: chosen?.name ?? '' }));
   };
 
   const validate = (): boolean => {
@@ -46,7 +70,11 @@ export default function ContactForm() {
     e.preventDefault();
     if (!validate()) return;
     setSubmitting(true);
-    await Promise.all([notify({ type: 'contact', ...data }), submitContact(data).catch(() => {})]);
+    const subject = data.dogName ? `Puppy inquiry – ${data.dogName}` : 'General inquiry';
+    await Promise.all([
+      notify({ type: 'contact', name: data.name, email: data.email, phone: data.phone, subject, dogName: data.dogName || 'Not specified', address: data.address || 'Not provided', message: data.message }),
+      submitContact({ name: data.name, email: data.email, phone: data.phone, subject, message: data.message }).catch(() => {}),
+    ]);
     appendSubmission('ilb:contact', data);
     setSubmitting(false);
     setSuccess(true);
@@ -67,17 +95,25 @@ export default function ContactForm() {
             <input id="c-email" type="email" className={inputCls('email')} value={data.email} onChange={(e) => update('email', e.target.value)} autoComplete="email" />
           </FormField>
 
-          <FormField label="Phone" htmlFor="c-phone" error={errors.phone} hint="Optional">
+          <FormField label="Your Phone" htmlFor="c-phone" error={errors.phone} hint="Optional" className="sm:col-span-2">
             <input id="c-phone" type="tel" className={inputCls('phone')} value={data.phone} onChange={(e) => update('phone', e.target.value)} autoComplete="tel" />
           </FormField>
 
-          <FormField label="Subject" htmlFor="c-subject">
-            <select id="c-subject" className="input" value={data.subject} onChange={(e) => update('subject', e.target.value)}>
-              <option>Puppy Reservation</option>
-              <option>General Question</option>
-              <option>Delivery / Shipping</option>
-              <option>Other</option>
-            </select>
+          {dogs && dogs.length > 0 && (
+            <FormField label="Puppy of Interest" htmlFor="c-dog" className="sm:col-span-2">
+              <select id="c-dog" className="input" value={data.dogId} onChange={(e) => chooseDog(e.target.value)}>
+                <option value="">General inquiry</option>
+                {dogs.map((d) => (
+                  <option key={d.id} value={d.id}>
+                    {d.name}
+                  </option>
+                ))}
+              </select>
+            </FormField>
+          )}
+
+          <FormField label="Address" htmlFor="c-address" hint="Optional" className="sm:col-span-2">
+            <input id="c-address" className="input" value={data.address} onChange={(e) => update('address', e.target.value)} autoComplete="street-address" />
           </FormField>
         </div>
 

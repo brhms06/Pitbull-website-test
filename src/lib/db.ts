@@ -442,6 +442,34 @@ export async function submitPuppyApplication(a: {
   if (error) throw error;
 }
 
+export async function submitPuppyContract(c: {
+  dogId: string;
+  dogName: string;
+  buyerName: string;
+  email: string;
+  phone: string;
+  address: string;
+  shippingOption: string;
+  paymentMethod: string;
+  price: number;
+  /** Signature drawing as a PNG data URL. */
+  signature: string;
+}): Promise<void> {
+  const { error } = await supabase.from('puppy_contracts').insert({
+    dog_id: c.dogId,
+    dog_name: c.dogName,
+    buyer_name: c.buyerName,
+    email: c.email,
+    phone: c.phone,
+    address: c.address,
+    shipping_option: c.shippingOption,
+    payment_method: c.paymentMethod,
+    price: c.price,
+    signature: c.signature,
+  });
+  if (error) throw error;
+}
+
 export async function submitNewsletter(email: string): Promise<void> {
   const { error } = await supabase.from('newsletter_subscribers').insert({ email });
   if (error) throw error;

@@ -15,15 +15,6 @@ const heroImages = [
 
 const SLIDE_INTERVAL = 3000;
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 28 },
-  show: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: 0.12 * i, duration: 0.6, ease: 'easeOut' },
-  }),
-};
-
 export default function Hero() {
   const [index, setIndex] = useState(0);
 
@@ -38,46 +29,43 @@ export default function Hero() {
       <div className="container-page relative grid items-center gap-10 py-16 md:py-24 lg:grid-cols-2 lg:gap-12">
         {/* Copy */}
         <div>
-          <motion.span
-            custom={0}
-            initial="hidden"
-            animate="show"
-            variants={fadeUp}
-            className="badge inline-flex items-center gap-1.5 bg-ember-100 text-ember-700"
+          <span
+            className="badge inline-flex animate-fade-up items-center gap-1.5 bg-ember-100 text-ember-700"
+            style={{ animationDelay: '0ms', animationFillMode: 'backwards' }}
           >
             <PawIcon className="h-4 w-4" /> {site.tagline}
-          </motion.span>
+          </span>
 
-          <motion.h1
-            custom={1}
-            initial="hidden"
-            animate="show"
-            variants={fadeUp}
-            className="mt-4 text-4xl font-extrabold leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl"
+          <h1
+            className="mt-4 animate-fade-up text-4xl font-extrabold leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl"
+            style={{ animationDelay: '120ms', animationFillMode: 'backwards' }}
           >
             Health-tested Pitbull puppies <span className="text-forest">raised with love</span>
-          </motion.h1>
+          </h1>
 
-          <motion.p
-            custom={2}
-            initial="hidden"
-            animate="show"
-            variants={fadeUp}
-            className="mt-5 max-w-xl text-lg leading-relaxed text-muted"
+          <p
+            className="mt-5 max-w-xl animate-fade-up text-lg leading-relaxed text-muted"
+            style={{ animationDelay: '240ms', animationFillMode: 'backwards' }}
           >
             We raise confident, well-socialised Pitbull puppies — vet-checked, vaccinated and
             ready to join your family. Reserve yours today, with nationwide delivery available.
-          </motion.p>
+          </p>
 
-          <motion.div custom={3} initial="hidden" animate="show" variants={fadeUp} className="mt-8 flex flex-wrap gap-3">
+          <div
+            className="mt-8 flex animate-fade-up flex-wrap gap-3"
+            style={{ animationDelay: '360ms', animationFillMode: 'backwards' }}
+          >
             <motion.div animate={{ scale: [1, 1.04, 1] }} transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}>
               <Link href="/contact" className="btn-accent inline-flex items-center gap-2 text-base shadow-glow">
-                <HeartIcon className="h-5 w-5" filled /> Reserve a Puppy
+                <HeartIcon className="h-5 w-5" filled /> Bring Me Home
               </Link>
             </motion.div>
-          </motion.div>
+          </div>
 
-          <motion.dl custom={4} initial="hidden" animate="show" variants={fadeUp} className="mt-10 grid max-w-md grid-cols-3 gap-4">
+          <dl
+            className="mt-10 grid max-w-md animate-fade-up grid-cols-3 gap-4"
+            style={{ animationDelay: '480ms', animationFillMode: 'backwards' }}
+          >
             {[
               { n: site.soldCount, l: 'Puppies placed' },
               { n: String(new Date().getFullYear() - site.foundedYear), l: 'Years breeding' },
@@ -88,16 +76,11 @@ export default function Hero() {
                 <dd className="text-sm text-muted">{s.l}</dd>
               </div>
             ))}
-          </motion.dl>
+          </dl>
         </div>
 
         {/* Image slideshow */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.96, y: 24 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
-          className="relative"
-        >
+        <div className="relative animate-fade-up" style={{ animationDelay: '120ms', animationFillMode: 'backwards' }}>
           <div className="relative">
             <div className="relative h-[460px] overflow-hidden rounded-[2.5rem] shadow-lift ring-1 ring-black/5">
               <AnimatePresence>
@@ -147,7 +130,7 @@ export default function Hero() {
           <Link href="/dogs" className="btn-primary mt-10 inline-flex text-base sm:mt-8">
             View Available Puppies <ArrowRightIcon className="h-5 w-5" />
           </Link>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

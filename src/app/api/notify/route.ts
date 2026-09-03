@@ -2,19 +2,24 @@ import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { site } from '@/data/site';
 
-type NotifyPayload = { type: 'contact' | 'application' | 'order' | 'order-confirmation' | 'newsletter' } & Record<string, unknown>;
+type NotifyPayload = { type: 'contact' | 'application' | 'contract' | 'order' | 'order-confirmation' | 'newsletter' } & Record<string, unknown>;
 
 function buildEmail(payload: NotifyPayload): { subject: string; text: string } {
   switch (payload.type) {
     case 'contact':
       return {
         subject: `New contact message: ${payload.subject ?? 'General'}`,
-        text: `From: ${payload.name} <${payload.email}>\nPhone: ${payload.phone || 'Not provided'}\nTopic: ${payload.subject}\n\n${payload.message}`,
+        text: `From: ${payload.name} <${payload.email}>\nPhone: ${payload.phone || 'Not provided'}\nTopic: ${payload.subject}\nPuppy: ${payload.dogName || 'Not specified'}\nAddress: ${payload.address || 'Not provided'}\n\n${payload.message}`,
       };
     case 'application':
       return {
         subject: `New puppy application for ${payload.dogName || 'a puppy'}`,
         text: `Name: ${payload.name}\nEmail: ${payload.email}\nPhone: ${payload.phone}\nPuppy: ${payload.dogName}\nLocation: ${payload.address}\nHome type: ${payload.homeType}\nChildren: ${payload.hasChildren}\nOther pets: ${payload.hasPets}\nExperience: ${payload.experience || 'Not provided'}`,
+      };
+    case 'contract':
+      return {
+        subject: `Signed puppy contract: ${payload.buyerName ?? ''} — ${payload.dogName || 'a puppy'}`,
+        text: `Buyer: ${payload.buyerName}\nEmail: ${payload.email}\nPhone: ${payload.phone}\nPuppy: ${payload.dogName || 'Not specified'}\nAddress: ${payload.address || 'Not provided'}\nShipping: ${payload.shippingOption || 'Not specified'}\nPayment method: ${payload.paymentMethod || 'Not specified'}\nAgreed price: ${payload.price || 'Not specified'}\n\nSigned by the buyer — signature attached.`,
       };
     case 'order':
       return {
@@ -61,12 +66,22 @@ export async function POST(request: Request) {
     const payload = (await request.json()) as NotifyPayload;
     const { subject, text } = buildEmail(payload);
     const to = payload.type === 'order-confirmation' && typeof payload.email === 'string' && payload.email.trim() ? [payload.email] : [site.email];
+
+    // The signature pad hands us a `data:image/png;base64,...` URL — Resend
+    // attachments want just the base64 payload.
+    const signature = typeof payload.signature === 'string' ? payload.signature : '';
+    const attachments =
+      payload.type === 'contract' && signature.startsWith('data:image/png;base64,')
+        ? [{ filename: 'signature.png', content: signature.split(',')[1] }]
+        : undefined;
+
     const resend = new Resend(apiKey);
     const { error } = await resend.emails.send({
       from: 'Ironline Bullies <onboarding@resend.dev>',
       to,
       subject,
       text,
+      attachments,
     });
     if (error) {
       console.error('[notify] Resend error:', error);

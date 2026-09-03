@@ -9,6 +9,9 @@ const quickLinks = [
   { label: 'About Us', href: '/about' },
   { label: 'Available Puppies', href: '/dogs' },
   { label: 'Contact', href: '/contact' },
+  { label: "FAQ's", href: '/faq' },
+  { label: 'Puppy Delivery', href: '/puppy-delivery' },
+  { label: 'Testimonials', href: '/testimonials' },
 ];
 
 export default function Footer() {

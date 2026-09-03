@@ -6,15 +6,18 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Logo from './Logo';
-import { HeartIcon } from './Icons';
-import { navLinks, site } from '@/data/site';
+import { HeartIcon, LockIcon } from './Icons';
+import { primaryNavLinks, moreNavLinks, site } from '@/data/site';
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [desktopMoreOpen, setDesktopMoreOpen] = useState(false);
+  const [mobileMoreOpen, setMobileMoreOpen] = useState(false);
   const pathname = usePathname();
   const closeRef = useRef<HTMLButtonElement>(null);
+  const moreRef = useRef<HTMLDivElement>(null);
 
   // Only render portal after client-side hydration to avoid SSR mismatch.
   useEffect(() => {
@@ -32,7 +35,26 @@ export default function Header() {
   // Close menu on navigation.
   useEffect(() => {
     setMenuOpen(false);
+    setDesktopMoreOpen(false);
+    setMobileMoreOpen(false);
   }, [pathname]);
+
+  // Close the desktop "More" dropdown on outside click or Escape.
+  useEffect(() => {
+    if (!desktopMoreOpen) return;
+    const onClick = (e: MouseEvent) => {
+      if (moreRef.current && !moreRef.current.contains(e.target as Node)) setDesktopMoreOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setDesktopMoreOpen(false);
+    };
+    document.addEventListener('mousedown', onClick);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onClick);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [desktopMoreOpen]);
 
   // Lock body scroll while menu is open.
   useEffect(() => {
@@ -50,6 +72,7 @@ export default function Header() {
   }, [menuOpen]);
 
   const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.startsWith(href));
+  const isMoreActive = moreNavLinks.some((l) => isActive(l.href));
 
   const navItemClass = (href: string) =>
     [
@@ -80,8 +103,8 @@ export default function Header() {
             <Logo />
           </Link>
 
-          <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary">
-            {navLinks.map((link) => (
+          <nav className="hidden items-center gap-1 xl:flex" aria-label="Primary">
+            {primaryNavLinks.map((link) => (
               <Link key={link.href} href={link.href} className={navItemClass(link.href)}>
                 {link.label}
                 {isActive(link.href) && (
@@ -92,6 +115,46 @@ export default function Header() {
                 )}
               </Link>
             ))}
+
+            <div ref={moreRef} className="relative">
+              <button
+                type="button"
+                onClick={() => setDesktopMoreOpen((v) => !v)}
+                aria-expanded={desktopMoreOpen}
+                aria-haspopup="menu"
+                className={[
+                  'relative rounded-full px-3 py-2 text-sm font-semibold transition-all duration-200',
+                  'hover:scale-[1.03] hover:text-ember',
+                  isMoreActive ? 'text-ember' : 'text-forest-800',
+                ].join(' ')}
+              >
+                More <span className="ml-0.5 inline-block text-xs align-middle">{desktopMoreOpen ? '▲' : '▼'}</span>
+                {isMoreActive && (
+                  <motion.span
+                    layoutId="nav-underline"
+                    className="absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full bg-ember"
+                  />
+                )}
+              </button>
+
+              {desktopMoreOpen && (
+                <div role="menu" className="absolute left-0 top-full mt-2 w-64 rounded-2xl bg-white p-2 shadow-lift ring-1 ring-black/5">
+                  {moreNavLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      role="menuitem"
+                      className={`flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold transition hover:bg-forest-50 hover:text-ember ${
+                        isActive(link.href) ? 'text-ember' : 'text-forest-700'
+                      }`}
+                    >
+                      {link.href === '/privacy' && <LockIcon className="h-3.5 w-3.5" />}
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
           </nav>
 
           <div className="flex items-center gap-2">
@@ -103,16 +166,16 @@ export default function Header() {
               <Link
                 href="/dogs"
                 className="btn-accent inline-flex items-center gap-2 shadow-glow"
-                aria-label="Reserve a puppy"
+                aria-label="Bring me home"
               >
-                <HeartIcon className="h-4 w-4" filled /> Reserve a Puppy
+                <HeartIcon className="h-4 w-4" filled /> Bring Me Home
               </Link>
             </motion.div>
 
             <button
               type="button"
               onClick={() => setMenuOpen((v) => !v)}
-              className="inline-flex h-11 w-11 items-center justify-center rounded-full text-forest-800 transition hover:bg-forest-50 lg:hidden"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full text-forest-800 transition hover:bg-forest-50 xl:hidden"
               aria-label={menuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={menuOpen}
               aria-controls="mobile-nav"
@@ -197,7 +260,7 @@ export default function Header() {
               </div>
 
               <nav className="flex flex-1 flex-col gap-1 px-4 py-5" aria-label="Mobile" style={{ backgroundColor: '#f4efe6' }}>
-                {navLinks.map((link) => {
+                {primaryNavLinks.map((link) => {
                   const active = isActive(link.href);
                   return (
                     <Link
@@ -208,13 +271,50 @@ export default function Header() {
                       className="flex items-center justify-between rounded-2xl px-4 py-3.5 text-[15px] font-semibold"
                       style={{ color: active ? '#b5502e' : '#1c3345', backgroundColor: active ? '#e8eef2' : 'transparent' }}
                     >
-                      <span>{link.label}</span>
+                      <span className="flex items-center gap-2">{link.label}</span>
                       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                         <path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     </Link>
                   );
                 })}
+
+                <button
+                  type="button"
+                  onClick={() => setMobileMoreOpen((v) => !v)}
+                  aria-expanded={mobileMoreOpen}
+                  tabIndex={menuOpen ? 0 : -1}
+                  className="flex items-center justify-between rounded-2xl px-4 py-3.5 text-[15px] font-semibold"
+                  style={{ color: isMoreActive ? '#b5502e' : '#1c3345', backgroundColor: isMoreActive ? '#e8eef2' : 'transparent' }}
+                >
+                  <span>More</span>
+                  <span style={{ transform: mobileMoreOpen ? 'rotate(90deg)' : 'none', transition: 'transform 200ms ease' }}>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                      <path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
+                </button>
+
+                {mobileMoreOpen && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', paddingLeft: '12px' }}>
+                    {moreNavLinks.map((link) => {
+                      const active = isActive(link.href);
+                      return (
+                        <Link
+                          key={link.href}
+                          href={link.href}
+                          onClick={() => setMenuOpen(false)}
+                          tabIndex={menuOpen && mobileMoreOpen ? 0 : -1}
+                          className="flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold"
+                          style={{ color: active ? '#b5502e' : '#69625a', backgroundColor: active ? '#e8eef2' : 'transparent' }}
+                        >
+                          {link.href === '/privacy' && <LockIcon className="h-4 w-4" />}
+                          {link.label}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
               </nav>
 
               <div className="px-5 py-5" style={{ borderTop: '1px solid #e6dcc9', backgroundColor: '#f4efe6' }}>
@@ -224,7 +324,7 @@ export default function Header() {
                   tabIndex={menuOpen ? 0 : -1}
                   className="btn-accent flex w-full items-center justify-center gap-2 py-4 text-base font-bold shadow-glow"
                 >
-                  <HeartIcon className="h-5 w-5" filled /> Reserve a Puppy
+                  <HeartIcon className="h-5 w-5" filled /> Bring Me Home
                 </Link>
               </div>
             </div>

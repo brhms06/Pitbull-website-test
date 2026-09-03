@@ -224,9 +224,12 @@ export default function DogForm({ rowId }: { rowId?: string }) {
       {error && <p className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">{error}</p>}
 
       <form onSubmit={onSubmit} className="mt-6 space-y-6">
-        {/* Basics */}
+        {/* Puppy card details — exactly what shows on the card/listing */}
         <section className="card space-y-4 p-6">
-          <h2 className="text-lg font-extrabold text-forest-800">Basics</h2>
+          <div>
+            <h2 className="text-lg font-extrabold text-forest-800">Puppy card details</h2>
+            <p className="text-sm text-muted">These are exactly what buyers see on the puppy card and listing.</p>
+          </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Name" required>
               <input className="input" value={form.name} onChange={(e) => onName(e.target.value)} />
@@ -234,19 +237,13 @@ export default function DogForm({ rowId }: { rowId?: string }) {
             <Field label="Breed" hint="e.g. Pitbull — Standard">
               <input className="input" value={form.breed} onChange={(e) => set('breed', e.target.value)} />
             </Field>
-            <Field label="Registry" hint="e.g. ABKC, UKC — leave blank if none">
-              <input className="input" value={form.registry} onChange={(e) => set('registry', e.target.value)} />
+            <Field label="Price — Full Payment ($)" required>
+              <input type="number" min={0} className="input" value={form.price} onChange={(e) => set('price', Number(e.target.value) || 0)} />
             </Field>
-            <Field label="Weight" hint='e.g. "45 lbs (est. adult)"'>
-              <input className="input" value={form.weightLabel} onChange={(e) => set('weightLabel', e.target.value)} />
-            </Field>
-            <Field label="Age label" hint="e.g. 10 weeks old">
-              <input className="input" value={form.ageLabel} onChange={(e) => set('ageLabel', e.target.value)} />
-            </Field>
-            <Field label="Age group">
-              <select className="input" value={form.ageGroup} onChange={(e) => set('ageGroup', e.target.value as AgeGroup)}>
-                {ageGroups.map((g) => (
-                  <option key={g}>{g}</option>
+            <Field label="Status">
+              <select className="input" value={form.status} onChange={(e) => set('status', e.target.value as DogStatus)}>
+                {statuses.map((s) => (
+                  <option key={s}>{s}</option>
                 ))}
               </select>
             </Field>
@@ -257,15 +254,31 @@ export default function DogForm({ rowId }: { rowId?: string }) {
                 ))}
               </select>
             </Field>
-            <Field label="Color" hint="e.g. Blue, Fawn, Chocolate tri">
-              <input className="input" value={form.color} onChange={(e) => set('color', e.target.value)} />
+            <Field label="Age label" hint="e.g. 10 weeks old">
+              <input className="input" value={form.ageLabel} onChange={(e) => set('ageLabel', e.target.value)} />
             </Field>
-            <Field label="Status">
-              <select className="input" value={form.status} onChange={(e) => set('status', e.target.value as DogStatus)}>
-                {statuses.map((s) => (
-                  <option key={s}>{s}</option>
+          </div>
+        </section>
+
+        {/* More basics */}
+        <section className="card space-y-4 p-6">
+          <h2 className="text-lg font-extrabold text-forest-800">More basics</h2>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label="Registry" hint="e.g. ABKC, UKC — leave blank if none">
+              <input className="input" value={form.registry} onChange={(e) => set('registry', e.target.value)} />
+            </Field>
+            <Field label="Weight" hint='e.g. "45 lbs (est. adult)"'>
+              <input className="input" value={form.weightLabel} onChange={(e) => set('weightLabel', e.target.value)} />
+            </Field>
+            <Field label="Age group">
+              <select className="input" value={form.ageGroup} onChange={(e) => set('ageGroup', e.target.value as AgeGroup)}>
+                {ageGroups.map((g) => (
+                  <option key={g}>{g}</option>
                 ))}
               </select>
+            </Field>
+            <Field label="Color" hint="e.g. Blue, Fawn, Chocolate tri">
+              <input className="input" value={form.color} onChange={(e) => set('color', e.target.value)} />
             </Field>
           </div>
           <Field label="Personality traits" hint="Comma separated, e.g. Loyal, Playful">
@@ -277,14 +290,16 @@ export default function DogForm({ rowId }: { rowId?: string }) {
           </label>
         </section>
 
-        {/* Pricing & purchase options */}
+        <div className="pt-2">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-muted">Additional details</h2>
+          <p className="text-xs text-muted">Everything below is optional extra info — not shown on the puppy card.</p>
+        </div>
+
+        {/* Pricing add-ons */}
         <section className="card space-y-4 p-6">
-          <h2 className="text-lg font-extrabold text-forest-800">Pricing &amp; purchase options</h2>
-          <p className="text-sm text-muted">These are the prices buyers see on this puppy&apos;s page. Leave an add-on at 0 to use the default shown.</p>
+          <h2 className="text-lg font-extrabold text-forest-800">Purchase options</h2>
+          <p className="text-sm text-muted">The full payment price is set above. Leave an add-on at 0 to use the default shown.</p>
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Price — Full Payment ($)" required>
-              <input type="number" min={0} className="input" value={form.price} onChange={(e) => set('price', Number(e.target.value) || 0)} />
-            </Field>
             <Field label="Reservation deposit ($)" hint="default $300">
               <input type="number" min={0} className="input" value={form.reservePrice} onChange={(e) => set('reservePrice', Number(e.target.value) || 0)} />
             </Field>

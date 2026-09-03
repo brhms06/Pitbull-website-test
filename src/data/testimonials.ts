@@ -34,4 +34,40 @@ export const testimonials: Testimonial[] = [
     rating: 5,
     photo: img(42),
   },
+  {
+    id: 'seed-4',
+    customerName: 'The Whitfield Family',
+    dogName: 'Duke',
+    quote:
+      "Duke settled in like he'd always been ours. He arrived with every record we needed and the breeder checked in for weeks after to make sure he was doing well.",
+    rating: 5,
+    photo: img(43),
+  },
+  {
+    id: 'seed-5',
+    customerName: 'Jordan K.',
+    dogName: 'Zeus',
+    quote:
+      'Zeus is everything they described — calm, patient with our kids, and clearly well cared for before we ever met him. Ground transport went smoothly too.',
+    rating: 5,
+    photo: img(44),
+  },
+  {
+    id: 'seed-6',
+    customerName: 'The Alvarez Family',
+    dogName: 'Coco',
+    quote:
+      "We flew in a flight nanny for Coco and the whole process was reassuring from start to finish. She's fearless and snuggly, exactly as promised.",
+    rating: 5,
+    photo: img(45),
+  },
+  {
+    id: 'seed-7',
+    customerName: 'Trevor B.',
+    dogName: 'Bruno',
+    quote:
+      'Bruno is goofy and affectionate with the whole family, and the health guarantee paperwork gave us real peace of mind.',
+    rating: 5,
+    photo: img(46),
+  },
 ];

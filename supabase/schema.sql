@@ -92,6 +92,22 @@ create table if not exists public.puppy_applications (
   created_at    timestamptz not null default now()
 );
 
+create table if not exists public.puppy_contracts (
+  id                uuid primary key default gen_random_uuid(),
+  dog_id            text default '',
+  dog_name          text default '',
+  buyer_name        text not null,
+  email             text not null,
+  phone             text default '',
+  address           text default '',
+  shipping_option   text default '',
+  payment_method    text default '',
+  price             numeric not null default 0,
+  signature         text not null default '',
+  status            text not null default 'New',
+  created_at        timestamptz not null default now()
+);
+
 create table if not exists public.newsletter_subscribers (
   id          uuid primary key default gen_random_uuid(),
   email       text not null,
@@ -165,6 +181,7 @@ alter table public.testimonials          enable row level security;
 alter table public.blog_posts            enable row level security;
 alter table public.contact_messages      enable row level security;
 alter table public.puppy_applications    enable row level security;
+alter table public.puppy_contracts       enable row level security;
 alter table public.newsletter_subscribers enable row level security;
 alter table public.orders                enable row level security;
 
@@ -199,7 +216,7 @@ do $$
 declare t text;
 begin
   foreach t in array array[
-    'contact_messages','puppy_applications','newsletter_subscribers','orders'
+    'contact_messages','puppy_applications','puppy_contracts','newsletter_subscribers','orders'
   ] loop
     execute format('drop policy if exists "%s insert" on public.%I', t, t);
     execute format('drop policy if exists "%s admin"  on public.%I', t, t);

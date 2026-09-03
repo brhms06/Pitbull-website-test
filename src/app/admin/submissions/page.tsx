@@ -4,11 +4,12 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase/client';
 import { WhatsAppIcon } from '@/components/Icons';
 
-type Tab = 'orders' | 'applications' | 'messages' | 'subscribers';
+type Tab = 'orders' | 'applications' | 'contracts' | 'messages' | 'subscribers';
 
 const tabs: Array<{ key: Tab; label: string; table: string }> = [
   { key: 'orders', label: 'Orders', table: 'orders' },
   { key: 'applications', label: 'Applications', table: 'puppy_applications' },
+  { key: 'contracts', label: 'Contracts', table: 'puppy_contracts' },
   { key: 'messages', label: 'Messages', table: 'contact_messages' },
   { key: 'subscribers', label: 'Subscribers', table: 'newsletter_subscribers' },
 ];
@@ -121,6 +122,22 @@ export default function SubmissionsPage() {
                         {row.address} · {row.home_type} · Children: {row.has_children} · Pets: {row.has_pets}
                       </p>
                       {row.experience && <p className="mt-1 text-sm text-ink/70">Experience: {row.experience}</p>}
+                    </>
+                  )}
+                  {tab === 'contracts' && (
+                    <>
+                      <p className="font-bold text-forest-800">
+                        {row.buyer_name} — {row.dog_name || 'a puppy'} {row.price ? `(${fmtMoney(row.price)})` : ''}
+                      </p>
+                      <p className="mt-1 text-sm text-muted">
+                        {row.email} · {row.phone}
+                      </p>
+                      <p className="mt-2 text-sm text-ink/80">
+                        {row.address} · {row.shipping_option} · {row.payment_method || 'No payment method chosen'}
+                      </p>
+                      {row.signature && (
+                        <img src={row.signature} alt="Buyer signature" className="mt-3 h-20 rounded-lg border border-sand bg-white p-1" />
+                      )}
                     </>
                   )}
                   {tab === 'messages' && (

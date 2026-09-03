@@ -76,11 +76,19 @@ export const localBusinessSchema = {
   // verifiable customers. Re-add this ONLY with real reviews you have collected.
 };
 
-export const navLinks = [
+export const primaryNavLinks = [
   { label: 'Home', href: '/' },
-  { label: 'About Us', href: '/about' },
-  { label: 'Available Puppies', href: '/dogs' },
-  { label: 'Reserve a Puppy', href: '/reserve' },
-  { label: 'Blog', href: '/blog' },
+  { label: 'About', href: '/about' },
+  { label: 'Our Puppies', href: '/dogs' },
+  { label: 'Puppy Contract', href: '/puppy-contract' },
+  { label: 'Puppy Delivery', href: '/puppy-delivery' },
   { label: 'Contact', href: '/contact' },
+] as const;
+
+export const moreNavLinks = [
+  { label: "FAQ's", href: '/faq' },
+  { label: 'Testimonials', href: '/testimonials' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Privacy Policy', href: '/privacy' },
+  { label: 'Return & Refund Policy', href: '/return-refund-policy' },
 ] as const;
