@@ -149,7 +149,7 @@ export default function PuppyContractForm({ dogs }: Props) {
 
           <FormField label="Shipping option" htmlFor="c-shipping" required error={errors.shippingOption}>
             <div className="flex flex-col gap-2 pt-1">
-              {['Ground Transport', 'Flight Nanny', 'Local or Airport Pickup'].map((opt) => (
+              {['Ship to door step – $180', 'Ship to Airport – $150'].map((opt) => (
                 <label key={opt} className="flex items-center gap-2 text-sm text-ink/85">
                   <input type="radio" name="shippingOption" checked={data.shippingOption === opt} onChange={() => update('shippingOption', opt)} />
                   {opt}
