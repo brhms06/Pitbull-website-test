@@ -6,7 +6,7 @@
  */
 export const dobermanPhotos = [
   'https://images.dog.ceo/breeds/doberman/n02107142_1193.jpg',
-  'https://images.dog.ceo/breeds/doberman/n02107142_5181.jpg',
+  'https://images.dog.ceo/breeds/doberman/n02107142_8399.jpg',
   'https://images.dog.ceo/breeds/doberman/n02107142_11042.jpg',
   'https://images.dog.ceo/breeds/doberman/n02107142_4653.jpg',
   'https://images.dog.ceo/breeds/doberman/n02107142_7703.jpg',
