@@ -11,32 +11,32 @@ interface LogoProps {
  * crisp at any size and can recolour for light/dark backgrounds.
  */
 export default function Logo({ className, withText = true, variant = 'dark' }: LogoProps) {
-  const titleColor = variant === 'light' ? '#ffffff' : '#213e53';
+  const titleColor = variant === 'light' ? '#ffffff' : '#0f1011';
   return (
     <span className={`inline-flex items-center gap-3 ${className ?? ''}`}>
       <svg viewBox="0 0 64 64" className="h-10 w-10 shrink-0" aria-hidden="true" focusable="false">
         <defs>
           <linearGradient id="logo-badge" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="#4d7c99" />
-            <stop offset="1" stopColor="#213e53" />
+            <stop offset="0" stopColor="#404349" />
+            <stop offset="1" stopColor="#0f1011" />
           </linearGradient>
         </defs>
         <rect width="64" height="64" rx="16" fill="url(#logo-badge)" />
-        <g fill="#f4efe6">
-          <ellipse cx="17" cy="24" rx="6" ry="8" transform="rotate(-20 17 24)" />
-          <ellipse cx="47" cy="24" rx="6" ry="8" transform="rotate(20 47 24)" />
-          <path d="M32 20c-9 0-14 7-14 15 0 8 6 14 14 14s14-6 14-14c0-8-5-15-14-15z" />
+        <g fill="#e9e2d6">
+          <polygon points="14,30 24,4 29,28" />
+          <polygon points="50,30 40,4 35,28" />
+          <path d="M32 19c-8 0-13 6-13 14 0 9 6 16 13 16s13-7 13-16c0-8-5-14-13-14z" />
         </g>
-        <g fill="#213e53">
-          <ellipse cx="26" cy="34" rx="2.6" ry="3.2" />
-          <ellipse cx="38" cy="34" rx="2.6" ry="3.2" />
+        <g fill="#0d0e0f">
+          <ellipse cx="27" cy="37" rx="2.3" ry="3" />
+          <ellipse cx="37" cy="37" rx="2.3" ry="3" />
         </g>
-        <path d="M32 39l-2.6 2.4h5.2z" fill="#b5502e" />
+        <path d="M32 42l-2.3 2.1h4.6z" fill="#8a3a15" />
         <path
-          d="M32 42c-2 2-4.2 1.6-5.2 0M32 42c2 2 4.2 1.6 5.2 0"
+          d="M32 45c-1.8 1.8-3.8 1.4-4.6 0M32 45c1.8 1.8 3.8 1.4 4.6 0"
           fill="none"
-          stroke="#213e53"
-          strokeWidth="1.4"
+          stroke="#0d0e0f"
+          strokeWidth="1.3"
           strokeLinecap="round"
         />
       </svg>
@@ -45,7 +45,7 @@ export default function Logo({ className, withText = true, variant = 'dark' }: L
           <span className="font-heading text-lg font-extrabold tracking-tight" style={{ color: titleColor }}>
             IRONLINE
           </span>
-          <span className="font-heading text-xs font-semibold tracking-[0.25em] text-ember">BULLIES</span>
+          <span className="font-heading text-xs font-semibold tracking-[0.25em] text-ember">DOBERMANS</span>
         </span>
       )}
     </span>

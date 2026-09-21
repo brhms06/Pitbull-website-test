@@ -3,13 +3,13 @@ import PageHero from '@/components/PageHero';
 import DogsBrowser from '@/components/DogsBrowser';
 import { site } from '@/data/site';
 import { fetchPublicDogsServer } from '@/lib/db.server';
-import { pitbullPhotos } from '@/data/pitbullPhotos';
+import { dobermanPhotos } from '@/data/dobermanPhotos';
 
-const heroImg = pitbullPhotos[2];
+const heroImg = dobermanPhotos[2];
 
 export const metadata: Metadata = {
-  title: 'Available Pitbull Puppies',
-  description: 'Browse available Pitbull puppies — vet-checked, vaccinated and home-raised. Reserve yours today, with nationwide delivery.',
+  title: 'Available Doberman Puppies',
+  description: 'Browse available Doberman puppies — vet-checked, vaccinated and home-raised. Reserve yours today, with nationwide delivery.',
 };
 
 export default async function DogsPage() {
@@ -45,7 +45,7 @@ export default async function DogsPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema ? [itemListSchema, breadcrumbJsonLd] : breadcrumbJsonLd) }}
       />
-      <PageHero title="Available Pitbull Puppies" subtitle="Browse our available puppies — vet-checked, vaccinated and ready for their new homes. Nationwide delivery available." image={heroImg} />
+      <PageHero title="Available Doberman Puppies" subtitle="Browse our available puppies — vet-checked, vaccinated and ready for their new homes. Nationwide delivery available." image={heroImg} />
 
       <section className="container-page py-12 md:py-16">
         <DogsBrowser dogs={dogs} />

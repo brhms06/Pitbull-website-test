@@ -38,7 +38,7 @@ export default function SignaturePad({ onChange, error }: Props) {
     const { x, y } = pointerPos(e);
     c.lineWidth = 2;
     c.lineCap = 'round';
-    c.strokeStyle = '#1c3345';
+    c.strokeStyle = '#0a0a0b';
     c.lineTo(x, y);
     c.stroke();
     setEmpty(false);

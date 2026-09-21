@@ -234,7 +234,7 @@ export default function DogForm({ rowId }: { rowId?: string }) {
             <Field label="Name" required>
               <input className="input" value={form.name} onChange={(e) => onName(e.target.value)} />
             </Field>
-            <Field label="Breed" hint="e.g. Pitbull — Standard">
+            <Field label="Breed" hint="e.g. Doberman Pinscher">
               <input className="input" value={form.breed} onChange={(e) => set('breed', e.target.value)} />
             </Field>
             <Field label="Price — Full Payment ($)" required>
@@ -266,7 +266,7 @@ export default function DogForm({ rowId }: { rowId?: string }) {
             <section className="card space-y-4 p-6">
               <h2 className="text-lg font-extrabold text-forest-800">More basics</h2>
               <div className="grid gap-4 sm:grid-cols-2">
-                <Field label="Registry" hint="e.g. ABKC, UKC — leave blank if none">
+                <Field label="Registry" hint="e.g. AKC, UKC — leave blank if none">
                   <input className="input" value={form.registry} onChange={(e) => set('registry', e.target.value)} />
                 </Field>
                 <Field label="Weight" hint='e.g. "45 lbs (est. adult)"'>

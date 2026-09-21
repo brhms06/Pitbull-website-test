@@ -5,8 +5,8 @@ export type AgeGroup = 'Puppy' | 'Young' | 'Adult' | 'Senior';
 export interface Dog {
   id: string;
   name: string;
-  breed: string; // e.g. "Pitbull — Standard", "American Pit Bull Terrier"
-  registry: string; // e.g. "ABKC", "UKC" — blank if not registered
+  breed: string; // e.g. "Doberman Pinscher"
+  registry: string; // e.g. "AKC", "UKC" — blank if not registered
   weightLabel: string; // e.g. "45 lbs (est. adult)"
   ageLabel: string; // human readable e.g. "10 weeks old"
   ageGroup: AgeGroup;

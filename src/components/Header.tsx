@@ -231,16 +231,16 @@ export default function Header() {
                 overflowY: 'auto',
                 width: '84%',
                 maxWidth: '360px',
-                backgroundColor: '#f4efe6',
-                boxShadow: '-8px 0 40px rgba(33,31,28,0.28)',
-                borderLeft: '1px solid #e6dcc9',
+                backgroundColor: '#e9e2d6',
+                boxShadow: '-8px 0 40px rgba(13,14,15,0.28)',
+                borderLeft: '1px solid #cfc3ac',
                 transform: menuOpen ? 'translateX(0)' : 'translateX(100%)',
                 transition: 'transform 260ms cubic-bezier(0.22, 1, 0.36, 1)',
               }}
             >
               <div
                 className="flex items-center justify-between px-5 py-4"
-                style={{ borderBottom: '1px solid #e6dcc9', backgroundColor: '#f4efe6' }}
+                style={{ borderBottom: '1px solid #cfc3ac', backgroundColor: '#e9e2d6' }}
               >
                 <Link href="/" onClick={() => setMenuOpen(false)}>
                   <Logo />
@@ -251,7 +251,7 @@ export default function Header() {
                   onClick={() => setMenuOpen(false)}
                   aria-label="Close menu"
                   className="inline-flex h-10 w-10 items-center justify-center rounded-full transition hover:bg-forest-100"
-                  style={{ color: '#1c3345' }}
+                  style={{ color: '#0a0a0b' }}
                 >
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
                     <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
@@ -259,7 +259,7 @@ export default function Header() {
                 </button>
               </div>
 
-              <nav className="flex flex-1 flex-col gap-1 px-4 py-5" aria-label="Mobile" style={{ backgroundColor: '#f4efe6' }}>
+              <nav className="flex flex-1 flex-col gap-1 px-4 py-5" aria-label="Mobile" style={{ backgroundColor: '#e9e2d6' }}>
                 {primaryNavLinks.map((link) => {
                   const active = isActive(link.href);
                   return (
@@ -269,7 +269,7 @@ export default function Header() {
                       onClick={() => setMenuOpen(false)}
                       tabIndex={menuOpen ? 0 : -1}
                       className="flex items-center justify-between rounded-2xl px-4 py-3.5 text-[15px] font-semibold"
-                      style={{ color: active ? '#b5502e' : '#1c3345', backgroundColor: active ? '#e8eef2' : 'transparent' }}
+                      style={{ color: active ? '#8a3a15' : '#0a0a0b', backgroundColor: active ? '#e9eaeb' : 'transparent' }}
                     >
                       <span className="flex items-center gap-2">{link.label}</span>
                       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -285,7 +285,7 @@ export default function Header() {
                   aria-expanded={mobileMoreOpen}
                   tabIndex={menuOpen ? 0 : -1}
                   className="flex items-center justify-between rounded-2xl px-4 py-3.5 text-[15px] font-semibold"
-                  style={{ color: isMoreActive ? '#b5502e' : '#1c3345', backgroundColor: isMoreActive ? '#e8eef2' : 'transparent' }}
+                  style={{ color: isMoreActive ? '#8a3a15' : '#0a0a0b', backgroundColor: isMoreActive ? '#e9eaeb' : 'transparent' }}
                 >
                   <span>More</span>
                   <span style={{ transform: mobileMoreOpen ? 'rotate(90deg)' : 'none', transition: 'transform 200ms ease' }}>
@@ -306,7 +306,7 @@ export default function Header() {
                           onClick={() => setMenuOpen(false)}
                           tabIndex={menuOpen && mobileMoreOpen ? 0 : -1}
                           className="flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold"
-                          style={{ color: active ? '#b5502e' : '#69625a', backgroundColor: active ? '#e8eef2' : 'transparent' }}
+                          style={{ color: active ? '#8a3a15' : '#5c574f', backgroundColor: active ? '#e9eaeb' : 'transparent' }}
                         >
                           {link.href === '/privacy' && <LockIcon className="h-4 w-4" />}
                           {link.label}
@@ -317,7 +317,7 @@ export default function Header() {
                 )}
               </nav>
 
-              <div className="px-5 py-5" style={{ borderTop: '1px solid #e6dcc9', backgroundColor: '#f4efe6' }}>
+              <div className="px-5 py-5" style={{ borderTop: '1px solid #cfc3ac', backgroundColor: '#e9e2d6' }}>
                 <Link
                   href="/dogs"
                   onClick={() => setMenuOpen(false)}

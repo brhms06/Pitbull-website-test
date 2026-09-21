@@ -4,21 +4,21 @@ import { useState, useEffect, useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRightIcon } from './Icons';
-import { pitbullPhotos } from '@/data/pitbullPhotos';
+import { dobermanPhotos } from '@/data/dobermanPhotos';
 
 const slides = [
   {
     id: 0,
-    image: pitbullPhotos[3],
+    image: dobermanPhotos[3],
     eyebrow: 'Meet Duke',
     heading: 'Meet your new best friend',
-    sub: 'A confident, affectionate Pitbull ready to join your family.',
+    sub: 'A confident, affectionate Doberman ready to join your family.',
     location: 'Available nationwide',
     dogId: 'duke',
   },
   {
     id: 1,
-    image: pitbullPhotos[4],
+    image: dobermanPhotos[4],
     eyebrow: 'Meet Bella',
     heading: 'Fill your home with loyalty and love',
     sub: 'Playful, affectionate and utterly charming — Bella is ready to steal your heart.',
@@ -27,7 +27,7 @@ const slides = [
   },
   {
     id: 2,
-    image: pitbullPhotos[5],
+    image: dobermanPhotos[5],
     eyebrow: 'Meet Diesel',
     heading: 'Loyal companions, built strong',
     sub: 'Home-raised and beautifully socialised, Diesel is ready to come home with you.',

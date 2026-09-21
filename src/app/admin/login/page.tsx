@@ -46,7 +46,7 @@ export default function LoginPage() {
             <PawIcon className="h-7 w-7" />
           </span>
           <h1 className="mt-4 text-2xl font-extrabold text-forest-800">Admin Login</h1>
-          <p className="mt-1 text-sm text-muted">Ironline Bullies dashboard</p>
+          <p className="mt-1 text-sm text-muted">Ironline Dobermans dashboard</p>
         </div>
 
         <form onSubmit={onSubmit} className="mt-7 space-y-4">

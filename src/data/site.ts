@@ -6,9 +6,9 @@
  * this is the one file to edit for that.
  */
 export const site = {
-  name: 'Ironline Bullies',
-  tagline: 'Family-Raised Pitbull Puppies',
-  shortPitch: 'Loyal companions, built strong.',
+  name: 'Ironline Dobermans',
+  tagline: 'Family-Raised Doberman Puppies',
+  shortPitch: 'Loyal, intelligent companions.',
   foundedYear: 2015,
   soldCount: '300+',
   city: 'Your City',
@@ -18,9 +18,9 @@ export const site = {
   // Your live domain (no trailing slash). Used for canonical URLs & sitemap.
   url: 'https://ironlinebullies.com',
   seoDescription:
-    'Health-tested, home-raised Pitbull puppies. Vet-checked, vaccinated and raised with love — reserve your puppy today, with nationwide delivery available.',
+    'Health-tested, home-raised Doberman puppies. Vet-checked, vaccinated and raised with love — reserve your puppy today, with nationwide delivery available.',
   keywords:
-    'Pitbull puppies, pitbull puppies for sale, Pitbull breeder, XL Pitbull puppies, buy pitbull puppy, reserve a Pitbull puppy',
+    'Doberman puppies, doberman puppies for sale, Doberman Pinscher breeder, AKC Doberman puppies, buy doberman puppy, reserve a Doberman puppy',
 
   // --- Placeholder contact details ---
   // TODO: this is temporarily your own inbox so Resend's sandbox mode can

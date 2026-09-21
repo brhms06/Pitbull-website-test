@@ -38,7 +38,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <PawIcon className="h-6 w-6 text-white" />
           </span>
           <div>
-            <p className="text-sm font-extrabold leading-tight text-white">Ironline Bullies</p>
+            <p className="text-sm font-extrabold leading-tight text-white">Ironline Dobermans</p>
             <p className="text-xs text-cream/70">Admin</p>
           </div>
         </div>

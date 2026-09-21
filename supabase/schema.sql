@@ -1,5 +1,5 @@
 -- =============================================================================
--- Ironline Bullies — Supabase schema
+-- Ironline Dobermans — Supabase schema
 -- =============================================================================
 -- HOW TO USE:
 --   1. Open your Supabase project -> SQL Editor -> New query.
@@ -150,7 +150,7 @@ create table if not exists public.blog_posts (
   meta_title        text not null default '',
   meta_description  text not null default '',
   tags              text[] not null default '{}',
-  author            text not null default 'Ironline Bullies',
+  author            text not null default 'Ironline Dobermans',
   published         boolean not null default false,
   published_at      timestamptz,
   created_at        timestamptz not null default now(),

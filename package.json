@@ -1,8 +1,8 @@
 {
-  "name": "ironline-bullies",
+  "name": "ironline-dobermans",
   "private": true,
   "version": "1.0.0",
-  "description": "Ironline Bullies — American Bully puppy breeder website (Next.js + Supabase).",
+  "description": "Ironline Dobermans — Doberman Pinscher puppy breeder website (Next.js + Supabase).",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

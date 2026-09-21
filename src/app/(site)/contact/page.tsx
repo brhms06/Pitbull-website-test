@@ -3,10 +3,10 @@ import PageHero from '@/components/PageHero';
 import ContactForm from '@/components/ContactForm';
 import { MailIcon, PhoneIcon, PinIcon, FacebookIcon, InstagramIcon, TikTokIcon } from '@/components/Icons';
 import { site } from '@/data/site';
-import { pitbullPhotos } from '@/data/pitbullPhotos';
+import { dobermanPhotos } from '@/data/dobermanPhotos';
 import { fetchPublicDogsServer } from '@/lib/db.server';
 
-const heroImg = pitbullPhotos[3];
+const heroImg = dobermanPhotos[3];
 
 export const metadata: Metadata = {
   title: 'Contact Us',

@@ -1,5 +1,5 @@
 -- =============================================================================
--- Ironline Bullies — add a single puppy via SQL
+-- Ironline Dobermans — add a single puppy via SQL
 -- =============================================================================
 -- HOW TO USE:
 --   1. Edit the values in the "EDIT THESE" block below — that's all you need.
@@ -25,7 +25,7 @@ insert into public.dogs (
   -- ---- EDIT THESE ----------------------------------------------------------
   slug,               -- lowercase-hyphenated version of the name, must be unique
   name,               -- shown on the card
-  breed,              -- shown on the card, e.g. 'American Bully - Standard'
+  breed,              -- shown on the card, e.g. 'Doberman Pinscher'
   price,              -- shown on the card — the full-payment price buyers see
   status,             -- shown on the card as "Condition" — 'Available' | 'Pending' | 'Sold'
   gender,             -- shown on the card as "Sex" — 'Male' | 'Female'
@@ -44,7 +44,7 @@ insert into public.dogs (
   -- ---- EDIT THESE ----------------------------------------------------------
   'pascal',
   'Pascal',
-  'American Bully - Standard',
+  'Doberman Pinscher',
   2500,
   'Available',
   'Male',

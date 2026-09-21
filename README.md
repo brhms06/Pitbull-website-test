@@ -1,6 +1,6 @@
-# Ironline Bullies
+# Ironline Dobermans
 
-An American Bully puppy breeder website — Next.js (App Router) + TypeScript + Tailwind CSS + Supabase, deployed on Vercel.
+A Doberman Pinscher puppy breeder website — Next.js (App Router) + TypeScript + Tailwind CSS + Supabase, deployed on Vercel.
 
 ## Tech stack
 
