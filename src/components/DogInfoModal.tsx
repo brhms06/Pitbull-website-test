@@ -3,16 +3,13 @@
 import Link from 'next/link';
 import type { Dog } from '@/types';
 import { getOptimizedImageUrl } from '@/lib/image-utils';
-import { dogFaqs } from '@/data/dogFaqs';
 import Modal from './Modal';
-import { CheckIcon, PawIcon } from './Icons';
+import { CheckIcon } from './Icons';
 
 const facts = (dog: Dog) => [
   { label: 'Breed', value: dog.breed },
   { label: 'Age', value: dog.ageLabel },
   { label: 'Gender', value: dog.gender },
-  { label: 'Color', value: dog.color },
-  { label: 'Weight', value: dog.weightLabel },
   { label: 'Price', value: `$${dog.price.toLocaleString()}` },
 ];
 
@@ -29,14 +26,12 @@ const goodWithFlags = (dog: Dog) => [
   { label: 'Other dogs', ok: dog.goodWithDogs },
 ];
 
-/** Full puppy info in a modal — the site retired its per-puppy detail page, so this is the "full info" surface now. */
+/** Full puppy info in a modal — click anywhere except the Contact button to close it. */
 export default function DogInfoModal({ dog, onClose }: { dog: Dog | null; onClose: () => void }) {
-  const faqs = dog ? dogFaqs[dog.id] : undefined;
-
   return (
-    <Modal open={!!dog} onClose={onClose} title={dog?.name} size="lg">
+    <Modal open={!!dog} onClose={onClose} title={dog?.name} size="lg" closeOnContentClick hideCloseButton>
       {dog && (
-        <div className="space-y-6">
+        <div className="space-y-5">
           <div className="overflow-hidden rounded-2xl bg-sand/30">
             <img
               src={getOptimizedImageUrl(dog.images[0], 700, 75)}
@@ -45,41 +40,16 @@ export default function DogInfoModal({ dog, onClose }: { dog: Dog | null; onClos
             />
           </div>
 
-          {dog.images.length > 1 && (
-            <div className="flex gap-2 overflow-x-auto">
-              {dog.images.slice(1).map((src, i) => (
-                <img
-                  key={src + i}
-                  src={getOptimizedImageUrl(src, 200, 70)}
-                  alt={`${dog.name}, photo ${i + 2}`}
-                  className="h-20 w-20 shrink-0 rounded-xl object-cover"
-                />
-              ))}
-            </div>
-          )}
-
-          {dog.personality.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {dog.personality.map((trait) => (
-                <span key={trait} className="badge bg-ember-100 text-ember-700">
-                  <PawIcon className="h-3.5 w-3.5" /> {trait}
-                </span>
-              ))}
-            </div>
-          )}
-
-          {dog.story && <p className="leading-relaxed text-ink/85">{dog.story}</p>}
-
-          <dl className="grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-3">
+          <dl className="grid grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-4">
             {facts(dog).map((f) => (
               <div key={f.label}>
                 <dt className="text-xs font-semibold uppercase tracking-wide text-muted">{f.label}</dt>
-                <dd className="font-semibold text-forest-800">{f.value}</dd>
+                <dd className="text-lg font-bold text-forest-800">{f.value}</dd>
               </div>
             ))}
           </dl>
 
-          <div className="grid gap-6 sm:grid-cols-2">
+          <div className="grid gap-6 border-t border-sand pt-5 sm:grid-cols-2">
             <div>
               <h4 className="font-heading font-bold text-forest-800">Health &amp; care</h4>
               <ul className="mt-2 space-y-1.5">
@@ -102,30 +72,7 @@ export default function DogInfoModal({ dog, onClose }: { dog: Dog | null; onClos
             </div>
           </div>
 
-          {dog.coordinator?.name && (
-            <div className="rounded-2xl bg-sand/30 p-4 text-sm">
-              <p className="font-semibold text-forest-800">Adoption coordinator</p>
-              <p className="text-ink/80">{dog.coordinator.name}</p>
-              {dog.coordinator.email && <p className="text-ink/80">{dog.coordinator.email}</p>}
-              {dog.coordinator.phone && <p className="text-ink/80">{dog.coordinator.phone}</p>}
-            </div>
-          )}
-
-          {faqs && faqs.length > 0 && (
-            <div>
-              <h4 className="font-heading font-bold text-forest-800">Frequently asked questions</h4>
-              <div className="mt-2 space-y-3">
-                {faqs.map((f) => (
-                  <div key={f.question}>
-                    <p className="font-semibold text-ink">{f.question}</p>
-                    <p className="text-sm text-ink/75">{f.answer}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <Link href={`/contact?dog=${dog.id}`} className="btn-accent w-full">
+          <Link href={`/contact?dog=${dog.id}`} className="btn-accent w-full" onClick={(e) => e.stopPropagation()}>
             Contact Us About {dog.name}
           </Link>
         </div>
