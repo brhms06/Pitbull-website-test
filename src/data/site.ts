@@ -16,15 +16,14 @@ export const site = {
 
   // --- SEO ---
   // Your live domain (no trailing slash). Used for canonical URLs & sitemap.
-  url: 'https://ironlinebullies.com',
+  url: 'https://crownlegacydobermans.com',
   seoDescription:
     'Health-tested, home-raised Doberman puppies. Vet-checked, vaccinated and raised with love — reserve your puppy today, with nationwide delivery available.',
   keywords:
     'Doberman puppies, doberman puppies for sale, Doberman Pinscher breeder, AKC Doberman puppies, buy doberman puppy, reserve a Doberman puppy',
 
   // --- Placeholder contact details ---
-  email: 'broomuhams@gmail.com',
-  phone: '(555) 010-1234',
+  email: 'info@crownlegacydobermans.com',
   // WhatsApp number in international format, digits only (e.g. 18125551234).
   // Leave blank to fall back to the contact page.
   whatsapp: '237670666946',
@@ -60,7 +59,6 @@ export const localBusinessSchema = {
   name: site.name,
   description: site.seoDescription,
   url: site.url,
-  telephone: site.phone,
   email: site.email,
   image: `${site.url}/logo.png`,
   priceRange: '$$$',

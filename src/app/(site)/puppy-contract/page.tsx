@@ -56,7 +56,7 @@ const sections: Array<{ h: string; p: string[] }> = [
   },
   {
     h: 'Contact',
-    p: [`Questions about this contract? Email us at ${site.email} or call ${site.phone}.`],
+    p: [`Questions about this contract? Email us at ${site.email}.`],
   },
 ];
 

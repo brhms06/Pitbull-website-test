@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Logo from './Logo';
 import NewsletterSignup from './NewsletterSignup';
-import { FacebookIcon, InstagramIcon, TikTokIcon, MailIcon, PhoneIcon, PinIcon, ShieldIcon, StarIcon, LockIcon } from './Icons';
+import { FacebookIcon, InstagramIcon, TikTokIcon, MailIcon, PinIcon, ShieldIcon, StarIcon, LockIcon } from './Icons';
 import { site } from '@/data/site';
 
 const quickLinks = [
@@ -56,12 +56,6 @@ export default function Footer() {
         <div>
           <h3 className="text-sm font-bold uppercase tracking-wider text-white">Get in touch</h3>
           <ul className="mt-4 space-y-3 text-sm text-cream/70">
-            <li className="flex items-center gap-2">
-              <PhoneIcon className="h-4 w-4 text-ember-200" />
-              <a href={`tel:${site.phone.replace(/\s/g, '')}`} className="hover:text-ember-200">
-                {site.phone}
-              </a>
-            </li>
             <li className="flex items-center gap-2">
               <MailIcon className="h-4 w-4 text-ember-200" />
               <a href={`mailto:${site.email}`} className="hover:text-ember-200">

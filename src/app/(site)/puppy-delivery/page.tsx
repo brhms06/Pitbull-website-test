@@ -24,7 +24,7 @@ const sections: Array<{ h: string; p: string[] }> = [
     h: 'Preparing for arrival',
     p: [
       'Every puppy is vet-checked, vaccinated appropriately for their age and dewormed before they travel — we never send a puppy that isn\'t ready or healthy enough for the trip.',
-      `You'll receive vet exam, vaccination and deworming records along with your puppy. Questions before or after delivery? Email us at ${site.email} or call ${site.phone}.`,
+      `You'll receive vet exam, vaccination and deworming records along with your puppy. Questions before or after delivery? Email us at ${site.email}.`,
     ],
   },
 ];

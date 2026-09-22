@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import FormField from './FormField';
 import Modal from './Modal';
 import { appendSubmission } from '@/lib/localStorage-utils';
+import { notify } from '@/lib/notify';
 import { submitContact } from '@/lib/db';
 
 interface ContactData {
@@ -70,7 +71,10 @@ export default function ContactForm({ dogs, initialDogId }: Props) {
     if (!validate()) return;
     setSubmitting(true);
     const subject = data.dogName ? `Puppy inquiry – ${data.dogName}` : 'General inquiry';
-    await submitContact({ name: data.name, email: data.email, phone: data.phone, subject, message: data.message }).catch(() => {});
+    await Promise.all([
+      notify({ type: 'contact', name: data.name, email: data.email, phone: data.phone, subject, dogName: data.dogName || 'Not specified', address: data.address || 'Not provided', message: data.message }),
+      submitContact({ name: data.name, email: data.email, phone: data.phone, subject, message: data.message }).catch(() => {}),
+    ]);
     appendSubmission('ilb:contact', data);
     setSubmitting(false);
     setSuccess(true);

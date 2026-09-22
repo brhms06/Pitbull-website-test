@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import FormField from './FormField';
 import Modal from './Modal';
 import SignaturePad from './SignaturePad';
+import { notify } from '@/lib/notify';
 import { submitPuppyContract } from '@/lib/db';
 
 const PAYMENT_METHODS = ['Zelle', 'Cash App', 'Chime', 'Apple Pay'];
@@ -119,18 +120,32 @@ export default function PuppyContractForm({ dogs }: Props) {
     if (!validate() || !signature) return;
     setSubmitting(true);
     const price = Number(data.price) || 0;
-    await submitPuppyContract({
-      dogId: data.dogId,
-      dogName: data.dogName,
-      buyerName: data.buyerName,
-      email: data.email,
-      phone: data.phone,
-      address: data.address,
-      shippingOption: data.shippingOption,
-      paymentMethod: data.paymentMethod,
-      price,
-      signature,
-    }).catch(() => {});
+    await Promise.all([
+      notify({
+        type: 'contract',
+        buyerName: data.buyerName,
+        email: data.email,
+        phone: data.phone,
+        dogName: data.dogName,
+        address: data.address,
+        shippingOption: data.shippingOption,
+        paymentMethod: data.paymentMethod,
+        price,
+        signature,
+      }),
+      submitPuppyContract({
+        dogId: data.dogId,
+        dogName: data.dogName,
+        buyerName: data.buyerName,
+        email: data.email,
+        phone: data.phone,
+        address: data.address,
+        shippingOption: data.shippingOption,
+        paymentMethod: data.paymentMethod,
+        price,
+        signature,
+      }).catch(() => {}),
+    ]);
     setSubmitting(false);
     setSuccess(true);
   };

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import PageHero from '@/components/PageHero';
 import ContactForm from '@/components/ContactForm';
-import { MailIcon, PhoneIcon, PinIcon, FacebookIcon, InstagramIcon, TikTokIcon } from '@/components/Icons';
+import { MailIcon, PinIcon, FacebookIcon, InstagramIcon, TikTokIcon } from '@/components/Icons';
 import { site } from '@/data/site';
 import { dobermanPhotos } from '@/data/dobermanPhotos';
 import { fetchPublicDogsServer } from '@/lib/db.server';
@@ -22,7 +22,7 @@ export default async function ContactPage({ searchParams }: { searchParams: Prom
     '@type': 'ContactPage',
     name: `Contact Us | ${site.name}`,
     url: `${site.url}/contact`,
-    mainEntity: { '@type': 'PetStore', name: site.name, url: site.url, telephone: site.phone, email: site.email },
+    mainEntity: { '@type': 'PetStore', name: site.name, url: site.url, email: site.email },
   };
 
   const breadcrumbJsonLd = {
@@ -44,9 +44,6 @@ export default async function ContactPage({ searchParams }: { searchParams: Prom
           <ContactForm dogs={available} initialDogId={dog} />
 
           <div className="card mt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-4 p-6 text-sm">
-            <a href={`tel:${site.phone.replace(/\s/g, '')}`} className="link-quiet flex items-center gap-2 font-semibold text-forest-800">
-              <PhoneIcon className="h-5 w-5 text-forest-600" /> {site.phone}
-            </a>
             <a href={`mailto:${site.email}`} className="link-quiet flex items-center gap-2 font-semibold text-forest-800">
               <MailIcon className="h-5 w-5 text-forest-600" /> {site.email}
             </a>

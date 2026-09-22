@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import FormField from './FormField';
 import Modal from './Modal';
 import { appendSubmission } from '@/lib/localStorage-utils';
+import { notify } from '@/lib/notify';
 import { submitPuppyApplication } from '@/lib/db';
 import { CheckIcon } from './Icons';
 
@@ -94,7 +95,21 @@ export default function PuppyApplicationForm({ dogId, dogName, dogs }: Props) {
     e.preventDefault();
     if (!validateStep(2)) return;
     setSubmitting(true);
-    await submitPuppyApplication(data).catch(() => {});
+    await Promise.all([
+      notify({
+        type: 'application',
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        dogName: data.dogName,
+        address: data.address,
+        homeType: data.homeType,
+        hasChildren: data.hasChildren,
+        hasPets: data.hasPets,
+        experience: data.experience || 'Not provided',
+      }),
+      submitPuppyApplication(data).catch(() => {}),
+    ]);
     appendSubmission('ilb:applications', data);
     setSubmitting(false);
     setSuccess(true);

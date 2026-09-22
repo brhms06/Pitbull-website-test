@@ -32,7 +32,7 @@ const sections: Array<{ h: string; p: string[] }> = [
   },
   {
     h: 'Contact',
-    p: [`Questions about a refund? Email us at ${site.email} or call ${site.phone}.`],
+    p: [`Questions about a refund? Email us at ${site.email}.`],
   },
 ];
 
