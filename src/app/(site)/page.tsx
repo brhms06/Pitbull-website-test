@@ -189,7 +189,7 @@ export default async function HomePage() {
         <section className="container-page py-16 md:py-24">
           <SectionHeading eyebrow="Happy families" title="What our families say" description="Families across the country trust us for healthy, well-socialised Doberman puppies." />
           <Reveal stagger={0.1} className="mt-12 grid gap-6 md:grid-cols-3">
-            {testimonials.slice(0, 3).map((t) => (
+            {testimonials.slice(0, 6).map((t) => (
               <div key={t.id} className="card flex flex-col gap-3 p-6">
                 <p className="font-bold text-forest-800">{t.customerName}</p>
                 <div className="flex gap-0.5 text-ember">
