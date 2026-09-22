@@ -18,7 +18,7 @@ export const blogPosts: BlogPost[] = [
     slug: 'doberman-colors-size-temperament',
     title: 'Doberman Puppies 101: Colors, Size & Temperament Explained',
     date: '2024-02-10',
-    author: 'Ironline Dobermans',
+    author: 'Crown Legacy Dobermans',
     excerpt:
       'Dobermans come in a handful of striking colors and one of the most consistent temperaments of any breed. Here is what to know before choosing your puppy.',
     content: `
@@ -45,7 +45,7 @@ export const blogPosts: BlogPost[] = [
     slug: 'bringing-home-your-new-puppy',
     title: 'Bringing Home Your New Puppy: The First 30 Days',
     date: '2024-03-05',
-    author: 'Ironline Dobermans',
+    author: 'Crown Legacy Dobermans',
     excerpt:
       'The first month sets the tone for your puppy\'s whole life. Here is what to expect and how to prepare.',
     content: `

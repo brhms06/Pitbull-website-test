@@ -16,53 +16,38 @@ const sections: Array<{ h: string; p: string[] }> = [
     p: [`These terms apply to your use of the ${site.name} website and to any puppy reserved or purchased through it. By placing a reservation you agree to them.`],
   },
   {
-    h: 'Reserving a puppy',
+    h: 'Responsibilities of the buyer',
     p: [
-      'A puppy is reserved once we have confirmed availability and received your deposit. Until we confirm in writing, a puppy remains available to other buyers.',
-      'We hold a puppy for 48 hours pending payment. If payment is not received in that window the puppy may be released to the next enquiry.',
-      'We reserve the right to decline a sale where we do not believe the placement is right for the puppy.',
+      'Payment: The buyer is responsible for paying for the puppy and shipping fees.',
+      'Supervision: The buyer agrees to provide proper supervision and not allow the puppy outdoors without supervision.',
+      'Humane care: The buyer commits to caring for the puppy in a humane manner, including providing adequate food, water, shelter, attention and medical care.',
+      'Guarantee and liability: The buyer understands that the breeder provides guarantees about the puppy’s temperament but is not responsible for future damages or injuries caused by the puppy.',
+      'Monitoring: The breeder has permission to contact the buyer to ensure the puppy is being properly treated and cared for.',
     ],
   },
   {
-    h: 'Prices, deposits and payment',
+    h: "Seller's guarantees",
     p: [
-      "Prices are shown in US dollars on each puppy's page. Deposits are deducted from the final balance.",
-      'Deposits secure a specific puppy and are non-refundable if you change your mind, except as set out under "If something goes wrong" below.',
-      'The balance is due before the puppy travels. We will confirm accepted payment methods when you reserve.',
+      'Health and registration: The seller guarantees the puppy’s sound health and provides AKC registration application paperwork for local Kennel Club registration.',
+      'Temperament: The seller ensures that the puppy has a great temperament at the time of sale.',
+      'Health records: The seller provides a health record of all shots and worming.',
     ],
   },
   {
-    h: 'Health guarantee',
+    h: 'Physical examination and refund',
     p: [
-      'Every puppy leaves us vet-checked, vaccinated appropriately for its age, dewormed and microchipped, with its records supplied.',
-      'We provide a written health guarantee against congenital defects with each puppy. The guarantee document issued with your puppy sets out its exact scope and duration and takes precedence over this summary.',
-      'We ask that you have your puppy examined by your own vet within 72 hours of arrival so that any concern is identified straight away.',
+      'Veterinary examination: The buyer agrees to take the puppy to a licensed veterinarian within 72 hours of delivery for a physical examination.',
+      'Refund policy: If the licensed vet determines that the puppy has health issues caused by the seller, the buyer can return the puppy for a full refund, with the seller covering the return expenses.',
     ],
   },
   {
-    h: 'Delivery and collection',
+    h: "Buyer's options and responsibilities",
     p: [
-      'You are welcome to collect your puppy in person. Where you choose nationwide delivery, travel is arranged with a pet courier or ground transport and charged separately.',
-      'Delivery dates are estimates. We will not send a puppy that is unwell or too young to travel safely, and will reschedule instead.',
+      'Rehoming option: If the buyer needs to give up the dog, the seller should be notified first, giving them the first option to resume full ownership and find a new home for the dog.',
+      'Money-back guarantee: The buyer has a 30-day money-back guarantee, with a full refund if they are not satisfied with the dog or have difficulties bonding with it.',
+      'Transfer approval: The breeder/seller reserves the right to approve or prohibit any transfer of the animal to a third party.',
+      'Prohibited facilities: The dog should not be sold, leased, traded or given to any pet shop, research laboratory, animal shelter or similar facility.',
     ],
-  },
-  {
-    h: 'Your responsibilities as an owner',
-    p: [
-      'By buying from us you agree to provide appropriate food, shelter, training and veterinary care for the life of the dog.',
-      'If you are ever unable to keep your dog, we ask that you contact us first — we would rather take a dog back than see it rehomed through a shelter.',
-    ],
-  },
-  {
-    h: 'If something goes wrong',
-    p: [
-      'If we are unable to supply the puppy you reserved — for example due to illness or a change in the litter — you may choose another available puppy, wait for the next litter, or receive a full refund of your deposit.',
-      'Nothing in these terms limits your rights under applicable consumer law.',
-    ],
-  },
-  {
-    h: 'Liability',
-    p: ['We share known health, lineage and temperament information in good faith. Dogs are living animals and no breeder can guarantee future health or personality beyond the written guarantee provided.'],
   },
   {
     h: 'Website content',

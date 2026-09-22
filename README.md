@@ -1,4 +1,4 @@
-# Ironline Dobermans
+# Crown Legacy Dobermans
 
 A Doberman Pinscher puppy breeder website — Next.js (App Router) + TypeScript + Tailwind CSS + Supabase, deployed on Vercel.
 

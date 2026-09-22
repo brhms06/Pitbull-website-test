@@ -164,7 +164,7 @@ export default function SubmissionsPage() {
                   {tab === 'orders' && row.whatsapp_opt_in && row.phone && (
                     <a
                       href={`https://wa.me/${String(row.phone).replace(/\D/g, '')}?text=${encodeURIComponent(
-                        `Hi ${row.customer_name}, this is Ironline Dobermans about your order. Here are the ${row.payment_method || 'payment'} details:`,
+                        `Hi ${row.customer_name}, this is Crown Legacy Dobermans about your order. Here are the ${row.payment_method || 'payment'} details:`,
                       )}`}
                       target="_blank"
                       rel="noopener noreferrer"

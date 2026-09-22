@@ -43,7 +43,7 @@ export default function Logo({ className, withText = true, variant = 'dark' }: L
       {withText && (
         <span className="flex flex-col leading-none">
           <span className="font-heading text-lg font-extrabold tracking-tight" style={{ color: titleColor }}>
-            IRONLINE
+            CROWN LEGACY
           </span>
           <span className="font-heading text-xs font-semibold tracking-[0.25em] text-ember">DOBERMANS</span>
         </span>

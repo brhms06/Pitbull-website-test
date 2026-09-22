@@ -6,7 +6,7 @@
  * this is the one file to edit for that.
  */
 export const site = {
-  name: 'Ironline Dobermans',
+  name: 'Crown Legacy Dobermans',
   tagline: 'Family-Raised Doberman Puppies',
   shortPitch: 'Loyal, intelligent companions.',
   foundedYear: 2015,

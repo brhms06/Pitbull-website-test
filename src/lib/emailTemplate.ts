@@ -30,8 +30,8 @@ export function renderAdminEmail(params: { emoji: string; heading: string; intro
     .join('');
 
   const footerText = footerName
-    ? `Automated notification from the Ironline Dobermans website. Reply to this email to respond directly to ${escapeHtml(footerName)}.`
-    : 'Automated notification from the Ironline Dobermans website.';
+    ? `Automated notification from the Crown Legacy Dobermans website. Reply to this email to respond directly to ${escapeHtml(footerName)}.`
+    : 'Automated notification from the Crown Legacy Dobermans website.';
 
   return `<!doctype html>
 <html>
