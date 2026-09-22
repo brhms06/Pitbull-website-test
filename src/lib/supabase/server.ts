@@ -28,5 +28,11 @@ export async function createClient() {
         }
       },
     },
+    global: {
+      // Next.js caches fetch() in Server Components indefinitely by default,
+      // which made pages like the homepage show stale dogs/testimonials after
+      // an admin edit. Opt every server-side Supabase request out of that cache.
+      fetch: (url: RequestInfo | URL, options?: RequestInit) => fetch(url, { ...options, cache: 'no-store' }),
+    },
   });
 }

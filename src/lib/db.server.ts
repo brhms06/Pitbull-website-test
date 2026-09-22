@@ -14,7 +14,10 @@ export async function fetchPublicDogsServer(): Promise<Dog[]> {
     .eq('published', true)
     .order('created_at', { ascending: false });
 
-  if (error || !data) return seedDogs;
+  if (error || !data) {
+    console.error('[fetchPublicDogsServer] falling back to seed dogs:', error);
+    return seedDogs;
+  }
   return (data as DogRow[]).map(rowToAdminDog);
 }
 
