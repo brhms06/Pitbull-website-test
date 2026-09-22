@@ -3,7 +3,7 @@ import Hero from '@/components/Hero';
 import { localBusinessSchema, site } from '@/data/site';
 import DogSlideshow from '@/components/DogSlideshow';
 import SectionHeading from '@/components/SectionHeading';
-import DogGrid from '@/components/DogGrid';
+import AvailablePuppiesPreview from '@/components/AvailablePuppiesPreview';
 import Reveal from '@/components/Reveal';
 import {
   ArrowRightIcon,
@@ -35,12 +35,33 @@ const reservationSteps = [
 
 export default async function HomePage() {
   const [dogs, testimonials] = await Promise.all([fetchPublicDogsServer(), fetchPublicTestimonialsServer()]);
-  const featured = dogs.filter((d) => d.status !== 'Sold').slice(0, 3);
+  const available = dogs.filter((d) => d.status !== 'Sold');
+  const availablePuppies = [
+    ...available.filter((d) => d.gender === 'Male').slice(0, 3),
+    ...available.filter((d) => d.gender === 'Female').slice(0, 3),
+  ];
 
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }} />
       <Hero />
+
+      {/* Available puppies — background offsets down from the section top so the
+          card row straddles the cream-to-sand boundary line. */}
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-x-0 bottom-0 top-[19rem] bg-sand sm:top-48 md:top-56" aria-hidden />
+        <div className="container-page relative py-16 md:py-24">
+          <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+            <SectionHeading align="left" eyebrow="Available now" title="Our current puppies" className="!mx-0" />
+            <Link href="/dogs" className="btn-ghost shrink-0">
+              View all puppies <ArrowRightIcon className="h-4 w-4" />
+            </Link>
+          </div>
+          <div className="mt-20 -translate-y-12 sm:-translate-y-16">
+            <AvailablePuppiesPreview dogs={availablePuppies} />
+          </div>
+        </div>
+      </section>
 
       {/* Tagline band */}
       <section className="bg-forest text-white">
@@ -136,21 +157,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Featured dogs */}
-      <section className="py-16 md:py-24">
-        <div className="container-page">
-          <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-            <SectionHeading align="left" eyebrow="Looking for a home" title="Puppies ready for their new homes" className="!mx-0" />
-            <Link href="/dogs" className="btn-ghost shrink-0">
-              View all puppies <ArrowRightIcon className="h-4 w-4" />
-            </Link>
-          </div>
-          <div className="mt-10">
-            <DogGrid dogs={featured} />
-          </div>
-        </div>
-      </section>
-
       {/* How reservation works */}
       <section className="bg-forest-800 py-16 text-white md:py-24">
         <div className="container-page">
@@ -234,10 +240,10 @@ export default async function HomePage() {
               <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-white/15">
                 <HomeIcon className="h-7 w-7 text-white" />
               </div>
-              <h3 className="text-2xl font-extrabold text-white">Pickup &amp; delivery</h3>
+              <h3 className="text-2xl font-extrabold text-white">Safe, Reliable Puppy Transportation</h3>
               <p className="mt-3 leading-relaxed text-white/85">
-                Collect your puppy in person or let us bring them safely to you. We arrange careful, stress-free
-                transport anywhere in the US.
+                At {site.name}, we understand that bringing your new Doberman home is an exciting experience. Our
+                priority is making sure every puppy travels safely, comfortably, and with the care they deserve.
               </p>
               <ul className="mt-4 space-y-2 text-sm text-white/85">
                 {['Safe nationwide delivery', 'Photo & video updates', 'Support before & after'].map((item) => (

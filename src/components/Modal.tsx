@@ -9,10 +9,11 @@ interface Props {
   onClose: () => void;
   title?: string;
   children: ReactNode;
+  size?: 'md' | 'lg';
 }
 
 /** Accessible, animated dialog (scale-up + fade). Closes on Esc / backdrop. */
-export default function Modal({ open, onClose, title, children }: Props) {
+export default function Modal({ open, onClose, title, children, size = 'md' }: Props) {
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
@@ -39,14 +40,14 @@ export default function Modal({ open, onClose, title, children }: Props) {
             role="dialog"
             aria-modal="true"
             aria-label={title}
-            className="card relative z-10 w-full max-w-md p-7 text-center"
+            className={`card relative z-10 w-full p-7 ${size === 'lg' ? 'max-w-2xl text-left' : 'max-w-md text-center'}`}
             initial={{ opacity: 0, scale: 0.9, y: 16 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 8 }}
             transition={{ type: 'spring', stiffness: 280, damping: 26 }}
           >
             {title && <h3 className="text-2xl font-extrabold text-forest-800">{title}</h3>}
-            <div className="mt-3 text-muted">{children}</div>
+            <div className={`mt-3 text-muted ${size === 'lg' ? 'max-h-[75vh] overflow-y-auto pr-1' : ''}`}>{children}</div>
             <button type="button" onClick={onClose} className="btn-primary mt-6 w-full">
               Close
             </button>
