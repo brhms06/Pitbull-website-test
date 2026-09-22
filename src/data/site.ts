@@ -23,9 +23,6 @@ export const site = {
     'Doberman puppies, doberman puppies for sale, Doberman Pinscher breeder, AKC Doberman puppies, buy doberman puppy, reserve a Doberman puppy',
 
   // --- Placeholder contact details ---
-  // TODO: this is temporarily your own inbox so Resend's sandbox mode can
-  // actually deliver test notifications. Switch back to the real business
-  // email once you've verified a sending domain in Resend.
   email: 'broomuhams@gmail.com',
   phone: '(555) 010-1234',
   // WhatsApp number in international format, digits only (e.g. 18125551234).
@@ -65,7 +62,7 @@ export const localBusinessSchema = {
   url: site.url,
   telephone: site.phone,
   email: site.email,
-  image: `${site.url}/logo.svg`,
+  image: `${site.url}/logo.png`,
   priceRange: '$$$',
   sameAs: ([site.social.facebook, site.social.instagram, site.social.tiktok] as string[]).filter((u) =>
     Boolean(u && u.trim()),

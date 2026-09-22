@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { appendSubmission } from '@/lib/localStorage-utils';
 import { submitNewsletter } from '@/lib/db';
-import { notify } from '@/lib/notify';
 import { ArrowRightIcon, CheckIcon } from './Icons';
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -21,7 +20,6 @@ export default function NewsletterSignup() {
       return;
     }
     submitNewsletter(email).catch(() => {});
-    notify({ type: 'newsletter', email });
     appendSubmission('ilb:newsletter', { email });
     setStatus('done');
     setEmail('');

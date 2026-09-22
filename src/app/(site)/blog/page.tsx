@@ -20,7 +20,7 @@ export default async function BlogPage() {
     '@type': 'Blog',
     name: `Blog | ${site.name}`,
     url: `${site.url}/blog`,
-    publisher: { '@type': 'Organization', name: site.name, logo: { '@type': 'ImageObject', url: `${site.url}/logo.svg` } },
+    publisher: { '@type': 'Organization', name: site.name, logo: { '@type': 'ImageObject', url: `${site.url}/logo.png` } },
   };
 
   const breadcrumbJsonLd = {

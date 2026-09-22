@@ -7,9 +7,11 @@ interface Props {
   dogs: Dog[];
   /** Optional message shown when the list is empty. */
   emptyMessage?: string;
+  /** Cards per row at desktop width. Defaults to 3 (used by the /dogs listing). */
+  columns?: 3 | 4;
 }
 
-export default function DogGrid({ dogs, emptyMessage }: Props) {
+export default function DogGrid({ dogs, emptyMessage, columns = 3 }: Props) {
   if (dogs.length === 0) {
     return (
       <div className="card flex flex-col items-center gap-3 px-6 py-16 text-center">
@@ -23,7 +25,10 @@ export default function DogGrid({ dogs, emptyMessage }: Props) {
   }
 
   return (
-    <Reveal stagger={0.08} className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <Reveal
+      stagger={0.08}
+      className={`grid grid-cols-1 gap-6 sm:grid-cols-2 ${columns === 4 ? 'lg:grid-cols-4' : 'lg:grid-cols-3'}`}
+    >
       {dogs.map((dog) => (
         <DogCard key={dog.id} dog={dog} />
       ))}

@@ -5,10 +5,46 @@ import { useRouter } from 'next/navigation';
 import FormField from './FormField';
 import Modal from './Modal';
 import SignaturePad from './SignaturePad';
-import { notify } from '@/lib/notify';
 import { submitPuppyContract } from '@/lib/db';
 
 const PAYMENT_METHODS = ['Zelle', 'Cash App', 'Chime', 'Apple Pay'];
+
+const TERMS_SECTIONS: Array<{ h: string; items: { label: string; text: string }[] }> = [
+  {
+    h: 'Responsibilities of the Buyer',
+    items: [
+      { label: 'Payment', text: 'The buyer is responsible for paying for the puppy and shipping fees.' },
+      { label: 'Supervision', text: 'The buyer agrees to provide proper supervision and not allow the puppy outdoors without supervision.' },
+      { label: 'Humane Care', text: 'The buyer commits to caring for the puppy in a humane manner, including providing adequate food, water, shelter, attention, and medical care.' },
+      { label: 'Guarantee and Liability', text: "The buyer understands that the breeder provides guarantees about the puppy's temperament but is not responsible for future damages or injuries caused by the puppy." },
+      { label: 'Monitoring', text: 'The breeder has permission to contact the buyer to ensure the puppy is being properly treated and cared for.' },
+    ],
+  },
+  {
+    h: "Seller's Guarantees",
+    items: [
+      { label: 'Health and Registration', text: "The seller guarantees the puppy's sound health and provides AKC registration application paperwork for local Kennel Club registration." },
+      { label: 'Temperament', text: 'The seller ensures that the puppy has a great temperament at the time of sale.' },
+      { label: 'Health Records', text: 'The seller provides a health record of all shots and worming.' },
+    ],
+  },
+  {
+    h: 'Physical Examination and Refund',
+    items: [
+      { label: 'Veterinary Examination', text: 'The buyer agrees to take the puppy to a licensed veterinarian within 72 hours of delivery for a physical examination.' },
+      { label: 'Refund Policy', text: 'If the licensed vet determines that the puppy has health issues caused by the seller, the buyer can return the puppy for a full refund, with the seller covering the return expenses.' },
+    ],
+  },
+  {
+    h: "Buyer's Options and Responsibilities",
+    items: [
+      { label: 'Rehoming Option', text: 'If the buyer needs to give up the dog, the seller should be notified first, giving them the first option to resume full ownership and find a new home for the dog.' },
+      { label: 'Money-Back Guarantee', text: 'The buyer has a 30-day money-back guarantee, with a full refund if they are not satisfied with the dog or have difficulties bonding with it.' },
+      { label: 'Transfer Approval', text: 'The breeder/seller reserves the right to approve or prohibit any transfer of the animal to a third party.' },
+      { label: 'Prohibited Facilities', text: 'The dog should not be sold, leased, traded, or given to any pet shop, research laboratory, animal shelter, or similar facility.' },
+    ],
+  },
+];
 
 interface ContractData {
   dogId: string;
@@ -27,7 +63,7 @@ const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phonePattern = /^[+\d][\d\s()-]{6,}$/;
 
 interface Props {
-  dogs: { id: string; name: string; price: number }[];
+  dogs: { id: string; name: string; price: number; gender: string }[];
 }
 
 export default function PuppyContractForm({ dogs }: Props) {
@@ -83,32 +119,18 @@ export default function PuppyContractForm({ dogs }: Props) {
     if (!validate() || !signature) return;
     setSubmitting(true);
     const price = Number(data.price) || 0;
-    await Promise.all([
-      notify({
-        type: 'contract',
-        buyerName: data.buyerName,
-        email: data.email,
-        phone: data.phone,
-        dogName: data.dogName,
-        address: data.address,
-        shippingOption: data.shippingOption,
-        paymentMethod: data.paymentMethod,
-        price,
-        signature,
-      }),
-      submitPuppyContract({
-        dogId: data.dogId,
-        dogName: data.dogName,
-        buyerName: data.buyerName,
-        email: data.email,
-        phone: data.phone,
-        address: data.address,
-        shippingOption: data.shippingOption,
-        paymentMethod: data.paymentMethod,
-        price,
-        signature,
-      }).catch(() => {}),
-    ]);
+    await submitPuppyContract({
+      dogId: data.dogId,
+      dogName: data.dogName,
+      buyerName: data.buyerName,
+      email: data.email,
+      phone: data.phone,
+      address: data.address,
+      shippingOption: data.shippingOption,
+      paymentMethod: data.paymentMethod,
+      price,
+      signature,
+    }).catch(() => {});
     setSubmitting(false);
     setSuccess(true);
   };
@@ -125,7 +147,7 @@ export default function PuppyContractForm({ dogs }: Props) {
                 <option value="">Select a puppy…</option>
                 {dogs.map((d) => (
                   <option key={d.id} value={d.id}>
-                    {d.name}
+                    {d.name} - {d.gender}
                   </option>
                 ))}
               </select>
@@ -170,15 +192,24 @@ export default function PuppyContractForm({ dogs }: Props) {
           </FormField>
         </div>
 
-        <div className="mt-6">
-          <label className="label">
-            Your signature <span className="text-ember">*</span>
-          </label>
-          <SignaturePad onChange={setSignature} error={errors.signature} />
+        <div className="mt-6 rounded-2xl border border-sand bg-cream/40 p-5 sm:p-6">
+          <h3 className="text-sm font-extrabold text-forest-800">Terms &amp; Conditions</h3>
+          {TERMS_SECTIONS.map((section) => (
+            <div key={section.h} className="mt-4">
+              <h4 className="text-xs font-bold text-forest-800">{section.h}</h4>
+              <ul className="mt-2 space-y-1.5 text-xs leading-relaxed text-ink/85">
+                {section.items.map((item) => (
+                  <li key={item.label}>
+                    <span className="font-semibold text-ink">{item.label}:</span> {item.text}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
 
         <div className="mt-5">
-          <FormField label="Accept Terms & Conditions?" htmlFor="c-agree" required error={errors.agree} hint="Your signature above confirms this agreement.">
+          <FormField label="Accept Terms & Conditions?" htmlFor="c-agree" required error={errors.agree} hint="Signing below confirms your agreement to these terms.">
             <div className="flex gap-4 pt-1">
               {['Yes', 'No'].map((opt) => (
                 <label key={opt} className="flex items-center gap-2 text-sm text-ink/85">
@@ -188,6 +219,13 @@ export default function PuppyContractForm({ dogs }: Props) {
               ))}
             </div>
           </FormField>
+        </div>
+
+        <div className="mt-6">
+          <label className="label">
+            Your signature <span className="text-ember">*</span>
+          </label>
+          <SignaturePad onChange={setSignature} error={errors.signature} />
         </div>
 
         <button type="submit" disabled={submitting} className="btn-accent mt-6 w-full disabled:opacity-70">

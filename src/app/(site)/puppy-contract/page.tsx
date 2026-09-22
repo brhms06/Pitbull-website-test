@@ -62,7 +62,7 @@ const sections: Array<{ h: string; p: string[] }> = [
 
 export default async function PuppyContractPage() {
   const dogs = await fetchPublicDogsServer();
-  const reservable = dogs.filter((d) => d.status !== 'Sold').map((d) => ({ id: d.id, name: d.name, price: d.price }));
+  const reservable = dogs.filter((d) => d.status !== 'Sold').map((d) => ({ id: d.id, name: d.name, price: d.price, gender: d.gender }));
 
   return (
     <>

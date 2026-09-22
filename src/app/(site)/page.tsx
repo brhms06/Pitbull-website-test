@@ -3,7 +3,7 @@ import Hero from '@/components/Hero';
 import { localBusinessSchema, site } from '@/data/site';
 import DogSlideshow from '@/components/DogSlideshow';
 import SectionHeading from '@/components/SectionHeading';
-import AvailablePuppiesPreview from '@/components/AvailablePuppiesPreview';
+import DogGrid from '@/components/DogGrid';
 import Reveal from '@/components/Reveal';
 import {
   ArrowRightIcon,
@@ -37,8 +37,8 @@ export default async function HomePage() {
   const [dogs, testimonials] = await Promise.all([fetchPublicDogsServer(), fetchPublicTestimonialsServer()]);
   const available = dogs.filter((d) => d.status !== 'Sold');
   const availablePuppies = [
-    ...available.filter((d) => d.gender === 'Male').slice(0, 3),
-    ...available.filter((d) => d.gender === 'Female').slice(0, 3),
+    ...available.filter((d) => d.gender === 'Male').slice(0, 4),
+    ...available.filter((d) => d.gender === 'Female').slice(0, 4),
   ];
 
   return (
@@ -58,7 +58,7 @@ export default async function HomePage() {
             </Link>
           </div>
           <div className="mt-20 -translate-y-12 sm:-translate-y-16">
-            <AvailablePuppiesPreview dogs={availablePuppies} />
+            <DogGrid dogs={availablePuppies} columns={4} />
           </div>
         </div>
       </section>
