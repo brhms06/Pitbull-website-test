@@ -53,16 +53,19 @@ create table if not exists public.dogs (
 create index if not exists dogs_created_at_idx on public.dogs (created_at desc);
 
 -- ---------- TESTIMONIALS (admin-managed, no public write) ---------------------
+-- Only three fields are shown on the site: customer name, star rating, and quote.
 create table if not exists public.testimonials (
   id            uuid primary key default gen_random_uuid(),
   customer_name text not null,
-  dog_name      text not null default '',
   quote         text not null,
   rating        int not null default 5,
-  photo_url     text not null default '',
   published     boolean not null default true,
   created_at    timestamptz not null default now()
 );
+-- If your testimonials table predates this simplification and still has
+-- dog_name/photo_url columns, they're safe to leave (unused) or drop:
+--   alter table public.testimonials drop column if exists dog_name;
+--   alter table public.testimonials drop column if exists photo_url;
 
 -- ---------- FORM SUBMISSIONS --------------------------------------------------
 create table if not exists public.contact_messages (

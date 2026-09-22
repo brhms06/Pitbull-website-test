@@ -191,13 +191,7 @@ export default async function HomePage() {
           <Reveal stagger={0.1} className="mt-12 grid gap-6 md:grid-cols-3">
             {testimonials.slice(0, 3).map((t) => (
               <div key={t.id} className="card flex flex-col gap-3 p-6">
-                <div className="flex items-center gap-3">
-                  <img src={t.photo} alt="" className="h-12 w-12 rounded-full object-cover" />
-                  <div>
-                    <p className="font-bold text-forest-800">{t.customerName}</p>
-                    {t.dogName && <p className="text-xs text-muted">Owner of {t.dogName}</p>}
-                  </div>
-                </div>
+                <p className="font-bold text-forest-800">{t.customerName}</p>
                 <div className="flex gap-0.5 text-ember">
                   {Array.from({ length: t.rating }).map((_, i) => (
                     <StarIcon key={i} className="h-4 w-4" />

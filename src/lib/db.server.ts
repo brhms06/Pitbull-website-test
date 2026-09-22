@@ -30,10 +30,8 @@ export async function fetchPublicTestimonialsServer(): Promise<Testimonial[]> {
   return data.map((r) => ({
     id: r.id,
     customerName: r.customer_name,
-    dogName: r.dog_name,
     quote: r.quote,
     rating: r.rating,
-    photo: r.photo_url,
   }));
 }
 

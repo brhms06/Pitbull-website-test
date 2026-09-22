@@ -37,10 +37,8 @@ export interface Dog {
 export interface Testimonial {
   id: string;
   customerName: string;
-  dogName: string;
   quote: string;
   rating: number; // 1-5
-  photo: string;
 }
 
 export interface TeamMember {

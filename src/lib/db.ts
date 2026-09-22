@@ -201,10 +201,8 @@ export async function fetchPublicTestimonials(): Promise<Testimonial[]> {
   return data.map((r) => ({
     id: r.id,
     customerName: r.customer_name,
-    dogName: r.dog_name,
     quote: r.quote,
     rating: r.rating,
-    photo: r.photo_url,
   }));
 }
 
@@ -313,10 +311,8 @@ export async function importSeedDogs(): Promise<number> {
 export interface TestimonialInput {
   id?: string;
   customerName: string;
-  dogName: string;
   quote: string;
   rating: number;
-  photoUrl: string;
   published: boolean;
 }
 
@@ -332,10 +328,8 @@ export async function fetchAllTestimonials() {
 export async function createTestimonial(input: TestimonialInput): Promise<void> {
   const { error } = await supabase.from('testimonials').insert({
     customer_name: input.customerName,
-    dog_name: input.dogName,
     quote: input.quote,
     rating: input.rating,
-    photo_url: input.photoUrl,
     published: input.published,
   });
   if (error) throw error;
