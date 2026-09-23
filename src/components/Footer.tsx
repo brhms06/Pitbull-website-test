@@ -4,10 +4,13 @@ import NewsletterSignup from './NewsletterSignup';
 import { FacebookIcon, InstagramIcon, TikTokIcon, MailIcon, PinIcon, ShieldIcon, StarIcon, LockIcon } from './Icons';
 import { site } from '@/data/site';
 
-const quickLinks = [
+const exploreLinks = [
   { label: 'Home', href: '/' },
   { label: 'About Us', href: '/about' },
   { label: 'Available Puppies', href: '/dogs' },
+];
+
+const moreLinks = [
   { label: 'Contact', href: '/contact' },
   { label: "FAQ's", href: '/faq' },
   { label: 'Puppy Delivery', href: '/puppy-delivery' },
@@ -25,6 +28,18 @@ export default function Footer() {
             {site.name} — {site.tagline}. Health-tested, home-raised puppies, raised with love and
             delivered across the US.
           </p>
+          <div className="mt-4 flex items-center gap-2 text-sm text-cream/70">
+            <MailIcon className="h-4 w-4 text-ember-200" />
+            <a href={`mailto:${site.email}`} className="hover:text-ember-200">
+              {site.email}
+            </a>
+          </div>
+          {site.address && (
+            <div className="mt-2 flex items-start gap-2 text-sm text-cream/70">
+              <PinIcon className="mt-0.5 h-4 w-4 shrink-0 text-ember-200" />
+              <span>{site.address}</span>
+            </div>
+          )}
           <div className="mt-5 flex gap-3">
             <SocialLink href={site.social.facebook} label="Facebook">
               <FacebookIcon />
@@ -42,7 +57,7 @@ export default function Footer() {
         <nav aria-label="Footer">
           <h3 className="text-sm font-bold uppercase tracking-wider text-white">Explore</h3>
           <ul className="mt-4 space-y-2 text-sm">
-            {quickLinks.map((l) => (
+            {exploreLinks.map((l) => (
               <li key={l.href}>
                 <Link href={l.href} className="text-cream/70 transition hover:text-ember-200">
                   {l.label}
@@ -52,24 +67,19 @@ export default function Footer() {
           </ul>
         </nav>
 
-        {/* Contact */}
-        <div>
-          <h3 className="text-sm font-bold uppercase tracking-wider text-white">Get in touch</h3>
-          <ul className="mt-4 space-y-3 text-sm text-cream/70">
-            <li className="flex items-center gap-2">
-              <MailIcon className="h-4 w-4 text-ember-200" />
-              <a href={`mailto:${site.email}`} className="hover:text-ember-200">
-                {site.email}
-              </a>
-            </li>
-            {site.address && (
-              <li className="flex items-start gap-2">
-                <PinIcon className="mt-0.5 h-4 w-4 shrink-0 text-ember-200" />
-                <span>{site.address}</span>
+        {/* More links */}
+        <nav aria-label="Footer secondary">
+          <h3 className="text-sm font-bold uppercase tracking-wider text-white">More</h3>
+          <ul className="mt-4 space-y-2 text-sm">
+            {moreLinks.map((l) => (
+              <li key={l.href}>
+                <Link href={l.href} className="text-cream/70 transition hover:text-ember-200">
+                  {l.label}
+                </Link>
               </li>
-            )}
+            ))}
           </ul>
-        </div>
+        </nav>
 
         {/* Newsletter + trust */}
         <div>
