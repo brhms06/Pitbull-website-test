@@ -352,7 +352,6 @@ export async function setTestimonialPublished(id: string, published: boolean): P
 export async function submitContact(m: {
   name: string;
   email: string;
-  phone: string;
   subject: string;
   message: string;
 }): Promise<void> {
@@ -365,7 +364,6 @@ export async function submitPuppyApplication(a: {
   dogName: string;
   name: string;
   email: string;
-  phone: string;
   address: string;
   homeType: string;
   hasChildren: string;
@@ -377,7 +375,6 @@ export async function submitPuppyApplication(a: {
     dog_name: a.dogName,
     name: a.name,
     email: a.email,
-    phone: a.phone,
     address: a.address,
     home_type: a.homeType,
     has_children: a.hasChildren,
@@ -392,7 +389,6 @@ export async function submitPuppyContract(c: {
   dogName: string;
   buyerName: string;
   email: string;
-  phone: string;
   address: string;
   shippingOption: string;
   paymentMethod: string;
@@ -405,7 +401,6 @@ export async function submitPuppyContract(c: {
     dog_name: c.dogName,
     buyer_name: c.buyerName,
     email: c.email,
-    phone: c.phone,
     address: c.address,
     shipping_option: c.shippingOption,
     payment_method: c.paymentMethod,

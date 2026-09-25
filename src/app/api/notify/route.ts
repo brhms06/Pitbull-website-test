@@ -14,7 +14,7 @@ function buildEmail(payload: NotifyPayload): { subject: string; text: string; ht
     case 'contact':
       return {
         subject: `New contact message: ${payload.subject ?? 'General'}`,
-        text: `From: ${payload.name} <${payload.email}>\nPhone: ${payload.phone || 'Not provided'}\nTopic: ${payload.subject}\nPuppy: ${payload.dogName || 'Not specified'}\nAddress: ${payload.address || 'Not provided'}\n\n${payload.message}`,
+        text: `From: ${payload.name} <${payload.email}>\nTopic: ${payload.subject}\nPuppy: ${payload.dogName || 'Not specified'}\nAddress: ${payload.address || 'Not provided'}\n\n${payload.message}`,
         html: renderAdminEmail({
           emoji: '📬',
           heading: 'New contact message',
@@ -22,7 +22,6 @@ function buildEmail(payload: NotifyPayload): { subject: string; text: string; ht
           rows: [
             { label: 'Name', value: str(payload.name) },
             { label: 'Email', value: str(payload.email) },
-            { label: 'Phone', value: str(payload.phone, 'Not provided') },
             { label: 'Topic', value: str(payload.subject, 'General') },
             { label: 'Puppy', value: str(payload.dogName, 'Not specified') },
             { label: 'Address', value: str(payload.address, 'Not provided') },
@@ -34,7 +33,7 @@ function buildEmail(payload: NotifyPayload): { subject: string; text: string; ht
     case 'application':
       return {
         subject: `New puppy application for ${payload.dogName || 'a puppy'}`,
-        text: `Name: ${payload.name}\nEmail: ${payload.email}\nPhone: ${payload.phone}\nPuppy: ${payload.dogName}\nLocation: ${payload.address}\nHome type: ${payload.homeType}\nChildren: ${payload.hasChildren}\nOther pets: ${payload.hasPets}\nExperience: ${payload.experience || 'Not provided'}`,
+        text: `Name: ${payload.name}\nEmail: ${payload.email}\nPuppy: ${payload.dogName}\nLocation: ${payload.address}\nHome type: ${payload.homeType}\nChildren: ${payload.hasChildren}\nOther pets: ${payload.hasPets}\nExperience: ${payload.experience || 'Not provided'}`,
         html: renderAdminEmail({
           emoji: '🐾',
           heading: 'New puppy application',
@@ -42,7 +41,6 @@ function buildEmail(payload: NotifyPayload): { subject: string; text: string; ht
           rows: [
             { label: 'Name', value: str(payload.name) },
             { label: 'Email', value: str(payload.email) },
-            { label: 'Phone', value: str(payload.phone) },
             { label: 'Puppy', value: str(payload.dogName) },
             { label: 'Location', value: str(payload.address) },
             { label: 'Home type', value: str(payload.homeType) },
@@ -56,7 +54,7 @@ function buildEmail(payload: NotifyPayload): { subject: string; text: string; ht
     case 'contract':
       return {
         subject: `Signed puppy contract: ${payload.buyerName ?? ''} — ${payload.dogName || 'a puppy'}`,
-        text: `Buyer: ${payload.buyerName}\nEmail: ${payload.email}\nPhone: ${payload.phone}\nPuppy: ${payload.dogName || 'Not specified'}\nAddress: ${payload.address || 'Not provided'}\nShipping: ${payload.shippingOption || 'Not specified'}\nPayment method: ${payload.paymentMethod || 'Not specified'}\nAgreed price: ${payload.price || 'Not specified'}\n\nSigned by the buyer — signature attached.`,
+        text: `Buyer: ${payload.buyerName}\nEmail: ${payload.email}\nPuppy: ${payload.dogName || 'Not specified'}\nAddress: ${payload.address || 'Not provided'}\nShipping: ${payload.shippingOption || 'Not specified'}\nPayment method: ${payload.paymentMethod || 'Not specified'}\nAgreed price: ${payload.price || 'Not specified'}\n\nSigned by the buyer — signature attached.`,
         html: renderAdminEmail({
           emoji: '✍️',
           heading: 'Signed puppy contract',
@@ -64,7 +62,6 @@ function buildEmail(payload: NotifyPayload): { subject: string; text: string; ht
           rows: [
             { label: 'Buyer', value: str(payload.buyerName) },
             { label: 'Email', value: str(payload.email) },
-            { label: 'Phone', value: str(payload.phone) },
             { label: 'Puppy', value: str(payload.dogName, 'Not specified') },
             { label: 'Address', value: str(payload.address, 'Not provided') },
             { label: 'Shipping', value: str(payload.shippingOption, 'Not specified') },

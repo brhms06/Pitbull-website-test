@@ -23,7 +23,7 @@ const sections: Array<{ h: string; p: string[] }> = [
   {
     h: 'Information we collect',
     p: [
-      'When you submit a contact form, reservation enquiry, puppy application, newsletter signup or order, we collect the details you enter — typically your name, email address, phone number, delivery address and any message you write.',
+      'When you submit a contact form, reservation enquiry, puppy application, newsletter signup or order, we collect the details you enter — typically your name, email address, delivery address and any message you write.',
       'We only collect information you choose to give us. We do not buy personal data from third parties.',
     ],
   },

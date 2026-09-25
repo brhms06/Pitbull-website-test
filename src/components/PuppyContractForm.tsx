@@ -52,7 +52,6 @@ interface ContractData {
   dogName: string;
   buyerName: string;
   email: string;
-  phone: string;
   address: string;
   shippingOption: string;
   paymentMethod: string;
@@ -61,7 +60,6 @@ interface ContractData {
 }
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const phonePattern = /^[+\d][\d\s()-]{6,}$/;
 
 interface Props {
   dogs: { id: string; name: string; price: number; gender: string }[];
@@ -74,7 +72,6 @@ export default function PuppyContractForm({ dogs }: Props) {
     dogName: '',
     buyerName: '',
     email: '',
-    phone: '',
     address: '',
     shippingOption: '',
     paymentMethod: '',
@@ -103,8 +100,6 @@ export default function PuppyContractForm({ dogs }: Props) {
     if (!data.buyerName.trim()) next.buyerName = 'Please enter your name.';
     if (!data.email.trim()) next.email = 'An email is required.';
     else if (!emailPattern.test(data.email)) next.email = 'Enter a valid email.';
-    if (!data.phone.trim()) next.phone = 'A phone number is required.';
-    else if (!phonePattern.test(data.phone)) next.phone = 'Enter a valid phone number.';
     if (!data.address.trim()) next.address = 'Please add your delivery/pick-up address.';
     if (!data.shippingOption) next.shippingOption = 'Please choose delivery or pick up.';
     if (!data.paymentMethod) next.paymentMethod = 'Please choose a payment method.';
@@ -125,7 +120,6 @@ export default function PuppyContractForm({ dogs }: Props) {
         type: 'contract',
         buyerName: data.buyerName,
         email: data.email,
-        phone: data.phone,
         dogName: data.dogName,
         address: data.address,
         shippingOption: data.shippingOption,
@@ -138,7 +132,6 @@ export default function PuppyContractForm({ dogs }: Props) {
         dogName: data.dogName,
         buyerName: data.buyerName,
         email: data.email,
-        phone: data.phone,
         address: data.address,
         shippingOption: data.shippingOption,
         paymentMethod: data.paymentMethod,
@@ -173,9 +166,6 @@ export default function PuppyContractForm({ dogs }: Props) {
           </FormField>
           <FormField label="Email" htmlFor="c-email" required error={errors.email}>
             <input id="c-email" type="email" className={inputCls('email')} value={data.email} onChange={(e) => update('email', e.target.value)} autoComplete="email" />
-          </FormField>
-          <FormField label="Phone" htmlFor="c-phone" required error={errors.phone}>
-            <input id="c-phone" type="tel" className={inputCls('phone')} value={data.phone} onChange={(e) => update('phone', e.target.value)} autoComplete="tel" />
           </FormField>
           <FormField label="Agreed price ($)" htmlFor="c-price" hint="Optional">
             <input id="c-price" type="number" min="0" className="input" value={data.price} onChange={(e) => update('price', e.target.value)} />

@@ -24,9 +24,6 @@ export const site = {
 
   // --- Placeholder contact details ---
   email: 'info@crownlegacydobermans.com',
-  // WhatsApp number in international format, digits only (e.g. 18125551234).
-  // Leave blank to fall back to the contact page.
-  whatsapp: '237670666946',
   // Left blank on purpose — no physical address is shown on the site.
   address: '',
   responseTime: 'We aim to reply within 24 hours.',
@@ -49,7 +46,7 @@ export const site = {
     chime: '' as string, // $ChimeSign, or the email/phone linked to Chime
     applePay: '' as string, // phone number or email linked to Apple Pay / Apple Cash
     instructions:
-      'Please include your order reference in the payment note. Once paid, reply to your confirmation email or message us on WhatsApp with a screenshot and we will confirm your puppy. Puppies are held for 48 hours.' as string,
+      'Please include your order reference in the payment note. Once paid, reply to your confirmation email with a screenshot and we will confirm your puppy. Puppies are held for 48 hours.' as string,
   },
 } as const;
 

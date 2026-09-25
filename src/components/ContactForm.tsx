@@ -11,7 +11,6 @@ import { submitContact } from '@/lib/db';
 interface ContactData {
   name: string;
   email: string;
-  phone: string;
   dogId: string;
   dogName: string;
   address: string;
@@ -19,7 +18,6 @@ interface ContactData {
 }
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const phonePattern = /^[+\d][\d\s()-]{6,}$/;
 
 interface Props {
   /** Reservable puppies for the "Puppy of Interest" dropdown. */
@@ -33,7 +31,6 @@ export default function ContactForm({ dogs, initialDogId }: Props) {
   const empty: ContactData = {
     name: '',
     email: '',
-    phone: '',
     dogId: initialDog?.id ?? '',
     dogName: initialDog?.name ?? '',
     address: '',
@@ -60,7 +57,6 @@ export default function ContactForm({ dogs, initialDogId }: Props) {
     if (!data.name.trim()) next.name = 'Please tell us your name.';
     if (!data.email.trim()) next.email = 'An email address is required.';
     else if (!emailPattern.test(data.email)) next.email = 'Please enter a valid email.';
-    if (data.phone && !phonePattern.test(data.phone)) next.phone = 'Please enter a valid phone number.';
     if (!data.message.trim()) next.message = 'Please add a short message.';
     setErrors(next);
     return Object.keys(next).length === 0;
@@ -72,8 +68,8 @@ export default function ContactForm({ dogs, initialDogId }: Props) {
     setSubmitting(true);
     const subject = data.dogName ? `Puppy inquiry – ${data.dogName}` : 'General inquiry';
     await Promise.all([
-      notify({ type: 'contact', name: data.name, email: data.email, phone: data.phone, subject, dogName: data.dogName || 'Not specified', address: data.address || 'Not provided', message: data.message }),
-      submitContact({ name: data.name, email: data.email, phone: data.phone, subject, message: data.message }).catch(() => {}),
+      notify({ type: 'contact', name: data.name, email: data.email, subject, dogName: data.dogName || 'Not specified', address: data.address || 'Not provided', message: data.message }),
+      submitContact({ name: data.name, email: data.email, subject, message: data.message }).catch(() => {}),
     ]);
     appendSubmission('ilb:contact', data);
     setSubmitting(false);
@@ -93,10 +89,6 @@ export default function ContactForm({ dogs, initialDogId }: Props) {
 
           <FormField label="Email" htmlFor="c-email" required error={errors.email}>
             <input id="c-email" type="email" className={inputCls('email')} value={data.email} onChange={(e) => update('email', e.target.value)} autoComplete="email" />
-          </FormField>
-
-          <FormField label="Your Phone" htmlFor="c-phone" error={errors.phone} hint="Optional" className="sm:col-span-2">
-            <input id="c-phone" type="tel" className={inputCls('phone')} value={data.phone} onChange={(e) => update('phone', e.target.value)} autoComplete="tel" />
           </FormField>
 
           {dogs && dogs.length > 0 && (

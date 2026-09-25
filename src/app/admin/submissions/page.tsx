@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase/client';
-import { WhatsAppIcon } from '@/components/Icons';
 
 type Tab = 'orders' | 'applications' | 'contracts' | 'messages' | 'subscribers';
 
@@ -91,9 +90,7 @@ export default function SubmissionsPage() {
                       <p className="font-bold text-forest-800">
                         {row.customer_name} — {fmtMoney(row.total)}
                       </p>
-                      <p className="mt-1 text-sm text-muted">
-                        {row.email} · {row.phone}
-                      </p>
+                      <p className="mt-1 text-sm text-muted">{row.email}</p>
                       <ul className="mt-2 space-y-0.5 text-sm text-ink/80">
                         {(row.items ?? []).map((it: Row, idx: number) => (
                           <li key={idx}>
@@ -115,9 +112,7 @@ export default function SubmissionsPage() {
                       <p className="font-bold text-forest-800">
                         {row.name} — wants to reserve {row.dog_name || '—'}
                       </p>
-                      <p className="mt-1 text-sm text-muted">
-                        {row.email} · {row.phone}
-                      </p>
+                      <p className="mt-1 text-sm text-muted">{row.email}</p>
                       <p className="mt-2 text-sm text-ink/80">
                         {row.address} · {row.home_type} · Children: {row.has_children} · Pets: {row.has_pets}
                       </p>
@@ -129,9 +124,7 @@ export default function SubmissionsPage() {
                       <p className="font-bold text-forest-800">
                         {row.buyer_name} — {row.dog_name || 'a puppy'} {row.price ? `(${fmtMoney(row.price)})` : ''}
                       </p>
-                      <p className="mt-1 text-sm text-muted">
-                        {row.email} · {row.phone}
-                      </p>
+                      <p className="mt-1 text-sm text-muted">{row.email}</p>
                       <p className="mt-2 text-sm text-ink/80">
                         {row.address} · {row.shipping_option} · {row.payment_method || 'No payment method chosen'}
                       </p>
@@ -145,9 +138,7 @@ export default function SubmissionsPage() {
                       <p className="font-bold text-forest-800">
                         {row.name} · {row.subject}
                       </p>
-                      <p className="mt-1 text-sm text-muted">
-                        {row.email} · {row.phone}
-                      </p>
+                      <p className="mt-1 text-sm text-muted">{row.email}</p>
                       <p className="mt-2 text-sm text-ink/80">{row.message}</p>
                     </>
                   )}
@@ -159,18 +150,6 @@ export default function SubmissionsPage() {
                   {tab === 'messages' && row.email && (
                     <a href={`mailto:${row.email}`} className="btn-ghost px-3 py-1.5 text-xs">
                       Reply
-                    </a>
-                  )}
-                  {tab === 'orders' && row.whatsapp_opt_in && row.phone && (
-                    <a
-                      href={`https://wa.me/${String(row.phone).replace(/\D/g, '')}?text=${encodeURIComponent(
-                        `Hi ${row.customer_name}, this is Crown Legacy Dobermans about your order. Here are the ${row.payment_method || 'payment'} details:`,
-                      )}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 rounded-full bg-[#25D366] px-3 py-1.5 text-xs font-semibold text-white transition hover:brightness-95"
-                    >
-                      <WhatsAppIcon className="h-3.5 w-3.5" /> WhatsApp customer
                     </a>
                   )}
                   <button type="button" onClick={() => remove(row.id)} className="rounded-full px-3 py-1.5 text-xs font-semibold text-red-600 transition hover:bg-red-50">

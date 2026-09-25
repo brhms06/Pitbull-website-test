@@ -15,7 +15,6 @@ interface ApplicationData {
   dogName: string;
   name: string;
   email: string;
-  phone: string;
   address: string;
   homeType: string;
   hasChildren: string;
@@ -25,7 +24,6 @@ interface ApplicationData {
 }
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const phonePattern = /^[+\d][\d\s()-]{6,}$/;
 const steps = ['About you', 'Your home', 'Confirm'];
 
 interface Props {
@@ -45,7 +43,6 @@ export default function PuppyApplicationForm({ dogId, dogName, dogs }: Props) {
     dogName: dogName ?? '',
     name: '',
     email: '',
-    phone: '',
     address: '',
     homeType: 'House with yard',
     hasChildren: 'No',
@@ -75,8 +72,6 @@ export default function PuppyApplicationForm({ dogId, dogName, dogs }: Props) {
       if (!data.name.trim()) next.name = 'Please enter your name.';
       if (!data.email.trim()) next.email = 'An email is required.';
       else if (!emailPattern.test(data.email)) next.email = 'Enter a valid email.';
-      if (!data.phone.trim()) next.phone = 'A phone number is required.';
-      else if (!phonePattern.test(data.phone)) next.phone = 'Enter a valid phone number.';
     }
     if (current === 1) {
       if (!data.address.trim()) next.address = 'Please add your city and ZIP code area.';
@@ -100,7 +95,6 @@ export default function PuppyApplicationForm({ dogId, dogName, dogs }: Props) {
         type: 'application',
         name: data.name,
         email: data.email,
-        phone: data.phone,
         dogName: data.dogName,
         address: data.address,
         homeType: data.homeType,
@@ -159,9 +153,6 @@ export default function PuppyApplicationForm({ dogId, dogName, dogs }: Props) {
                 <FormField label="Email" htmlFor="a-email" required error={errors.email}>
                   <input id="a-email" type="email" className={inputCls('email')} value={data.email} onChange={(e) => update('email', e.target.value)} autoComplete="email" />
                 </FormField>
-                <FormField label="Phone" htmlFor="a-phone" required error={errors.phone}>
-                  <input id="a-phone" type="tel" className={inputCls('phone')} value={data.phone} onChange={(e) => update('phone', e.target.value)} autoComplete="tel" />
-                </FormField>
                 <FormField label="Previous dog experience" htmlFor="a-exp" hint="Optional">
                   <input id="a-exp" className="input" value={data.experience} onChange={(e) => update('experience', e.target.value)} />
                 </FormField>
@@ -210,9 +201,6 @@ export default function PuppyApplicationForm({ dogId, dogName, dogs }: Props) {
                     </li>
                     <li>
                       <strong>Email:</strong> {data.email || '—'}
-                    </li>
-                    <li>
-                      <strong>Phone:</strong> {data.phone || '—'}
                     </li>
                     <li>
                       <strong>Location:</strong> {data.address || '—'}

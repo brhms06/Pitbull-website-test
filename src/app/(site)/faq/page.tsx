@@ -9,7 +9,7 @@ const faqs: Array<{ question: string; answer: string }> = [
   {
     question: 'How do I reserve a puppy?',
     answer:
-      'Reach out through our contact form or WhatsApp with the puppy you\'re interested in. Once we confirm availability, a deposit secures your puppy — the deposit is deducted from the final balance.',
+      'Reach out through our contact form with the puppy you\'re interested in. Once we confirm availability, a deposit secures your puppy — the deposit is deducted from the final balance.',
   },
   {
     question: 'How do I pay, and how long is a puppy held for me?',

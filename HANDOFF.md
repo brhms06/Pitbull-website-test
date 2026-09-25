@@ -114,7 +114,7 @@ page feature reasserting itself). Instead:
   customer's real orders/PII into the *developer's* Supabase project
   instead of failing loudly.
 - **`src/data/site.ts`** — update `email` (→ the new Titan inbox, e.g.
-  `hello@customerdomain.com`), `phone`, `whatsapp`, `social`, and `url`
+  `hello@customerdomain.com`), `social`, and `url`
   (→ `https://customerdomain.com`) to the customer's real details.
 - **`src/app/api/notify/route.ts`** — update `from:` (currently
   `'Ironline Dobermans <onboarding@resend.dev>'`) to the verified Resend
