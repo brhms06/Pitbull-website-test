@@ -26,7 +26,7 @@ export interface Dog {
   reservePrice?: number; // reservation deposit (0 = use default)
   breedingPrice?: number; // price with breeding rights (0 = use default)
   warrantyPrice?: number; // price with extended warranty (0 = use default)
-  coordinator: { name: string; email: string; phone: string };
+  coordinator: { name: string; email: string };
   personality: string[];
   shortDescription: string;
   story: string;

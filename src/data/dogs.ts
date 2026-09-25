@@ -10,9 +10,9 @@ import { dobermanPhotos } from '@/data/dobermanPhotos';
 const img = (i: number) => dobermanPhotos[i % dobermanPhotos.length];
 
 const coordinators = {
-  jt: { name: '', email: '', phone: '' },
-  mr: { name: '', email: '', phone: '' },
-  al: { name: '', email: '', phone: '' },
+  jt: { name: '', email: '' },
+  mr: { name: '', email: '' },
+  al: { name: '', email: '' },
 };
 
 export const dogs: Dog[] = [

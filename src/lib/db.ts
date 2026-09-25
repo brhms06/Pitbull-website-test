@@ -32,7 +32,6 @@ export interface DogRow {
   warranty_price: number;
   coordinator_name: string;
   coordinator_email: string;
-  coordinator_phone: string;
   personality: string[];
   short_description: string;
   story: string;
@@ -70,7 +69,6 @@ export interface DogInput {
   warrantyPrice: number;
   coordinatorName: string;
   coordinatorEmail: string;
-  coordinatorPhone: string;
   personality: string[];
   shortDescription: string;
   story: string;
@@ -114,7 +112,6 @@ export const rowToAdminDog = (r: DogRow): AdminDog => ({
   coordinator: {
     name: r.coordinator_name,
     email: r.coordinator_email,
-    phone: r.coordinator_phone,
   },
   personality: r.personality ?? [],
   shortDescription: r.short_description,
@@ -151,7 +148,6 @@ const inputToRow = (d: DogInput) => ({
   warranty_price: d.warrantyPrice,
   coordinator_name: d.coordinatorName,
   coordinator_email: d.coordinatorEmail,
-  coordinator_phone: d.coordinatorPhone,
   personality: d.personality,
   short_description: d.shortDescription,
   story: d.story,
@@ -289,7 +285,6 @@ export async function importSeedDogs(): Promise<number> {
     warranty_price: 0,
     coordinator_name: d.coordinator.name,
     coordinator_email: d.coordinator.email,
-    coordinator_phone: d.coordinator.phone,
     personality: d.personality,
     short_description: d.shortDescription,
     story: d.story,

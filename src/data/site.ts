@@ -41,10 +41,10 @@ export const site = {
   // --- Payment details shown to buyers at checkout so they can pay you. ---
   // Fill in the methods you use; any left blank are hidden automatically.
   payment: {
-    zelle: '' as string, // Zelle email or phone number
+    zelle: '' as string, // Zelle email
     cashApp: '' as string, // $cashtag (with or without the $)
-    chime: '' as string, // $ChimeSign, or the email/phone linked to Chime
-    applePay: '' as string, // phone number or email linked to Apple Pay / Apple Cash
+    chime: '' as string, // $ChimeSign, or the email linked to Chime
+    applePay: '' as string, // email linked to Apple Pay / Apple Cash
     instructions:
       'Please include your order reference in the payment note. Once paid, reply to your confirmation email with a screenshot and we will confirm your puppy. Puppies are held for 48 hours.' as string,
   },
